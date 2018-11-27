@@ -38,12 +38,15 @@ router.delete('/:lvlId', (req, res)=> {
 })
 
 router.get('/:lvlId', (req, res)=> {
-    database.getLevelById(req.params.lvlID, (level)=> {
+    database.getLevelById(req.params.lvlId, (level)=> {
         if (level == -1) {
             res.status(500).end('')
         }
+            else if(level == 0){
+            res.status(404).end()
+        }
         else {
-            res.json({level: level})
+            res.json(level)
         }
     })
 })
