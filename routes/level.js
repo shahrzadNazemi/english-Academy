@@ -56,6 +56,9 @@ router.get('/', (req, res)=> {
         if (getREsult == -1) {
             res.status(500).end('')
         }
+            else if(getREsult == 0){
+            res.json([])
+        }
         else {
             res.json(getREsult)
         }
