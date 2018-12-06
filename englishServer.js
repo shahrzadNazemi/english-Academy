@@ -19,27 +19,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileupload());
 
-app.use(function (req, res, next) {
-    if (req.path.includes('/login')) {
-        return next();
-    }
-    if (!req.headers.authorization) {
-        return res.status(401).json({error: "authorization required"});
-    }
-    var token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-        return res.status(401).json({error: "authorization required"});
-    }
-    var verify = jwt.verify(token);
-    // console.log(verify.userID)
-
-    if (!verify || verify == 1)  {
-
-        return res.status(401).json({error: "authorization failed"});
-    }
-    console.log("verification", verify);
-    next();
-});
+// app.use(function (req, res, next) {
+//     if (req.path.includes('/login')) {
+//         return next();
+//     }
+//     if (!req.headers.authorization) {
+//         return res.status(401).json({error: "authorization required"});
+//     }
+//     var token = req.headers.authorization.split(" ")[1];
+//     if (!token) {
+//         return res.status(401).json({error: "authorization required"});
+//     }
+//     var verify = jwt.verify(token);
+//     // console.log(verify.userID)
+//
+//     if (!verify || verify == 1)  {
+//
+//         return res.status(401).json({error: "authorization failed"});
+//     }
+//     console.log("verification", verify);
+//     next();
+// });
 
 app.use('/api/users', user);
 app.use('/api/level', level);
