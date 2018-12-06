@@ -22,7 +22,7 @@ router.put('/:lvlId', (req, res)=> {
             res.status(500).end('')
         }
         else {
-            res.json({affectedRows: updateResult})
+            res.json( updateResult)
         }
     })
 })
