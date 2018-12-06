@@ -16,7 +16,7 @@ router.post('/', (req, res)=> {
 })
 
 router.put('/:lvlId', (req, res)=> {
-    database.updateLevel(req.body, req.params.lvlID, (updateResult)=> {
+    database.updateLevel(req.body, req.params.lvlId, (updateResult)=> {
         if (updateResult == -1) {
             res.status(500).end('')
         }
@@ -27,7 +27,7 @@ router.put('/:lvlId', (req, res)=> {
 })
 
 router.delete('/:lvlId', (req, res)=> {
-    database.delLevel(req.params.lvlID, (delResult)=> {
+    database.delLevel(req.params.lvlId, (delResult)=> {
         if (delResult == -1) {
             res.status(500).end('')
         }
@@ -52,12 +52,12 @@ router.get('/:lvlId', (req, res)=> {
 })
 
 router.get('/', (req, res)=> {
-    database.getLevels(req.body, (addResult)=> {
-        if (addResult == -1) {
+    database.getLevels((getREsult)=> {
+        if (getREsult == -1) {
             res.status(500).end('')
         }
         else {
-            res.json({lvlID: addResult})
+            res.json(getREsult)
         }
     })
     // res.json({"status":"success"})
