@@ -31,6 +31,32 @@ module.exports.adminLogin = (loginData, cb)=> {
 
 };
 
+module.exports.stuLogin = (loginData, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/student/login`,
+        headers: {"content-Type": "application/json"},
+        body: loginData,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 module.exports.addLevel = (levelInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/level`,
