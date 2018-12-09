@@ -187,6 +187,20 @@ router.get('/student', (req, res) => {
     })
 });
 
+router.get('/student/:stdId', (req, res) => {
+    database.getStudentById(req.params.stdId , (getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
+        }
+        else if (getResult == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(getResult)
+        }
+    })
+});
+
 router.delete('/student/:stdId', (req, res) => {
     database.delAdmin(req.params.admId, (deleteResult)=> {
         if (deleteResult == -1) {
