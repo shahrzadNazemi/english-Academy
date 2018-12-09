@@ -69,13 +69,23 @@ module.exports.validation = (message, data, cb)=> {
 };
 
 module.exports.pagination = (offset, limit, data, cb)=> {
+    console.log(offset, limit, data)
     let temp = []
     let k = 0
-    for (var i = offset; i <= limit; i++) {
-        temp[k] = data[i]
-        k++
+    if (limit > data.length || offset > data.length) {
+        cb(data)
     }
-    cb(temp)
+    else {
+        for (var i = offset; i < limit; i++) {
+            temp[k] = data[i]
+            console.log(data[i])
+            k++
+        }
+        console.log("temp", temp)
+        cb(temp)
+    }
+
+
 }
 
 

@@ -414,23 +414,51 @@ router.put('/sound/:sndId', (req, res) => {
 
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
-        if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else if (lesson == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            // response.pagination(l)
-            response.response('درس مورد نظر یافت شد.', lesson, (result)=> {
-                res.json(result)
+        if(req.query.cli == 1){
+            if (lesson == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (lesson == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                if (req.query.offset && req.query.limit) {
+                    response.pagination(req.query.offset, req.query.limit, lesson, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.response('اطلاعات مورد نظر یافت شد', lesson, (result)=> {
+                        res.json(result)
+                    })
+                }
 
-            })
+            }
         }
+        else{
+            if(lesson == -1){
+                res.status(500).end('')
+            }
+            else if(lesson == 0){
+                res.status(404).end('')
+            }
+            else{
+                if(req.query.offset && req.query.limit){
+                    response.pagination(req.query.offset ,req.query.limit , lesson , (resp)=>{
+                        res.json(resp)
+                    } )
+                }
+                else{
+                    res.json(lesson)
+
+                }
+            }
+        }
+
     })
 });
 
