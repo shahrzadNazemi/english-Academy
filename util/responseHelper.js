@@ -19,12 +19,12 @@ module.exports.responseUpdated = (message, data, cb)=> {
 }
 
 module.exports.response = (message, data, cb)=> {
-    let info = [{
+    let info = {
         status: 'success',
         status_code: 200,
         message: message,
         data: data
-    }]
+    }
     cb(info)
 }
 

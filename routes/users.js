@@ -128,14 +128,14 @@ router.post('/student', (req, res)=> {
 
 router.post('/student/login', (req, res) => {
     if (req.body == undefined) {
-       res.status(400).end('no data is sent')
+        res.status(400).end('no data is sent')
     }
     database.stuLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
-           res.status(500).end('')
+            res.status(500).end('')
         }
         else if (loginResult == 0) {
-           res.status(404).end('')
+            res.status(404).end('')
         }
         else {
             let data = loginResult
@@ -188,7 +188,7 @@ router.get('/student', (req, res) => {
 });
 
 router.get('/student/:stdId', (req, res) => {
-    database.getStudentById(req.params.stdId , (getResult)=> {
+    database.getStudentById(req.params.stdId, (getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')
         }
@@ -200,6 +200,24 @@ router.get('/student/:stdId', (req, res) => {
         }
     })
 });
+
+router.get('/student/best', (req, res) => {
+    database.getAllStu((getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
+        }
+        else if (getResult == 0) {
+            res.status(404).end('')
+        }
+        else {
+            for (var i = 0; i < getResult.length; i++) {
+                
+            }
+            res.json(getResult)
+        }
+    })
+});
+
 
 router.delete('/student/:stdId', (req, res) => {
     database.delAdmin(req.params.admId, (deleteResult)=> {
