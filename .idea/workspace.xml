@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/users.js" afterPath="$PROJECT_DIR$/routes/users.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,25 +46,22 @@
       <file leaf-file-name="responseHelper.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util/responseHelper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="83" column="33" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
+            <state relative-caret-position="200">
+              <caret line="26" column="5" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
               <folding>
                 <element signature="e#55#192#0" expanded="false" />
                 <element signature="e#72#177#0" expanded="false" />
                 <element signature="e#249#386#0" expanded="false" />
                 <element signature="e#266#371#0" expanded="false" />
-                <element signature="e#436#575#0" expanded="false" />
-                <element signature="e#453#560#0" expanded="false" />
-                <element signature="e#454#559#0" expanded="false" />
-                <element signature="e#631#768#0" expanded="false" />
-                <element signature="e#648#753#0" expanded="false" />
-                <element signature="e#825#963#0" expanded="false" />
-                <element signature="e#842#948#0" expanded="false" />
-                <element signature="e#1019#1162#0" expanded="false" />
-                <element signature="e#1036#1147#0" expanded="false" />
-                <element signature="e#1214#1359#0" expanded="false" />
-                <element signature="e#1231#1344#0" expanded="false" />
-                <element signature="e#1623#1713#0" expanded="false" />
+                <element signature="e#629#766#0" expanded="false" />
+                <element signature="e#646#751#0" expanded="false" />
+                <element signature="e#823#961#0" expanded="false" />
+                <element signature="e#840#946#0" expanded="false" />
+                <element signature="e#1017#1160#0" expanded="false" />
+                <element signature="e#1034#1145#0" expanded="false" />
+                <element signature="e#1212#1357#0" expanded="false" />
+                <element signature="e#1229#1342#0" expanded="false" />
+                <element signature="e#1621#1711#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -628,10 +623,10 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/englishServer.js" />
         <option value="$PROJECT_DIR$/routes/level.js" />
-        <option value="$PROJECT_DIR$/util/responseHelper.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
         <option value="$PROJECT_DIR$/database/database.js" />
         <option value="$PROJECT_DIR$/routes/users.js" />
+        <option value="$PROJECT_DIR$/util/responseHelper.js" />
       </list>
     </option>
   </component>
@@ -1136,12 +1131,12 @@
       <workItem from="1544084965442" duration="8026000" />
       <workItem from="1544270767406" duration="7904000" />
       <workItem from="1544293332829" duration="1786000" />
-      <workItem from="1544333655436" duration="13359000" />
+      <workItem from="1544333655436" duration="13526000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="112707000" />
+    <option name="totallyTimeSpent" value="112874000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -3282,31 +3277,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/util/responseHelper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="83" column="33" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
-          <folding>
-            <element signature="e#55#192#0" expanded="false" />
-            <element signature="e#72#177#0" expanded="false" />
-            <element signature="e#249#386#0" expanded="false" />
-            <element signature="e#266#371#0" expanded="false" />
-            <element signature="e#436#575#0" expanded="false" />
-            <element signature="e#453#560#0" expanded="false" />
-            <element signature="e#454#559#0" expanded="false" />
-            <element signature="e#631#768#0" expanded="false" />
-            <element signature="e#648#753#0" expanded="false" />
-            <element signature="e#825#963#0" expanded="false" />
-            <element signature="e#842#948#0" expanded="false" />
-            <element signature="e#1019#1162#0" expanded="false" />
-            <element signature="e#1036#1147#0" expanded="false" />
-            <element signature="e#1214#1359#0" expanded="false" />
-            <element signature="e#1231#1344#0" expanded="false" />
-            <element signature="e#1623#1713#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="199">
@@ -3722,6 +3692,28 @@
             <element signature="e#25137#25170#0" expanded="false" />
             <element signature="e#25675#25743#0" expanded="false" />
             <element signature="e#25767#25828#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/responseHelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="26" column="5" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
+          <folding>
+            <element signature="e#55#192#0" expanded="false" />
+            <element signature="e#72#177#0" expanded="false" />
+            <element signature="e#249#386#0" expanded="false" />
+            <element signature="e#266#371#0" expanded="false" />
+            <element signature="e#629#766#0" expanded="false" />
+            <element signature="e#646#751#0" expanded="false" />
+            <element signature="e#823#961#0" expanded="false" />
+            <element signature="e#840#946#0" expanded="false" />
+            <element signature="e#1017#1160#0" expanded="false" />
+            <element signature="e#1034#1145#0" expanded="false" />
+            <element signature="e#1212#1357#0" expanded="false" />
+            <element signature="e#1229#1342#0" expanded="false" />
+            <element signature="e#1621#1711#0" expanded="false" />
           </folding>
         </state>
       </provider>
