@@ -509,7 +509,7 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
             })
         }
         else {
-            response.response('ویدیو مورد نظر یافت شد.', sound, (result)=> {
+            response.response('وویس مورد نظر یافت شد.', sound, (result)=> {
                 res.json(result)
 
             })
