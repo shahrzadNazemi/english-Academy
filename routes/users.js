@@ -19,8 +19,8 @@ router.post('/admin/login', (req, res) => {
             })
         }
         else {
-            let data =  loginResult
-        data.jwt = jwt.signUser(loginResult.adm_username)
+            let data = loginResult
+            data.jwt = jwt.signUser(loginResult.adm_username)
 
             response.response('ورود با موفقیت انجام شد.', data, (result)=> {
                 res.json(result[0])
@@ -127,29 +127,20 @@ router.post('/student', (req, res)=> {
 });
 
 router.post('/student/login', (req, res) => {
-    if(req.body == undefined){
-        response.validation('داده ای فرستاده نشده است.' , '' , (result)=>{
-            res.json(result)
-        })
+    if (req.body == undefined) {
+       res.status(400).end('no data is sent')
     }
     database.stuLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
+           res.status(500).end('')
         }
         else if (loginResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
+           res.status(404).end('')
         }
         else {
             let data = loginResult
-        data.jwt = jwt.signUser(loginResult.stu_username)
-            response.response('ورود با موفقیت انجام شد.', data, (result)=> {
-                res.json(result[0])
-
-            })
+            data.jwt = jwt.signUser(loginResult.stu_username)
+            res.json(data)
         }
     })
 });
@@ -216,7 +207,6 @@ router.delete('/student/:stdId', (req, res) => {
         }
     })
 });
-
 
 
 module.exports = router

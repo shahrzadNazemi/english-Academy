@@ -8,7 +8,7 @@ module.exports.responseCreated = (message, data, cb)=> {
     cb(info)
 }
 
-module.exports.responseUpdated = (message , data , cb)=> {
+module.exports.responseUpdated = (message, data, cb)=> {
     let info = {
         status: 'updated',
         status_code: 200,
@@ -18,7 +18,7 @@ module.exports.responseUpdated = (message , data , cb)=> {
     cb(info)
 }
 
-module.exports.response = (message , data , cb)=> {
+module.exports.response = (message, data, cb)=> {
     let info = [{
         status: 'success',
         status_code: 200,
@@ -28,7 +28,7 @@ module.exports.response = (message , data , cb)=> {
     cb(info)
 }
 
-module.exports.respondDeleted = (message , data , cb)=> {
+module.exports.respondDeleted = (message, data, cb)=> {
     let info = {
         status: 'deleted',
         status_code: 200,
@@ -38,7 +38,7 @@ module.exports.respondDeleted = (message , data , cb)=> {
     cb(info)
 }
 
-module.exports.respondNotFound = (message , data , cb)=> {
+module.exports.respondNotFound = (message, data, cb)=> {
     let info = {
         status: 'notFound',
         status_code: 404,
@@ -48,7 +48,7 @@ module.exports.respondNotFound = (message , data , cb)=> {
     cb(info)
 }
 
-module.exports.InternalServer = (message , data , cb)=> {
+module.exports.InternalServer = (message, data, cb)=> {
     let info = {
         status: 'internalError',
         status_code: 500,
@@ -58,7 +58,7 @@ module.exports.InternalServer = (message , data , cb)=> {
     cb(info)
 }
 
-module.exports.validation = (message , data , cb)=> {
+module.exports.validation = (message, data, cb)=> {
     let info = {
         status: 'validationError',
         status_code: 400,
@@ -66,6 +66,16 @@ module.exports.validation = (message , data , cb)=> {
         data: data
     }
     cb(info)
+};
+
+module.exports.pagination = (offset, limit, data, cb)=> {
+    let temp = []
+    let k = 0
+    for (var i = offset; i <= limit; i++) {
+        temp[k] = data[i]
+        k++
+    }
+    cb(temp)
 }
 
 
