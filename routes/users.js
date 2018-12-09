@@ -144,9 +144,10 @@ router.post('/student/login', (req, res) => {
             })
         }
         else {
-            let data = {result: loginResult, jwt: jwt.signUser(loginResult.stu_username)}
+            let data = loginResult
+        data.jwt = jwt.signUser(loginResult.stu_username)
             response.response('ورود با موفقیت انجام شد.', data, (result)=> {
-                res.json(result)
+                res.json(result[0])
 
             })
         }
