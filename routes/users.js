@@ -23,7 +23,7 @@ router.post('/admin/login', (req, res) => {
             data.jwt = jwt.signUser(loginResult.adm_username)
 
             response.response('ورود با موفقیت انجام شد.', data, (result)=> {
-                res.json(result[0])
+                res.json(result)
 
             })
         }
