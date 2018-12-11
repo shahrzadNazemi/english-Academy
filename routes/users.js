@@ -3,10 +3,12 @@ var router = express.Router();
 var database = require('../database/database');
 let logger = require('../util/logger');
 let jwt = require('../util/jwtHelper');
-let response = require('../util/responseHelper')
+let response = require('../util/responseHelper');
+let hashHelper = require('../util/hashHelper')
 
 
 router.post('/admin/login', (req, res) => {
+    req.body.adm_password = hashHelper.hash(req.body.adm_password)
     database.adminLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -19,6 +21,7 @@ router.post('/admin/login', (req, res) => {
             })
         }
         else {
+            delete loginResult.adm_password
             let data = loginResult
             data.jwt = jwt.signUser(loginResult.adm_username)
 
@@ -31,6 +34,7 @@ router.post('/admin/login', (req, res) => {
 });
 
 router.put('/admin/:admId', (req, res) => {
+    req.body.adm_password = hashHelper.hash(req.body.adm_password)
     database.updateAdmin(req.body, req.params.admId, (Putresult)=> {
         if (Putresult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -43,6 +47,7 @@ router.put('/admin/:admId', (req, res) => {
             })
         }
         else {
+           delete  Putresult.adm_password
             response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
                 res.json(result)
 
@@ -94,6 +99,8 @@ router.delete('/admin/:admId', (req, res) => {
 });
 
 router.post('/admin', (req, res)=> {
+    req.body.adm_password = hashHelper.hash(req.body.adm_password)
+
     database.addAdmin(req.body, (addedAdmin)=> {
         if (addedAdmin == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -111,6 +118,8 @@ router.post('/admin', (req, res)=> {
 
 
 router.post('/student', (req, res)=> {
+    req.body.stu_password = hashHelper.hash(req.body.stu_password)
+
     database.addStu(req.body, (student)=> {
         if (student == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -118,6 +127,7 @@ router.post('/student', (req, res)=> {
             })
         }
         else {
+            delete student.stu_password
             response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
                 res.json(result)
 
@@ -130,6 +140,8 @@ router.post('/student/login', (req, res) => {
     if (req.body == undefined) {
         res.status(400).end('no data is sent')
     }
+    // req.body.stu_password = hashHelper.hash(req.body.stu_password)
+
     database.stuLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
             res.status(500).end('')
@@ -138,6 +150,7 @@ router.post('/student/login', (req, res) => {
             res.status(404).end('')
         }
         else {
+            delete loginResult.stu_password
             let data = loginResult
             data.jwt = jwt.signUser(loginResult.stu_username)
             res.json(data)
@@ -146,22 +159,17 @@ router.post('/student/login', (req, res) => {
 });
 
 router.put('/student/:stdId', (req, res) => {
-    database.updateAdmin(req.body, req.params.admId, (Putresult)=> {
+    // req.body.stu_password = hashHelper.hash(req.body.stu_password)
+    database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
         if (Putresult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
+            res.status(500).end('')
         }
         else if (Putresult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
+            res.status(404).end('')
         }
         else {
-            response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
-                res.json(result)
-
-            })
+            delete Putresult.stu_password
+            res.json(Putresult)
         }
     })
 });
@@ -196,6 +204,7 @@ router.get('/student/:stdId', (req, res) => {
             res.status(404).end('')
         }
         else {
+            delete getResult.stu_password
             res.json(getResult)
         }
     })
@@ -210,10 +219,17 @@ router.get('/student/best', (req, res) => {
             res.status(404).end('')
         }
         else {
-            for (var i = 0; i < getResult.length; i++) {
-                
+            let temp =[]
+            let length = getResult.length
+            if(length <= 3){
+                res.json(getResult)
             }
-            res.json(getResult)
+            else{
+                temp[0] = getResult[length]
+                temp[1] = getResult[length-1]
+                temp[2] = getResult[length-2]
+                res.json(temp)
+            }
         }
     })
 });
