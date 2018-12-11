@@ -272,6 +272,11 @@ module.exports.delAdmin = (admId, cb)=> {
             console.log('err in db')
             cb(-1)
         }
+        else if (response.statusCode == 403) {
+            console.log('last admin can not be deleted')
+            cb(-4)
+        }
+            
         else if (response.statusCode == 404) {
             cb(0)
         }

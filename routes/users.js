@@ -89,6 +89,11 @@ router.delete('/admin/:admId', (req, res) => {
                 res.json(result)
             })
         }
+            else if(deleteResult == -4){
+            response.validation('آخرین ادمین قابل حذف شدن نیست.', '', (result)=> {
+                res.json(result)
+            })
+        }
         else {
             response.respondDeleted('اطلاعات همه ی ادمین ها', deleteResult, (result)=> {
                 res.json(result)

@@ -6,21 +6,48 @@ let response = require('../util/responseHelper')
 
 
 router.post('/', (req, res)=> {
-    database.addLevel(req.body, (addResult)=> {
-        if (addResult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                res.json(result)
+    if (req.body.lvl_description == undefined) {
+        response.validation('فرستادن توضیحات الزامی است', 'required', (result)=> {
+            res.json(result)
+        })
+    }
+    else if (req.body.lvl_title == undefined) {
+        response.validation('فرستادن عنوان الزامی است', 'required', (result)=> {
+            res.json(result)
+        })
+    }
+    else if (req.body.lvl_description.length < req.body.lvl_title) {
+        response.validation('توضیحات نمیتواند کمتر از عنوان باشد', 'length', (result)=> {
+            res.json(result)
+        })
+    }
+    else if (req.body.lvl_description.length < 3) {
+        response.validation('توضیحات نمیتواند کمتر از 3 باشد', 'length', (result)=> {
+            res.json(result)
+        })
+    }
+    else if (req.body.lvl_title.length < 3) {
+        response.validation('عنوان نمیتواند کمتر از 3 باشد', 'length', (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        database.addLevel(req.body, (addResult)=> {
+            if (addResult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                    res.json(result)
 
-            })
-        }
-    })
+                })
+            }
+        })
+
+    }
 })
-
 
 router.put('/:lvlId', (req, res)=> {
     database.updateLevel(req.body, req.params.lvlId, (updateResult)=> {
