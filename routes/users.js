@@ -122,23 +122,48 @@ router.post('/admin', (req, res)=> {
 });
 
 
-router.post('/student', (req, res)=> {
-    req.body.stu_password = hashHelper.hash(req.body.stu_password)
+router.post('/student/register', (req, res)=> {
 
-    database.addStu(req.body, (student)=> {
-        if (student == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
+    if(req.body.stu_password == undefined || req.body.stu_username == undefined){
+        res.status(500).end('password is required')
+    }
+    else{
+        if(req.body.stu_fname == undefined){
+            req.body.stu_fname = ""
         }
-        else {
-            delete student.stu_password
-            response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
-                res.json(result)
+        if(req.body.stu_lname == undefined){
+            req.body.stu_lname = ""
+        }
+        if(req.body.stu_mobile == undefined){
+            req.body.stu_mobile = ""
+        }
+        if(req.body.stu_avatarUrl == undefined){
+            req.body.stu_avatarUrl = ""
+        }
+        if(req.body.stu_score == undefined){
+            req.body.stu_score = ""
+        }
+        if(req.body.stu_lastPassedLesson == undefined){
+            req.body.stu_lastPassedLesson = ""
+        }
+        req.body.stu_password = hashHelper.hash(req.body.stu_password)
+        database.addStu(req.body, (student)=> {
+            if (student == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                delete student.stu_password
+                response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
+                    res.json(result)
 
-            })
-        }
-    })
+                })
+            }
+        })
+    }
+
+
 });
 
 router.post('/student/login', (req, res) => {
@@ -164,19 +189,25 @@ router.post('/student/login', (req, res) => {
 });
 
 router.put('/student/:stdId', (req, res) => {
-    // req.body.stu_password = hashHelper.hash(req.body.stu_password)
-    database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
-        if (Putresult == -1) {
-            res.status(500).end('')
-        }
-        else if (Putresult == 0) {
-            res.status(404).end('')
-        }
-        else {
-            delete Putresult.stu_password
-            res.json(Putresult)
-        }
-    })
+    if(req.body.stu_password  == undefined){
+        res.status(400).end('password is required')
+    }
+    else{
+        req.body.stu_password = hashHelper.hash(req.body.stu_password)
+        database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
+            if (Putresult == -1) {
+                res.status(500).end('')
+            }
+            else if (Putresult == 0) {
+                res.status(404).end('')
+            }
+            else {
+                delete Putresult.stu_password
+                res.json(Putresult)
+            }
+        })
+    }
+
 });
 
 router.get('/student', (req, res) => {
@@ -239,7 +270,6 @@ router.get('/student/best', (req, res) => {
     })
 });
 
-
 router.delete('/student/:stdId', (req, res) => {
     database.delAdmin(req.params.admId, (deleteResult)=> {
         if (deleteResult == -1) {
@@ -260,6 +290,8 @@ router.delete('/student/:stdId', (req, res) => {
         }
     })
 });
+
+// router.
 
 
 module.exports = router

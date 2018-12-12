@@ -44,7 +44,7 @@ router.post('/video', (req, res) => {
 
                     }
                     if (forbidden == true) {
-                        response.validation('یک ویدیو با این اولویت وجود دارد.', '', (result)=> {
+                        response.validation('اولویت فایل وجود دارد', {vd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                             res.json(result)
                         })
                     }
@@ -90,13 +90,13 @@ router.post('/video', (req, res) => {
             })
         }
         else {
-            response.validation('فایلی برای آپلود وجود ندارد.', '', (result)=> {
+            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                 res.json(result)
             })
         }
     }
     else {
-        response.validation('فایلی برای آپلود وجود ندارد.', '', (result)=> {
+        response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile',  (result)=> {
             res.json(result)
         })
     }
@@ -122,7 +122,7 @@ router.post('/sound', (req, res) => {
 
                     }
                     if (forbidden == true) {
-                        response.validation('وویسی با این اولویت وجود دارد.', '', (result)=> {
+                        response.validation('اولویت فایل وجود دارد', {snd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                             res.json(result)
                         })
                     }
@@ -168,13 +168,13 @@ router.post('/sound', (req, res) => {
             })
         }
         else {
-            response.validation('فایلی برای آپلود وجود ندارد.', '', (result)=> {
+            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                 res.json(result)
             })
         }
     }
     else {
-        response.validation('فایلی برای آپلود وجود ندارد.', '', (result)=> {
+        response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
             res.json(result)
         })
     }
@@ -232,7 +232,7 @@ router.put('/video/:vdId', (req, res) => {
 
                                 }
                                 if (forbidden == true) {
-                                    response.validation('فایلی با این اولویت وجود دارد', '', (result)=> {
+                                    response.validation('اولویت فایل وجود دارد', {vd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                                         res.json(result)
                                     })
                                 }
@@ -332,50 +332,73 @@ router.put('/sound/:sndId', (req, res) => {
                     else {
                         if (req.files.file != null) {
                             // type file
-                            var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                            var file = req.files.file.name.replace(`.${extension}`, '');
-                            var newFile = new Date().getTime() + '_' + req.body.snd_order + '.' + extension;
-                            // path is Upload Directory
-                            var dir = `${config.uploadPathSound}/${req.body.snd_lvlId}/${req.body.snd_lsnId}/`;
-                            console.log("dir", dir)
-                            module.exports.addDir(dir, function (newPath) {
-                                var path = dir + newFile;
-                                req.files.file.mv(path, function (err) {
-                                    if (err) {
-                                        console.error(err);
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            database.getSoundByLsnLvl(req.body.snd_lvlId, req.body.snd_lsnId, (sounds)=> {
+                                if (sounds == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    let forbidden = false
+                                    for (var i = 0; i < sounds.length; i++) {
+                                        if (((sounds[i].vd_url.substring(sounds[i].vd_url.lastIndexOf("_") + 1)).substr(0, (sounds[i].vd_url.substring(sounds[i].vd_url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.vd_order) {
+                                            forbidden = true
+                                            break;
+                                        }
+
+                                    }
+                                    if (forbidden == true) {
+                                        response.validation('اولویت فایل وجود دارد', {vd_order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                                             res.json(result)
                                         })
                                     }
                                     else {
-                                        req.body.snd_url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                        database.updateSound(req.body, req.params.sndId, (result)=> {
-                                            if (updateSound == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else if (updateSound == 0) {
-                                                response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else {
-                                                response.responseUpdated('اطلاعات با موفقیت تغییر یافت', updateSound, (result)=> {
-                                                    res.json(result)
+                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                        var file = req.files.file.name.replace(`.${extension}`, '');
+                                        var newFile = new Date().getTime() + '_' + req.body.snd_order + '.' + extension;
+                                        // path is Upload Directory
+                                        var dir = `${config.uploadPathSound}/${req.body.snd_lvlId}/${req.body.snd_lsnId}/`;
+                                        console.log("dir", dir)
+                                        module.exports.addDir(dir, function (newPath) {
+                                            var path = dir + newFile;
+                                            req.files.file.mv(path, function (err) {
+                                                if (err) {
+                                                    console.error(err);
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    req.body.snd_url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                    database.updateSound(req.body, req.params.sndId, (updateSound)=> {
+                                                        if (updateSound == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (updateSound == 0) {
+                                                            response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else {
+                                                            response.responseUpdated('اطلاعات با موفقیت تغییر یافت', updateSound, (result)=> {
+                                                                res.json(result)
 
-                                                })
-                                            }
-                                        })
+                                                            })
+                                                        }
+                                                    })
+                                                }
+
+                                            })
+                                        });
+
                                     }
-
+                                }
                                 })
-                            });
-
-
                         }
                         else {
-                            response.validation('فایلی برای آپلود وجود ندارد.', '', (result)=> {
+                            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                                 res.json(result)
                             })
                         }
@@ -410,7 +433,6 @@ router.put('/sound/:sndId', (req, res) => {
 
     }
 });
-
 
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {

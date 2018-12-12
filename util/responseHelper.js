@@ -58,12 +58,12 @@ module.exports.InternalServer = (message, data, cb)=> {
     cb(info)
 }
 
-module.exports.validation = (message, data, cb)=> {
+module.exports.validation = (message, data, status ,  cb)=> {
     let info = {
-        status: 'validationError',
+        status: status,
         status_code: 400,
         message: message,
-        data: data
+        errors: data
     }
     cb(info)
 };
