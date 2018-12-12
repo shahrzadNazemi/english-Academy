@@ -149,16 +149,18 @@ router.post('/student/register', (req, res)=> {
         req.body.stu_password = hashHelper.hash(req.body.stu_password)
         database.addStu(req.body, (student)=> {
             if (student == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                    res.json(result)
-                })
+                res.status(500).end('')
+                // response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                //     res.json(result)
+                // })
             }
             else {
                 delete student.stu_password
-                response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
-                    res.json(result)
-
-                })
+                res.json(student)
+                // response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
+                //     res.json(result)
+                //
+                // })
             }
         })
     }
