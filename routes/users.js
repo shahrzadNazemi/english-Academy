@@ -156,7 +156,7 @@ router.post('/student/register', (req, res)=> {
             }
             else {
                 delete student.stu_password
-                res.json(student)
+                res.json({userId:student})
                 // response.response('دانشپذیر با موفقیت ثبت شد.', student, (result)=> {
                 //     res.json(result)
                 //
