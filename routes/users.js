@@ -291,7 +291,9 @@ router.delete('/student/:stdId', (req, res) => {
     })
 });
 
-// router.
+router.post('/student/avatar' , (req , res)=>{
+    
+})
 
 
 module.exports = router

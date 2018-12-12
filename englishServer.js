@@ -20,7 +20,7 @@ app.use(cors());
 app.use(fileupload());
 
 app.use(function (req, res, next) {
-    if (req.path.includes('/login' || '/register')) {
+    if (req.path.includes('/login') || req.path.includes('/register')) {
         return next();
     }
     if (!req.headers.authorization) {
