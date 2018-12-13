@@ -92,7 +92,7 @@ router.delete('/admin/:admId', (req, res) => {
             })
         }
         else if (deleteResult == -4) {
-            response.validation('آخرین ادمین قابل حذف شدن نیست.', '', (result)=> {
+            response.validation('آخرین ادمین قابل حذف شدن نیست.', '','lastAdmin' ,  (result)=> {
                 res.json(result)
             })
         }
@@ -175,13 +175,16 @@ router.post('/student/register', (req, res)=> {
                             else {
                                 req.body.stu_avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
                                 req.body.stu_id = (req.body.stu_id.replace(/"/g, ''));
-                                console.log(JSON.parse(JSON.stringify(req.body.stu_id)))
                                 req.body.setAvatar = true
-                                database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.stu_id)), (err, result)=> {
-                                    if (err) {
+                                database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.stu_id)), (result)=> {
+                                    if (result== -1 ) {
                                         res.status(500).end('')
                                     }
+                                        else if(result == 0){
+                                        res.status(404).end('')
+                                    }
                                     else {
+                                        delete  req.body.setAvatar
                                         res.json(req.body)
                                     }
                                 })
