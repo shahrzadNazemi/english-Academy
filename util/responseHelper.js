@@ -61,7 +61,7 @@ module.exports.InternalServer = (message, data, cb)=> {
 module.exports.validation = (message, data, status ,  cb)=> {
     let info = {
         status: status,
-        status_code: 400,
+        status_code: 422,
         message: message,
         errors: data
     }
