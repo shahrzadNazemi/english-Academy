@@ -105,6 +105,29 @@ router.delete('/admin/:admId', (req, res) => {
     })
 });
 
+router.get('/admin/:admId' , (req , res)=>{
+    database.getAdminById(req.params.admId , (admin)=>{
+
+        if (admin == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (admin == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  admin.adm_password
+            response.responseUpdated('اطلاعات کاربر مورد نظر', admin, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+})
+
 router.post('/admin', (req, res)=> {
     req.body.adm_password = hashHelper.hash(req.body.adm_password)
 

@@ -4,8 +4,13 @@ var database = require('../database/database');
 let logger = require('../util/logger');
 let response = require('../util/responseHelper');
 const ajv = require("ajv")({
-    removeAdditional: true
+    removeAdditional: true,
+    $data: true,
+    verbose: true,
+    allErrors: true
 });
+var normalise = require('ajv-error-messages');
+const translate = require('google-translate-api');
 
 
 const level = {
@@ -20,7 +25,26 @@ const level = {
 router.post('/', (req, res)=> {
     let valid = ajv.validate(level, req.body);
     if (!valid) {
-        console.log(ajv.errors)
+        // console.log(ajv.errors)
+        let normalisedErrors = normalise(ajv.errors);
+
+        console.log(normalisedErrors)
+        for(var i =0;i<normalisedErrors.length;i++){
+
+        }
+        // translate('I spea Dutch!', {from: 'en', to: 'fa'}).then(res => {
+        //     console.log(res.text);
+        //     //=> Ik spreek Nederlands!
+        //     console.log(res.from.text.autoCorrected);
+        //     //=> true
+        //     console.log(res.from.text.value);
+        //     //=> I [speak] Dutch!
+        //     console.log(res.from.text.didYouMean);
+        //     //=> false
+        // }).catch(err => {
+        //     console.error(err);
+        // });
+
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
