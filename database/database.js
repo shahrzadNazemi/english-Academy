@@ -725,6 +725,7 @@ module.exports.getAllStu = (cb)=> {
 };
 
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
+    console.log(updateInfo)
     request.put({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
         headers: {"content-Type": "application/json"},

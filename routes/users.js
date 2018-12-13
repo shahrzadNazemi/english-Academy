@@ -4,7 +4,9 @@ var database = require('../database/database');
 let logger = require('../util/logger');
 let jwt = require('../util/jwtHelper');
 let response = require('../util/responseHelper');
-let hashHelper = require('../util/hashHelper')
+let hashHelper = require('../util/hashHelper');
+let config = require('../util/config');
+let lesson = require('./lesson')
 
 
 router.post('/admin/login', (req, res) => {
@@ -47,7 +49,7 @@ router.put('/admin/:admId', (req, res) => {
             })
         }
         else {
-           delete  Putresult.adm_password
+            delete  Putresult.adm_password
             response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
                 res.json(result)
 
@@ -89,7 +91,7 @@ router.delete('/admin/:admId', (req, res) => {
                 res.json(result)
             })
         }
-            else if(deleteResult == -4){
+        else if (deleteResult == -4) {
             response.validation('آخرین ادمین قابل حذف شدن نیست.', '', (result)=> {
                 res.json(result)
             })
@@ -124,29 +126,75 @@ router.post('/admin', (req, res)=> {
 
 router.post('/student/register', (req, res)=> {
 
-    if(req.body.stu_password == undefined || req.body.stu_username == undefined){
+    if (req.body.stu_password == undefined || req.body.stu_username == undefined) {
         res.status(500).end('password is required')
     }
-    else{
-        if(req.body.stu_fname == undefined){
+    else {
+        if (req.body.stu_fname == undefined) {
             req.body.stu_fname = ""
         }
-        if(req.body.stu_lname == undefined){
+        if (req.body.stu_lname == undefined) {
             req.body.stu_lname = ""
         }
-        if(req.body.stu_mobile == undefined){
+        if (req.body.stu_mobile == undefined) {
             req.body.stu_mobile = ""
         }
-        if(req.body.stu_avatarUrl == undefined){
+        if (req.body.stu_avatarUrl == undefined) {
             req.body.stu_avatarUrl = ""
         }
-        if(req.body.stu_score == undefined){
+        if (req.body.stu_score == undefined) {
             req.body.stu_score = ""
         }
-        if(req.body.stu_lastPassedLesson == undefined){
+        if (req.body.stu_lastPassedLesson == undefined) {
             req.body.stu_lastPassedLesson = ""
         }
         req.body.stu_password = hashHelper.hash(req.body.stu_password)
+        if (req.files.file != null) {
+            // type file
+            database.addStu(req.body, (student)=> {
+                if (student == -1) {
+                    res.status(500).end('')
+                }
+                else {
+                    delete student.stu_password
+                    req.body.stu_id = student
+                    // res.json(req.body)
+                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                    var file = req.files.file.name.replace(`.${extension}`, '');
+                    var newFile = new Date().getTime() + '.' + extension;
+                    // path is Upload Directory
+                    var dir = `${config.uploadPathStuImage}/${req.body.stu_id}/`;
+                    console.log("dir", dir)
+                    lesson.addDir(dir, function (newPath) {
+                        var path = dir + newFile;
+                        req.files.file.mv(path, function (err) {
+                            if (err) {
+                                console.error(err);
+                                res.status(500).end('')
+                            }
+                            else {
+                                req.body.stu_avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
+                                req.body.stu_id = (req.body.stu_id.replace(/"/g, ''));
+                                console.log(JSON.parse(JSON.stringify(req.body.stu_id)))
+                                req.body.setAvatar = true
+                                database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.stu_id)), (err, result)=> {
+                                    if (err) {
+                                        res.status(500).end('')
+                                    }
+                                    else {
+                                        res.json(req.body)
+                                    }
+                                })
+                            }
+
+                        })
+                    });
+                }
+            })
+
+
+        }
+        else {
             database.addStu(req.body, (student)=> {
                 if (student == -1) {
                     res.status(500).end('')
@@ -157,6 +205,7 @@ router.post('/student/register', (req, res)=> {
                     res.json(req.body)
                 }
             })
+        }
 
     }
 
@@ -186,10 +235,10 @@ router.post('/student/login', (req, res) => {
 });
 
 router.put('/student/:stdId', (req, res) => {
-    if(req.body.stu_password  == undefined){
+    if (req.body.stu_password == undefined) {
         res.status(400).end('password is required')
     }
-    else{
+    else {
         req.body.stu_password = hashHelper.hash(req.body.stu_password)
         database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
             if (Putresult == -1) {
@@ -252,15 +301,15 @@ router.get('/student/best', (req, res) => {
             res.status(404).end('')
         }
         else {
-            let temp =[]
+            let temp = []
             let length = getResult.length
-            if(length <= 3){
+            if (length <= 3) {
                 res.json(getResult)
             }
-            else{
+            else {
                 temp[0] = getResult[length]
-                temp[1] = getResult[length-1]
-                temp[2] = getResult[length-2]
+                temp[1] = getResult[length - 1]
+                temp[2] = getResult[length - 2]
                 res.json(temp)
             }
         }
@@ -287,10 +336,6 @@ router.delete('/student/:stdId', (req, res) => {
         }
     })
 });
-
-router.post('/student/avatar' , (req , res)=>{
-    
-})
 
 
 module.exports = router

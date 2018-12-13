@@ -8,3 +8,7 @@ module.exports.downloadPathVideo = "http://localhost:9000/upload/video";
 
 module.exports.downloadPathSound = "http://localhost:9000/upload/sound";
 
+module.exports.uploadPathStuImage = "C:/Users/Ardeshir/IdeaProjects/fileAccess/site/upload/student/avatar"
+
+module.exports.downloadPathStuImage= "http://localhost:9000/upload/student/avatar";
+
