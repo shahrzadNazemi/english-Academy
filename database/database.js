@@ -258,9 +258,10 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
     })
 };
 
-module.exports.delAdmin = (admId, cb)=> {
+module.exports.delStudent = (stuId, cb)=> {
+    console.log(stuId)
     request.delete({
-        url: `${config.databaseServer}/api/users/admin/${admId}`,
+        url: `${config.databaseServer}/api/users/student/${stuId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -461,8 +462,8 @@ module.exports.delLesson = (lsnId, cb)=> {
 };
 
 module.exports.delVideo = (vdId, cb)=> {
-    request.get({
-        url: `${config.databaseServer}/api/level`,
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/video/${vdId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -485,8 +486,8 @@ module.exports.delVideo = (vdId, cb)=> {
 };
 
 module.exports.delSound = (sndId, cb)=> {
-    request.get({
-        url: `${config.databaseServer}/api/level`,
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/sound/${sndId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {

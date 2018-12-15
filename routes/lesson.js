@@ -591,45 +591,86 @@ router.delete('/:lsnId', (req, res) => {
 });
 
 router.delete('/video/:vdId', (req, res) => {
-    database.delVideo(req.params.vdId, (result)=> {
-        if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
-                res.json(result)
+    database.getVideoByVDId(req.params.vdId, (video)=> {
+        var unlinkPath = video.vd_url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+        fs.unlink(unlinkPath, function (err) {
+            if (err) {
+                response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                database.delVideo(req.params.vdId, (result)=> {
+                    if (video == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (video == 0) {
+                        response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
+                            res.json(result)
 
-            })
-        }
+                        })
+                    }
+                })
+            }
+
+        })
+
     })
+
 });
 
 router.delete('/sound/:sndId', (req, res) => {
-    database.delSound(req.params.sndId, (result)=> {
-        if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+    database.getSoundBysndId(req.params.sndId, (sound)=> {
+        if (sound == 0 || sound == -1) {
+            response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
-                res.json(result)
+            var unlinkPath = sound.snd_url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+            fs.unlink(unlinkPath, function (err) {
+                if (err) {
+                    console.log("err in unlinking", err)
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    database.delSound(req.params.sndId, (result)=> {
+                        if (result == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == 0) {
+                            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            response.response('فایل مورد نظر حذف شد.', result, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    })
+
+
+                }
 
             })
         }
+
+
     })
+
 });
 
 
