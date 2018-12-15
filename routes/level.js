@@ -16,10 +16,10 @@ const translate = require('google-translate-api');
 const level = {
     type: "object",
     properties: {
-        lvl_title: {type: "string", minLength: 3, maxLength: 20},
-        lvl_description: {type: "string", minLength: 21}
+        title: {type: "string", minLength: 3, maxLength: 20},
+        description: {type: "string", minLength: 21}
     },
-    required: ["lvl_title", "lvl_description"],
+    required: ["title", "description"],
     additionalProperties: false
 };
 router.post('/', (req, res)=> {
@@ -48,24 +48,24 @@ router.post('/', (req, res)=> {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            if (Data == "lvl_title ") {
-                errorData = {"lvl_title": ["وارد کردن عنوان ضروری است."]}
+            if (Data == "title ") {
+                errorData = {"title": ["وارد کردن عنوان ضروری است."]}
             }
             else {
-                errorData = {"lvl_description": ["وارد کردن توضیحات ضروری است."]}
+                errorData = {"description": ["وارد کردن توضیحات ضروری است."]}
             }
         }
         else if (ajv.errors[0].keyword == 'minLength') {
-            if (ajv.errors[0].params.limit == level.properties.lvl_title.minLength) {
+            if (ajv.errors[0].params.limit == level.properties.title.minLength) {
                 errorData = {"lvl_title": ["عنوان نباید کمتر از 3 حرف باشد."]}
 
             }
             else {
-                errorData = {"lvl_description": ["عنوان نباید کمتر از 20 حرف باشد."]}
+                errorData = {"description": ["عنوان نباید کمتر از 20 حرف باشد."]}
             }
         }
         else if (ajv.errors[0].keyword == 'maxLength') {
-            errorData = {"lvl_title": ["عنوان نباید بیشتر از 20 حرف باشد."]}
+            errorData = {"title": ["عنوان نباید بیشتر از 20 حرف باشد."]}
         }
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
             res.json(result)
@@ -95,24 +95,24 @@ router.put('/:lvlId', (req, res)=> {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            if (Data == "lvl_title ") {
-                errorData = {"lvl_title": ["وارد کردن عنوان ضروری است."]}
+            if (Data == "title ") {
+                errorData = {"title": ["وارد کردن عنوان ضروری است."]}
             }
             else {
-                errorData = {"lvl_description": ["وارد کردن توضیحات ضروری است."]}
+                errorData = {"description": ["وارد کردن توضیحات ضروری است."]}
             }
         }
         else if (ajv.errors[0].keyword == 'minLength') {
-            if (ajv.errors[0].params.limit == level.properties.lvl_title.minLength) {
-                errorData = {"lvl_title": ["عنوان نباید کمتر از 20 حرف باشد."]}
+            if (ajv.errors[0].params.limit == level.properties.title.minLength) {
+                errorData = {"title": ["عنوان نباید کمتر از 20 حرف باشد."]}
 
             }
             else {
-                errorData = {"lvl_description": ["عنوان نباید کمتر از 20 حرف باشد."]}
+                errorData = {"description": ["عنوان نباید کمتر از 20 حرف باشد."]}
             }
         }
         else if (ajv.errors[0].keyword == 'maxLength') {
-            errorData = {"lvl_title": ["عنوان نباید بیشتر از 30 حرف باشد."]}
+            errorData = {"title": ["عنوان نباید بیشتر از 30 حرف باشد."]}
         }
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
             res.json(result)

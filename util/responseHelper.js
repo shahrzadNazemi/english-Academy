@@ -78,10 +78,29 @@ module.exports.pagination = (offset, limit, data, cb)=> {
     else {
         for (var i = offset; i < limit; i++) {
             temp[k] = data[i]
-            console.log(data[i])
             k++
         }
-        console.log("temp", temp)
+        cb(temp)
+    }
+
+
+}
+
+module.exports.paginationClient = (page, limit, data, cb)=> {
+    console.log(data)
+    let temp = []
+    let k = 0
+    if (limit > data.length) {
+        cb(data)
+    }
+    else {
+        let offset = limit * (page-1)
+        let limit1 = limit * page
+        for (var i = offset; i < limit1; i++) {
+            temp[k] = data[i]
+            k++
+        }
+console.log(temp)
         cb(temp)
     }
 

@@ -28,7 +28,7 @@ router.post('/video', (req, res) => {
     if (req.files) {
         if (req.files.file != null) {
             // type file    
-            database.getVideoByLsnLvl(req.body.vd_lvlId, req.body.vd_lsnId, (videos)=> {
+            database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                 if (videos == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)
@@ -37,7 +37,7 @@ router.post('/video', (req, res) => {
                 else {
                     let forbidden = false
                     for (var i = 0; i < videos.length; i++) {
-                        if (((videos[i].vd_url.substring(videos[i].vd_url.lastIndexOf("_") + 1)).substr(0, (videos[i].vd_url.substring(videos[i].vd_url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.vd_order) {
+                        if (((videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).substr(0, (videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
                             forbidden = true
                             break;
                         }
@@ -51,9 +51,9 @@ router.post('/video', (req, res) => {
                     else {
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.file.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '_' + req.body.vd_order + '.' + extension;
+                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
                         // path is Upload Directory
-                        var dir = `${config.uploadPathVideo}/${req.body.vd_lvlId}/${req.body.vd_lsnId}/`;
+                        var dir = `${config.uploadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/`;
                         console.log("dir", dir)
                         module.exports.addDir(dir, function (newPath) {
                             var path = dir + newFile;
@@ -65,7 +65,7 @@ router.post('/video', (req, res) => {
                                     })
                                 }
                                 else {
-                                    req.body.vd_url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                    req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
                                     database.addVideo(req.body, (result)=> {
                                         if (result == -1) {
                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
@@ -106,7 +106,7 @@ router.post('/sound', (req, res) => {
     if (req.files) {
         if (req.files.file != null) {
             // type file    
-            database.getSoundByLsnLvl(req.body.snd_lvlId, req.body.snd_lsnId, (sounds)=> {
+            database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                 if (sounds == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)
@@ -115,23 +115,23 @@ router.post('/sound', (req, res) => {
                 else {
                     let forbidden = false
                     for (var i = 0; i < sounds.length; i++) {
-                        if (((sounds[i].snd_url.substring(sounds[i].snd_url.lastIndexOf("_") + 1)).substr(0, (sounds[i].snd_url.substring(sounds[i].snd_url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.snd_order) {
+                        if (((sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).substr(0, (sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
                             forbidden = true
                             break;
                         }
 
                     }
                     if (forbidden == true) {
-                        response.validation('اولویت فایل وجود دارد', {snd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                        response.validation('اولویت فایل وجود دارد', {order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                             res.json(result)
                         })
                     }
                     else {
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.file.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '_' + req.body.snd_order + '.' + extension;
+                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
                         // path is Upload Directory
-                        var dir = `${config.uploadPathSound}/${req.body.snd_lvlId}/${req.body.snd_lsnId}/`;
+                        var dir = `${config.uploadPathSound}/${req.body.lvlId}/${req.body.lsnId}/`;
                         console.log("dir", dir)
                         module.exports.addDir(dir, function (newPath) {
                             var path = dir + newFile;
@@ -143,7 +143,7 @@ router.post('/sound', (req, res) => {
                                     })
                                 }
                                 else {
-                                    req.body.snd_url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                    req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                     database.addSound(req.body, (result)=> {
                                         if (result == -1) {
                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
@@ -206,7 +206,7 @@ router.put('/:lsnId', (req, res) => {
 router.put('/video/:vdId', (req, res) => {
     if (req.files.file) {
         database.getVideoByVDId(req.params.vdId, (video)=> {
-            var unlinkPath = video.vd_url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+            var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
             fs.unlink(unlinkPath, function (err) {
                 if (err) {
                     response.respondNotFound('فایلی یافت نشد', '', (result)=> {
@@ -216,7 +216,7 @@ router.put('/video/:vdId', (req, res) => {
                 else {
                     if (req.files.file != null) {
                         // type file
-                        database.getVideoByLsnLvl(req.body.vd_lvlId, req.body.vd_lsnId, (videos)=> {
+                        database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                             if (videos == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                                     res.json(result)
@@ -225,23 +225,23 @@ router.put('/video/:vdId', (req, res) => {
                             else {
                                 let forbidden = false
                                 for (var i = 0; i < videos.length; i++) {
-                                    if (((videos[i].vd_url.substring(videos[i].vd_url.lastIndexOf("_") + 1)).substr(0, (videos[i].vd_url.substring(videos[i].vd_url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.vd_order) {
+                                    if (((videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).substr(0, (videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
                                         forbidden = true
                                         break;
                                     }
 
                                 }
                                 if (forbidden == true) {
-                                    response.validation('اولویت فایل وجود دارد', {vd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                                    response.validation('اولویت فایل وجود دارد', {order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                                         res.json(result)
                                     })
                                 }
                                 else {
                                     var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                                     var file = req.files.file.name.replace(`.${extension}`, '');
-                                    var newFile = new Date().getTime() + '_' + req.body.vd_order + '.' + extension;
+                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
                                     // path is Upload Directory
-                                    var dir = `${config.uploadPathVideo}/${req.body.vd_lvlId}/${req.body.vd_lsnId}/`;
+                                    var dir = `${config.uploadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/`;
                                     console.log("dir", dir)
                                     module.exports.addDir(dir, function (newPath) {
                                         var path = dir + newFile;
@@ -253,7 +253,7 @@ router.put('/video/:vdId', (req, res) => {
                                                 })
                                             }
                                             else {
-                                                req.body.vd_url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                                req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
                                                 database.updateVideo(req.body, req.params.vdId, (result)=> {
                                                     if (result == -1) {
                                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
@@ -321,7 +321,7 @@ router.put('/sound/:sndId', (req, res) => {
                 })
             }
             else {
-                var unlinkPath = sound.snd_url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+                var unlinkPath = sound.url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
                 fs.unlink(unlinkPath, function (err) {
                     if (err) {
                         console.log("err in unlinking", err)
@@ -332,7 +332,7 @@ router.put('/sound/:sndId', (req, res) => {
                     else {
                         if (req.files.file != null) {
                             // type file
-                            database.getSoundByLsnLvl(req.body.snd_lvlId, req.body.snd_lsnId, (sounds)=> {
+                            database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                                 if (sounds == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                                         res.json(result)
@@ -341,23 +341,23 @@ router.put('/sound/:sndId', (req, res) => {
                                 else {
                                     let forbidden = false
                                     for (var i = 0; i < sounds.length; i++) {
-                                        if (((sounds[i].vd_url.substring(sounds[i].vd_url.lastIndexOf("_") + 1)).substr(0, (sounds[i].vd_url.substring(sounds[i].vd_url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.vd_order) {
+                                        if (((sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).substr(0, (sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
                                             forbidden = true
                                             break;
                                         }
 
                                     }
                                     if (forbidden == true) {
-                                        response.validation('اولویت فایل وجود دارد', {vd_order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                                        response.validation('اولویت فایل وجود دارد', {order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                                             res.json(result)
                                         })
                                     }
                                     else {
                                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                                         var file = req.files.file.name.replace(`.${extension}`, '');
-                                        var newFile = new Date().getTime() + '_' + req.body.snd_order + '.' + extension;
+                                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
                                         // path is Upload Directory
-                                        var dir = `${config.uploadPathSound}/${req.body.snd_lvlId}/${req.body.snd_lsnId}/`;
+                                        var dir = `${config.uploadPathSound}/${req.body.lvlId}/${req.body.lsnId}/`;
                                         console.log("dir", dir)
                                         module.exports.addDir(dir, function (newPath) {
                                             var path = dir + newFile;
@@ -369,7 +369,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                     })
                                                 }
                                                 else {
-                                                    req.body.snd_url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                    req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                     database.updateSound(req.body, req.params.sndId, (updateSound)=> {
                                                         if (updateSound == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -566,23 +566,46 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
             })
         }
     })
+});
+
+router.get('/' , (req , res)=>{
+    database.getAllLessons((sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('وویس مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.paginationClient(req.query.page , req.query.limit , sound , (result1)=>{
+                response.response('اطلاعات مورد نظر یافت شد.', result1, (result)=> {
+res.json(result)
+                })
+            })
+
+        }
+    })
 })
 
 
 router.delete('/:lsnId', (req, res) => {
     database.delLesson(req.params.lsnId, (result)=> {
-        if (video == -1) {
+        if (result == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                 res.json(result)
             })
         }
-        else if (video == 0) {
+        else if (result == 0) {
             response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
+            response.response('ویدیو مورد نظر یافت شد.', result, (result)=> {
                 res.json(result)
 
             })
@@ -592,7 +615,7 @@ router.delete('/:lsnId', (req, res) => {
 
 router.delete('/video/:vdId', (req, res) => {
     database.getVideoByVDId(req.params.vdId, (video)=> {
-        var unlinkPath = video.vd_url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+        var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
         fs.unlink(unlinkPath, function (err) {
             if (err) {
                 response.respondNotFound('فایلی یافت نشد', '', (result)=> {
@@ -634,7 +657,7 @@ router.delete('/sound/:sndId', (req, res) => {
             })
         }
         else {
-            var unlinkPath = sound.snd_url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+            var unlinkPath = sound.url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
             fs.unlink(unlinkPath, function (err) {
                 if (err) {
                     console.log("err in unlinking", err)
