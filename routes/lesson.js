@@ -44,7 +44,7 @@ router.post('/video', (req, res) => {
 
                     }
                     if (forbidden == true) {
-                        response.validation('اولویت فایل وجود دارد', {vd_order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                        response.validation('اولویت فایل وجود دارد', {vd_order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                             res.json(result)
                         })
                     }
@@ -90,13 +90,13 @@ router.post('/video', (req, res) => {
             })
         }
         else {
-            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+            response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                 res.json(result)
             })
         }
     }
     else {
-        response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile',  (result)=> {
+        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
             res.json(result)
         })
     }
@@ -122,7 +122,7 @@ router.post('/sound', (req, res) => {
 
                     }
                     if (forbidden == true) {
-                        response.validation('اولویت فایل وجود دارد', {order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                        response.validation('اولویت فایل وجود دارد', {order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                             res.json(result)
                         })
                     }
@@ -168,13 +168,13 @@ router.post('/sound', (req, res) => {
             })
         }
         else {
-            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+            response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                 res.json(result)
             })
         }
     }
     else {
-        response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
             res.json(result)
         })
     }
@@ -232,7 +232,7 @@ router.put('/video/:vdId', (req, res) => {
 
                                 }
                                 if (forbidden == true) {
-                                    response.validation('اولویت فایل وجود دارد', {order:["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
+                                    response.validation('اولویت فایل وجود دارد', {order: ["اولویت فایل وجود دارد"]}, 'fileOrder', (result)=> {
                                         res.json(result)
                                     })
                                 }
@@ -395,10 +395,10 @@ router.put('/sound/:sndId', (req, res) => {
 
                                     }
                                 }
-                                })
+                            })
                         }
                         else {
-                            response.validation('فایلی برای آپلود وجود ندارد.', {file:["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                            response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                                 res.json(result)
                             })
                         }
@@ -436,7 +436,7 @@ router.put('/sound/:sndId', (req, res) => {
 
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
-        if(req.query.cli == 1){
+        if (req.query.cli == 1) {
             if (lesson == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                     res.json(result)
@@ -461,20 +461,20 @@ router.get('/level/:lvlId', (req, res) => {
 
             }
         }
-        else{
-            if(lesson == -1){
+        else {
+            if (lesson == -1) {
                 res.status(500).end('')
             }
-            else if(lesson == 0){
+            else if (lesson == 0) {
                 res.status(404).end('')
             }
-            else{
-                if(req.query.offset && req.query.limit){
-                    response.pagination(req.query.offset ,req.query.limit , lesson , (resp)=>{
+            else {
+                if (req.query.offset && req.query.limit) {
+                    response.pagination(req.query.offset, req.query.limit, lesson, (resp)=> {
                         res.json(resp)
-                    } )
+                    })
                 }
-                else{
+                else {
                     res.json(lesson)
 
                 }
@@ -568,7 +568,7 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
     })
 });
 
-router.get('/' , (req , res)=>{
+router.get('/', (req, res)=> {
     database.getAllLessons((sound)=> {
         if (sound == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -581,9 +581,10 @@ router.get('/' , (req , res)=>{
             })
         }
         else {
-            response.paginationClient(req.query.page , req.query.limit , sound , (result1)=>{
-                response.response('اطلاعات مورد نظر یافت شد.', result1, (result)=> {
-res.json(result)
+            response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                let countPages = sound.length/req.query.limit
+                response.response(countPages, result1 , (result)=> {
+                    res.json(result)
                 })
             })
 
