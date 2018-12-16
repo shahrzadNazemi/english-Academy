@@ -172,53 +172,55 @@ router.post('/student/register', (req, res)=> {
             req.body.lastPassedLesson = ""
         }
         req.body.password = hashHelper.hash(req.body.password)
-        if (req.files.file != null) {
-            // type file
-            database.addStu(req.body, (student)=> {
-                if (student == -1) {
-                    res.status(500).end('')
-                }
-                else {
-                    delete student.password
-                    req.body.id = student
-                    // res.json(req.body)
-                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                    var file = req.files.file.name.replace(`.${extension}`, '');
-                    var newFile = new Date().getTime() + '.' + extension;
-                    // path is Upload Directory
-                    var dir = `${config.uploadPathStuImage}/${req.body.id}/`;
-                    console.log("dir", dir)
-                    lesson.addDir(dir, function (newPath) {
-                        var path = dir + newFile;
-                        req.files.file.mv(path, function (err) {
-                            if (err) {
-                                console.error(err);
-                                res.status(500).end('')
-                            }
-                            else {
-                                req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
-                                req.body.id = (req.body.stu_id.replace(/"/g, ''));
-                                req.body.setAvatar = true
-                                database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.id)), (result)=> {
-                                    if (result== -1 ) {
-                                        res.status(500).end('')
-                                    }
+        if(req.files){
+            if (req.files.file != null) {
+                // type file
+                database.addStu(req.body, (student)=> {
+                    if (student == -1) {
+                        res.status(500).end('')
+                    }
+                    else {
+                        delete student.password
+                        req.body.id = student
+                        // res.json(req.body)
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathStuImage}/${req.body.id}/`;
+                        console.log("dir", dir)
+                        lesson.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    res.status(500).end('')
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
+                                    req.body.id = (req.body.stu_id.replace(/"/g, ''));
+                                    req.body.setAvatar = true
+                                    database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.id)), (result)=> {
+                                        if (result== -1 ) {
+                                            res.status(500).end('')
+                                        }
                                         else if(result == 0){
-                                        res.status(404).end('')
-                                    }
-                                    else {
-                                        delete  req.body.setAvatar
-                                        res.json(req.body)
-                                    }
-                                })
-                            }
+                                            res.status(404).end('')
+                                        }
+                                        else {
+                                            delete  req.body.setAvatar
+                                            res.json(req.body)
+                                        }
+                                    })
+                                }
 
-                        })
-                    });
-                }
-            })
+                            })
+                        });
+                    }
+                })
 
 
+            }
         }
         else {
             database.addStu(req.body, (student)=> {
