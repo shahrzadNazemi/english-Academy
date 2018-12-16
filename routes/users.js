@@ -179,6 +179,8 @@ router.post('/student/register', (req, res)=> {
                     if (student == -1) {
                         res.status(500).end('')
                     }
+                    else if(student == -2){
+                        res.status(403).end('')}
                     else {
                         delete student.password
                         req.body.id = student
@@ -226,6 +228,9 @@ router.post('/student/register', (req, res)=> {
             database.addStu(req.body, (student)=> {
                 if (student == -1) {
                     res.status(500).end('')
+                }
+                    else if(student == -2){
+                    res.status(403).end('')
                 }
                 else {
                     delete student.password

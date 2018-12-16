@@ -691,6 +691,9 @@ module.exports.addStu = (stuInfo, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
+            else if(response.statusCode== 403){
+            cb(-2)
+        }
         else {
             logger.info("response body", body)
             cb(body)
