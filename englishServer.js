@@ -13,7 +13,7 @@ let level = require('./routes/level');
 let lesson = require('./routes/lesson');
 
 app.use(logger);
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'50mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());

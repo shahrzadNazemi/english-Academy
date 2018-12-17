@@ -92,7 +92,7 @@ router.delete('/admin/:admId', (req, res) => {
             })
         }
         else if (deleteResult == -4) {
-            response.validation('آخرین ادمین قابل حذف شدن نیست.', '','lastAdmin' ,  (result)=> {
+            response.validation('آخرین ادمین قابل حذف شدن نیست.', '', 'lastAdmin', (result)=> {
                 res.json(result)
             })
         }
@@ -105,8 +105,8 @@ router.delete('/admin/:admId', (req, res) => {
     })
 });
 
-router.get('/admin/:admId' , (req , res)=>{
-    database.getAdminById(req.params.admId , (admin)=>{
+router.get('/admin/:admId', (req, res)=> {
+    database.getAdminById(req.params.admId, (admin)=> {
 
         if (admin == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -126,7 +126,7 @@ router.get('/admin/:admId' , (req , res)=>{
             })
         }
     })
-})
+});
 
 router.post('/admin', (req, res)=> {
     req.body.password = hashHelper.hash(req.body.password)
@@ -172,15 +172,17 @@ router.post('/student/register', (req, res)=> {
             req.body.lastPassedLesson = ""
         }
         req.body.password = hashHelper.hash(req.body.password)
-        if(req.files){
+        if (req.body.file) {
+            console.log(req.files)
             if (req.files.file != null) {
                 // type file
                 database.addStu(req.body, (student)=> {
                     if (student == -1) {
                         res.status(500).end('')
                     }
-                    else if(student == -2){
-                        res.status(403).end('')}
+                    else if (student == -2) {
+                        res.status(403).end('')
+                    }
                     else {
                         delete student.password
                         req.body.id = student
@@ -200,13 +202,13 @@ router.post('/student/register', (req, res)=> {
                                 }
                                 else {
                                     req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
-                                    req.body.id = (req.body.stu_id.replace(/"/g, ''));
+                                    req.body.id = (req.body.id.replace(/"/g, ''));
                                     req.body.setAvatar = true
                                     database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.id)), (result)=> {
-                                        if (result== -1 ) {
+                                        if (result == -1) {
                                             res.status(500).end('')
                                         }
-                                        else if(result == 0){
+                                        else if (result == 0) {
                                             res.status(404).end('')
                                         }
                                         else {
@@ -229,7 +231,7 @@ router.post('/student/register', (req, res)=> {
                 if (student == -1) {
                     res.status(500).end('')
                 }
-                    else if(student == -2){
+                else if (student == -2) {
                     res.status(403).end('')
                 }
                 else {
@@ -350,22 +352,62 @@ router.get('/student/best', (req, res) => {
 });
 
 router.delete('/student/:stdId', (req, res) => {
-    database.delStudent(req.params.stdId, (deleteResult)=> {
-        if (deleteResult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
+    database.getStudentById(req, params.stdId, (getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
         }
-        else if (deleteResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
+        else if (getResult == 0) {
+            res.status(404).end('')
         }
         else {
-            response.respondDeleted('اطلاعات مورد نظر حذف شد.', deleteResult, (result)=> {
-                res.json(result)
+            if (getResult.avatarUrl) {
+                var unlinkPath = getResult.url.replace(`${config.downloadPathStuImage}`, `${config.uploadPathStuImage}`);
+                fs.unlink(unlinkPath, function (err) {
+                    if (err) {
+                        res.status(500).end('')
+                    }
+                    else {
+                        database.delStudent(req.params.stdId, (deleteResult)=> {
+                            if (deleteResult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (deleteResult == 0) {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                response.respondDeleted('اطلاعات مورد نظر حذف شد.', deleteResult, (result)=> {
+                                    res.json(result)
 
-            })
+                                })
+                            }
+                        });
+                    }
+                })
+            }
+            else {
+                database.delStudent(req.params.stdId, (deleteResult)=> {
+                    if (deleteResult == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (deleteResult == 0) {
+                        response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.respondDeleted('اطلاعات مورد نظر حذف شد.', deleteResult, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
+            }
         }
     })
 });
