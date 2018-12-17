@@ -172,7 +172,7 @@ router.post('/student/register', (req, res)=> {
             req.body.lastPassedLesson = ""
         }
         req.body.password = hashHelper.hash(req.body.password)
-        if (req.body.file) {
+        if (req.files.file) {
             console.log(req.files)
             if (req.files.file != null) {
                 // type file
