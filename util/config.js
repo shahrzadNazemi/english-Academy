@@ -10,5 +10,5 @@ module.exports.downloadPathSound = "http://localhost:9000/upload/sound";
 
 module.exports.uploadPathStuImage = "/var/fileAccess/site/upload/student/avatar"
 
-module.exports.downloadPathStuImage= "http://185.94.99.69:9000/upload/student/avatar";
+module.exports.downloadPathStuImage= "http://localhost:9000/upload/student/avatar";
 
