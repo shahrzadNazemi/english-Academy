@@ -582,8 +582,9 @@ router.get('/', (req, res)=> {
         }
         else {
             response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
-                let countPages = sound.length/req.query.limit
-                response.response(countPages, result1 , (result)=> {
+                let countPages = Math.ceil(sound.length/req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی درسها', result1 , (result)=> {
                     res.json(result)
                 })
             })

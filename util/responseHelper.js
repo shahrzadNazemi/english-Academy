@@ -19,13 +19,28 @@ module.exports.responseUpdated = (message, data, cb)=> {
 }
 
 module.exports.response = (message, data, cb)=> {
-    let info = {
-        status: 'success',
-        status_code: 200,
-        message: message,
-        data: data
+    if(data.totalPage == undefined){
+        let info = {
+            status: 'success',
+            status_code: 200,
+            message: message,
+            data: data
+        }
+        cb(info)
     }
-    cb(info)
+    else{
+        let totalPage = data.totalPage
+        delete data.totalPage
+        let info = {
+            status: 'success',
+            status_code: 200,
+            message: message,
+            totalPage:totalPage,
+            data: data
+        }
+        cb(info)
+    }
+    
 }
 
 module.exports.respondDeleted = (message, data, cb)=> {
@@ -97,10 +112,12 @@ module.exports.paginationClient = (page, limit, data, cb)=> {
         let offset = limit * (page-1)
         let limit1 = limit * page
         for (var i = offset; i < limit1; i++) {
-            temp[k] = data[i]
-            k++
+            if(data[i]!= undefined){
+                temp[k] = data[i]
+                k++
+            }
+
         }
-console.log(temp)
         cb(temp)
     }
 
