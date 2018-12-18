@@ -172,8 +172,7 @@ router.post('/student/register', (req, res)=> {
             req.body.lastPassedLesson = ""
         }
         req.body.password = hashHelper.hash(req.body.password)
-        if (req.files.file) {
-            console.log(req.files)
+        if (req.files) {
             if (req.files.file != null) {
                 // type file
                 database.addStu(req.body, (student)=> {
@@ -185,13 +184,13 @@ router.post('/student/register', (req, res)=> {
                     }
                     else {
                         delete student.password
-                        req.body.id = student
+                        req.body._id = student
                         // res.json(req.body)
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.file.name.replace(`.${extension}`, '');
                         var newFile = new Date().getTime() + '.' + extension;
                         // path is Upload Directory
-                        var dir = `${config.uploadPathStuImage}/${req.body.id}/`;
+                        var dir = `${config.uploadPathStuImage}/${req.body._id}/`;
                         console.log("dir", dir)
                         lesson.addDir(dir, function (newPath) {
                             var path = dir + newFile;
@@ -202,9 +201,9 @@ router.post('/student/register', (req, res)=> {
                                 }
                                 else {
                                     req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
-                                    req.body.id = (req.body.id.replace(/"/g, ''));
+                                    req.body._id = (req.body._id.replace(/"/g, ''));
                                     req.body.setAvatar = true
-                                    database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body.id)), (result)=> {
+                                    database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
                                         if (result == -1) {
                                             res.status(500).end('')
                                         }
@@ -213,6 +212,8 @@ router.post('/student/register', (req, res)=> {
                                         }
                                         else {
                                             delete  req.body.setAvatar
+                                            delete req.body.password
+                                            req.body.jwt = jwt.signUser(req.body.username)
                                             res.json(req.body)
                                         }
                                     })
@@ -235,8 +236,10 @@ router.post('/student/register', (req, res)=> {
                     res.status(403).end('')
                 }
                 else {
-                    delete student.password
-                    req.body.id = student
+
+                    delete req.body.password
+                    req.body._id = student
+                    req.body.jwt = jwt.signUser(req.body.username)
                     res.json(req.body)
                 }
             })
