@@ -19,7 +19,7 @@ module.exports.responseUpdated = (message, data, cb)=> {
 }
 
 module.exports.response = (message, data, cb)=> {
-    if(data.totalPage == undefined){
+    if (data.totalPage == undefined) {
         let info = {
             status: 'success',
             status_code: 200,
@@ -28,19 +28,19 @@ module.exports.response = (message, data, cb)=> {
         }
         cb(info)
     }
-    else{
+    else {
         let totalPage = data.totalPage
         delete data.totalPage
         let info = {
             status: 'success',
             status_code: 200,
             message: message,
-            totalPage:totalPage,
+            totalPage: totalPage,
             data: data
         }
         cb(info)
     }
-    
+
 }
 
 module.exports.respondDeleted = (message, data, cb)=> {
@@ -73,7 +73,7 @@ module.exports.InternalServer = (message, data, cb)=> {
     cb(info)
 }
 
-module.exports.validation = (message, data, status ,  cb)=> {
+module.exports.validation = (message, data, status, cb)=> {
     let info = {
         status: status,
         status_code: 422,
@@ -102,21 +102,19 @@ module.exports.pagination = (offset, limit, data, cb)=> {
 }
 
 module.exports.paginationClient = (page, limit, data, cb)=> {
-    console.log(data)
     let temp = []
     let k = 0
     if (limit > data.length) {
         cb(data)
     }
     else {
-        let offset = limit * (page-1)
+        let offset = limit * (page - 1)
         let limit1 = limit * page
         for (var i = offset; i < limit1; i++) {
-            if(data[i]!= undefined){
+            if (data[i] != undefined) {
                 temp[k] = data[i]
                 k++
             }
-
         }
         cb(temp)
     }

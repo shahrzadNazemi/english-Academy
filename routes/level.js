@@ -32,18 +32,6 @@ router.post('/', (req, res)=> {
         for(var i =0;i<normalisedErrors.length;i++){
 
         }
-        // translate('I spea Dutch!', {from: 'en', to: 'fa'}).then(res => {
-        //     console.log(res.text);
-        //     //=> Ik spreek Nederlands!
-        //     console.log(res.from.text.autoCorrected);
-        //     //=> true
-        //     console.log(res.from.text.value);
-        //     //=> I [speak] Dutch!
-        //     console.log(res.from.text.didYouMean);
-        //     //=> false
-        // }).catch(err => {
-        //     console.error(err);
-        // });
 
         let errorData
         if (ajv.errors[0].keyword == 'required') {
@@ -139,7 +127,7 @@ router.put('/:lvlId', (req, res)=> {
         })
 
     }
-})
+});
 
 router.delete('/:lvlId', (req, res)=> {
     database.delLevel(req.params.lvlId, (delResult)=> {

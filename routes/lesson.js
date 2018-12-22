@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
             })
         }
         else {
-            response.response('اطلاعات مورد نظر ثبت شد.', lesson, (result)=> {
+            response.responseCreated('اطلاعات مورد نظر ثبت شد.', lesson, (result)=> {
                 res.json(result)
 
             })
