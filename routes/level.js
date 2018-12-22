@@ -141,6 +141,11 @@ router.delete('/:lvlId', (req, res)=> {
                 res.json(result)
             })
         }
+            else if(delResult == -3){
+            response.validation('سطح قابل حذف شدن نیست.', '', 'hasLesson', (result)=> {
+                res.json(result)
+            })
+        }
         else {
             response.respondDeleted('اطلاعات با موفقیت حذف شد.', delResult, (result)=> {
                 res.json(result)

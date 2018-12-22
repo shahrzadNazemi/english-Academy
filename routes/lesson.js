@@ -434,6 +434,8 @@ router.put('/sound/:sndId', (req, res) => {
     }
 });
 
+
+
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
         if (req.query.cli == 1) {
@@ -498,6 +500,27 @@ router.get('/:lsnId/video', (req, res) => {
         }
         else {
             response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/:lsnId', (req, res) => {
+    database.getLessonById(req.params.lsnId , (lesson)=> {
+        if (lesson == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (lesson == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('درس مورد نظر یافت شد.', lesson, (result)=> {
                 res.json(result)
 
             })
@@ -591,7 +614,7 @@ router.get('/', (req, res)=> {
 
         }
     })
-})
+});
 
 
 router.delete('/:lsnId', (req, res) => {
