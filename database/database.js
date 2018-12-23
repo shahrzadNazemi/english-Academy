@@ -100,6 +100,10 @@ module.exports.addType = (typeInfo, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+
         else {
             logger.info("response body", body)
             cb(body)

@@ -283,6 +283,13 @@ router.post('/type', (req, res)=> {
                     res.json(result)
                 })
             }
+                else if(type == -3){
+                let data = {"title":"عنوان نباید تکراری باشد"}
+                response.validation('اطلاعات وارد شده اشتباه است.' ,data , 'duplicated' , (result)=>{
+                    res.json(result)
+
+                } )
+            }
             else {
                 response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
                     res.json(result)
@@ -649,7 +656,7 @@ router.get('/selective', (req, res)=> {
 
             for (var i = 0; i < lesson.length; i++) {
                 temp[i]= {}
-                temp[i].Lable = lesson[i].title;
+                temp[i].Label = lesson[i].title;
                 temp[i].value = lesson[i]._id
                 console.log(temp)
             }
