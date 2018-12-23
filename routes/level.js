@@ -96,7 +96,7 @@ router.put('/:lvlId', (req, res)=> {
 
             }
             else {
-                errorData = {"description": ["عنوان نباید کمتر از 20 حرف باشد."]}
+                errorData = {"description": ["توضیحات  نباید کمتر از 20 حرف باشد."]}
             }
         }
         else if (ajv.errors[0].keyword == 'maxLength') {
