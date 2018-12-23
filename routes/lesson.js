@@ -23,7 +23,7 @@ const lesson = {
         lvlId: {type: "string"},
         title: {type: "string"}
     },
-    required: ["lvlId" , "title"],
+    required: ["lvlId", "title"],
     additionalProperties: false
 };
 const type = {
@@ -681,6 +681,35 @@ router.get('/selective', (req, res)=> {
         }
     })
 });
+router.get('/type', (req, res)=> {
+    database.getAllTypes((type)=> {
+        if (type == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (type == 0) {
+            response.respondNotFound('نوع مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let temp = []
+
+            for (var i = 0; i < type.length; i++) {
+                temp[i] = {}
+                temp[i].label = type[i].title;
+                temp[i].value = type[i]._id
+                console.log(temp)
+            }
+            response.response('اطلاعات انواع فایل', temp, (result1)=> {
+                res.json(result1)
+            })
+
+        }
+    })
+});
+
 
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (lesson)=> {
@@ -790,6 +819,7 @@ router.get('/', (req, res)=> {
         }
     })
 });
+
 
 
 router.delete('/:lsnId', (req, res) => {

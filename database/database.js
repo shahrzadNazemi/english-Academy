@@ -265,6 +265,30 @@ module.exports.getAdmins = (cb)=> {
     })
 };
 
+module.exports.getAllTypes = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/type`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateAdmin = (updateInfo, admId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/users/admin/${admId}`,
@@ -337,6 +361,9 @@ module.exports.addLesson = (lsnInfo, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
         }
         else {
             logger.info("response body", body)
