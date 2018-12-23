@@ -21,8 +21,9 @@ const lesson = {
     type: "object",
     properties: {
         lvlId: {type: "string"},
+        title: {type: "string"}
     },
-    required: ["lvlId"],
+    required: ["lvlId" , "title"],
     additionalProperties: false
 };
 const type = {
@@ -41,8 +42,15 @@ router.post('/', (req, res) => {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            errorData = {"lvlId": ["وارد کردن شناسه ی سطح ضروری است."]}
+            console.log(Data)
+            if (Data == lvlId) {
+                errorData = {"lvlId": ["وارد کردن شناسه ی سطح ضروری است."]}
+            }
+            else {
+                errorData = {"title": ["وارد کردن نام درس ضروری است."]}
+            }
         }
+
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
             res.json(result)
         })
@@ -51,6 +59,12 @@ router.post('/', (req, res) => {
         database.addLesson(req.body, (lesson)=> {
             if (lesson == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (lesson == -3) {
+                let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
                     res.json(result)
                 })
             }
@@ -283,12 +297,12 @@ router.post('/type', (req, res)=> {
                     res.json(result)
                 })
             }
-                else if(type == -3){
-                let data = {"title":"عنوان نباید تکراری باشد"}
-                response.validation('اطلاعات وارد شده اشتباه است.' ,data , 'duplicated' , (result)=>{
+            else if (type == -3) {
+                let data = {"title": "عنوان نباید تکراری باشد"}
+                response.validation('اطلاعات وارد شده اشتباه است.', data, 'duplicated', (result)=> {
                     res.json(result)
 
-                } )
+                })
             }
             else {
                 response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
@@ -655,8 +669,8 @@ router.get('/selective', (req, res)=> {
             let temp = []
 
             for (var i = 0; i < lesson.length; i++) {
-                temp[i]= {}
-                temp[i].Label = lesson[i].title;
+                temp[i] = {}
+                temp[i].label = lesson[i].title;
                 temp[i].value = lesson[i]._id
                 console.log(temp)
             }
