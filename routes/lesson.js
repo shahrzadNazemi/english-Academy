@@ -90,6 +90,7 @@ router.post('/', (req, res) => {
 });
 
 router.post('/video', (req, res) => {
+    console.log(req.body)
     let valid = ajv.validate(video, req.body);
     if (!valid) {
         let errorData
@@ -913,6 +914,31 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
                 res.json(result)
 
             })
+        }
+    })
+});
+
+router.get('/video', (req, res)=> {
+        database.getAllVideo((video)=> {
+        if (video == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (video == 0) {
+            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.paginationClient(req.query.page, req.query.limit, video, (result1)=> {
+                let countPages = Math.ceil(video.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی ویدیوها', result1, (result)=> {
+                    res.json(result)
+                })
+            })
+
         }
     })
 });
