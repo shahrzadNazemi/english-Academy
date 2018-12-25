@@ -834,6 +834,31 @@ router.get('/type', (req, res)=> {
     })
 });
 
+router.get('/video', (req, res)=> {
+    database.getAllVideo((video)=> {
+        if (video == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (video == 0) {
+            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.paginationClient(req.query.page, req.query.limit, video, (result1)=> {
+                let countPages = Math.ceil(video.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی ویدیوها', result1, (result)=> {
+                    res.json(result)
+                })
+            })
+
+        }
+    })
+});
+
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (lesson)=> {
         if (lesson == -1) {
@@ -918,30 +943,6 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
     })
 });
 
-router.get('/video', (req, res)=> {
-        database.getAllVideo((video)=> {
-        if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else if (video == 0) {
-            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', '', (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.paginationClient(req.query.page, req.query.limit, video, (result1)=> {
-                let countPages = Math.ceil(video.length / req.query.limit)
-                result1.totalPage = countPages
-                response.response('اطلاعات همه ی ویدیوها', result1, (result)=> {
-                    res.json(result)
-                })
-            })
-
-        }
-    })
-});
 
 router.get('/', (req, res)=> {
     database.getAllLessons((sound)=> {
