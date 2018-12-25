@@ -1,6 +1,6 @@
 module.exports.databaseServer = 'http://localhost:9090'
 
-module.exports.uploadPathVideo = "/var/fileAccess/site/upload/video";
+module.exports.uploadPathVideo = "C:/Users/Ardeshir/IdeaProjects/fileAccess/site/upload/video";
 
 module.exports.uploadPathSound = "/var/fileAccess/site/upload/sound";
 

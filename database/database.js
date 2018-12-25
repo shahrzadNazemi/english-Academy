@@ -448,9 +448,10 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
 };
 
 module.exports.updateVideo = (updateInfo, vdId, cb)=> {
-    request.get({
-        url: `${config.databaseServer}/api/level`,
+    request.put({
+        url: `${config.databaseServer}/api/lesson/video/${vdId}`,
         headers: {"content-Type": "application/json"},
+        body:updateInfo,
         json: true
     }, function (err, response, body) {
         if (err) {
