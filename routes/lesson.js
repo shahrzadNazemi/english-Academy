@@ -254,7 +254,7 @@ router.post('/sound', (req, res) => {
             res.json(result)
         })
     }
-    else{
+    else {
         if (req.files) {
             if (req.files.file != null) {
                 // type file
@@ -457,7 +457,7 @@ router.put('/video/:vdId', (req, res) => {
                         res.json(result)
                     })
                 }
-                else{
+                else {
                     var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                     fs.unlink(unlinkPath, function (err) {
                         if (err) {
@@ -649,7 +649,7 @@ router.put('/sound/:sndId', (req, res) => {
             res.json(result)
         })
     }
-    else{
+    else {
         if (req.files.file) {
             database.getSoundBysndId(req.params.sndId, (sound)=> {
                 if (sound == 0 || sound == -1) {
@@ -940,6 +940,26 @@ router.get('/video', (req, res)=> {
                     res.json(result)
                 })
             })
+        }
+    })
+});
+
+router.get('/video/:vdId', (req, res)=> {
+    database.getVideoByVDId(req.params.vdId, (video)=> {
+        if (video == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (video == 0) {
+            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات ویدیو', video, (result)=> {
+                res.json(result)
+            })
 
         }
     })
@@ -1088,7 +1108,7 @@ router.delete('/video/:vdId', (req, res) => {
                 res.json(result)
             })
         }
-        else{
+        else {
             var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
             fs.unlink(unlinkPath, function (err) {
                 if (err) {
@@ -1117,7 +1137,7 @@ router.delete('/video/:vdId', (req, res) => {
                                     })
                                 }
                                 else {
-                                    response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
+                                    response.response('ویدیو مورد نظر حذف شد.', video, (result)=> {
                                         res.json(result)
 
                                     })
@@ -1136,7 +1156,7 @@ router.delete('/video/:vdId', (req, res) => {
 router.delete('/sound/:sndId', (req, res) => {
     database.getSoundBysndId(req.params.sndId, (sound)=> {
         if (sound == 0 || sound == -1) {
-            response.respondNotFound('صدای مورد نظر یافت نشد.', {} , (result)=> {
+            response.respondNotFound('صدای مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
