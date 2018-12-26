@@ -1104,7 +1104,7 @@ router.delete('/video/:vdId', (req, res) => {
             })
         }
         else if (video == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -1137,7 +1137,7 @@ router.delete('/video/:vdId', (req, res) => {
                                     })
                                 }
                                 else {
-                                    response.response('ویدیو مورد نظر حذف شد.', video, (result)=> {
+                                    response.response('ویدیو مورد نظر حذف شد.', result, (result)=> {
                                         res.json(result)
 
                                     })

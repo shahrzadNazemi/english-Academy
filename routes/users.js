@@ -305,6 +305,24 @@ router.post('/student/login', (req, res) => {
     })
 });
 
+router.post('/student/placement', (req, res)=> {
+    if (req.body.lsnId != undefined) {
+        let errData = {"lsnId": "وارد کردن شناسه ی درس ضروری است."}
+        response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
+            res.json(result)
+        })
+    }
+    else{
+        if(req.body.lsnId == 0){
+            
+        }
+        else{
+            database.stuPlacement()
+
+        }
+    }
+});
+
 router.put('/student/:stdId', (req, res) => {
     if (req.body.stu_password == undefined) {
         let errData = {"password": "پسورد را وارد کنید"}
