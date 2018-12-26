@@ -3,6 +3,7 @@ var request = require('request')
 var logger = require("../util/logger");
 var config = require('../util/config');
 var util = require('util')
+let fs = require('fs')
 
 
 module.exports.adminLogin = (loginData, cb)=> {
@@ -74,6 +75,9 @@ module.exports.addLevel = (levelInfo, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+            else if(response.statusCode == 403){
+            cb(-2)
         }
         else {
             logger.info("response body", body)
