@@ -10,8 +10,8 @@ const ajv = require("ajv")({
     allErrors: true
 });
 var normalise = require('ajv-error-messages');
-const translate = require('google-translate-api');
-
+let lesson = require('./lesson');
+let config = require('../util/config')
 
 const level = {
     type: "object",
@@ -59,19 +59,83 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
-        database.addLevel(req.body, (addResult)=> {
-            if (addResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                    res.json(result)
+        if (req.files) {
+            if (req.files.file != null) {
+                // type file
+                database.addLevel(req.body, (level)=> {
+                    if (level == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        req.body._id = level
+                        // res.json(req.body)
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathLevelImage}/${req.body._id}/`;
+                        console.log("dir", dir)
+                        lesson.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathLevelImage}`, `${config.downloadPathLevelImage}`)
+                                    req.body._id = (req.body._id.replace(/"/g, ''));
+                                    database.updateLevel(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                        if (result == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (result == 0) {
+                                            response.respondNotFound('کاربر مورد نظر یافت نشد', '', (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
+                                                res.json(result)
 
+                                            })
+                                        }
+                                    })
+                                }
+
+                            })
+                        });
+                    }
                 })
             }
-        })
+            else{
+                let errData = {"file":"فایلی به این نام فرستاده نشده است" }
+                response.validation('فایلی به این نام فرستاده نشده است' , errData , "required" , (result)=>{
+                    res.json(result)
+                })
+            }
+        }
+        else{
+            database.addLevel(req.body, (addResult)=> {
+                if (addResult == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+        }
 
     }
 })

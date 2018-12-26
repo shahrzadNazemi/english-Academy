@@ -240,8 +240,6 @@ router.post('/student/register', (req, res)=> {
                         });
                     }
                 })
-
-
             }
         }
         else {
@@ -291,7 +289,7 @@ router.post('/student/login', (req, res) => {
             })
         }
         else if (loginResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {} , (result)=> {
                 res.json(result)
             })
         }
@@ -391,8 +389,41 @@ router.get('/student/best', (req, res) => {
     })
 });
 
-router.get('/student/level/best', (req, res) => {
-    
+router.get('/student/level/best/:lsnId', (req, res) => {
+    database.getLessonById(req.params.lsnId , (lesson)=>{
+        if (lesson == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+
+        }
+        else if (lesson == 0) {
+            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                res.json(result)
+            })
+
+        } else {
+            let lvlId = lesson.lvlId
+            database.getStudentByLevel(lvlId ,(student)=>{
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+
+                }
+                else if (lesson == 0) {
+                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else{
+                    response.response('اطلاعات بهترین دانش آموزان این سطح' , student , (result1)=>{
+                        res.json(result1)
+                    })
+                }
+            } )
+        }
+    })
     database.getAllStu((getResult)=> {
         if (getResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {

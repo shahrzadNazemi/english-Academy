@@ -993,7 +993,7 @@ router.get('/:lsnId/video/:lvlId', (req, res)=> {
             })
         }
     })
-})
+});
 
 router.get('/:lsnId/sound/:lvlId', (req, res)=> {
     database.getSoundByLsnLvl(req.params.lvlId, req.params.lsnId, (sound)=> {
@@ -1015,7 +1015,6 @@ router.get('/:lsnId/sound/:lvlId', (req, res)=> {
         }
     })
 });
-
 
 router.get('/', (req, res)=> {
     database.getAllLessons((sound)=> {
