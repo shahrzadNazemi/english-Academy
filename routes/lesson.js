@@ -626,21 +626,23 @@ router.put('/video/:vdId', (req, res) => {
             }
         }
         else {
-            database.getLessonById(req.body.lsnId, (lesson)=> {
-                if (lesson == -1) {
+            database.getVideoByVDId(req.params.vdId, (video)=> {
+                if (video == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
 
                 }
-                else if (lesson == 0) {
+                else if (video == 0) {
                     response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                         res.json(result)
                     })
 
                 }
                 else {
-                    database.updateVideo(req.body, req.params.vdId, (result)=> {
+                    var newVideo = Object.assign(req.body, video)
+
+                    database.updateVideo(newVideo , req.params.vdId , (result)=> {
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
