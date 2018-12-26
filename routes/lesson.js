@@ -384,7 +384,7 @@ router.post('/type', (req, res)=> {
             }
         })
     }
-})
+});
 
 
 router.put('/:lsnId', (req, res) => {
@@ -445,7 +445,7 @@ router.put('/video/:vdId', (req, res) => {
         })
     }
     else {
-        if (req.files.file) {
+        if (req.files.file != null || req.files.file != undefined) {
             database.getVideoByVDId(req.params.vdId, (video)=> {
                 if (video == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

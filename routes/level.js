@@ -18,9 +18,10 @@ const level = {
     type: "object",
     properties: {
         title: {type: "string", minLength: 3, maxLength: 20},
-        description: {type: "string", minLength: 21}
+        description: {type: "string", minLength: 21},
+        order :{type:"string"}
     },
-    required: ["title", "description"],
+    required: ["title", "description" , "order"],
     additionalProperties: false
 };
 router.post('/', (req, res)=> {
@@ -42,6 +43,9 @@ router.post('/', (req, res)=> {
             }
             else if (Data = "description") {
                 errorData = {"description": ["وارد کردن توضیحات ضروری است."]}
+            }
+            else if (Data = "order") {
+                errorData = {"description": ["وارد کردن ترتیب ضروری است."]}
             }
         }
         else if (ajv.errors[0].keyword == 'minLength') {
