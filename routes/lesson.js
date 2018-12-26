@@ -124,16 +124,18 @@ router.post('/video', (req, res) => {
     }
     else {
         if (req.files) {
+            console.log(req.files)
+            console.log(req.body)
             if (req.files.file != null) {
                 database.getLessonById(req.body.lsnId, (lesson)=> {
                     if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
 
                     }
                     else if (lesson == 0) {
-                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
 
@@ -142,7 +144,7 @@ router.post('/video', (req, res) => {
                         req.body.lvlId = lesson.lvlId
                         database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                             if (videos == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -260,13 +262,13 @@ router.post('/sound', (req, res) => {
                 // type file
                 database.getLessonById(req.body.lsnId, (lesson)=> {
                     if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
 
                     }
                     else if (lesson == 0) {
-                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
 
@@ -275,7 +277,7 @@ router.post('/sound', (req, res) => {
                         req.body.lvlId = lesson.lvlId
                         database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                             if (sounds == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -403,12 +405,12 @@ router.put('/:lsnId', (req, res) => {
         database.updateLesson(req.body, req.params.lsnId, (lesson)=> {
 
             if (lesson == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -450,7 +452,7 @@ router.put('/video/:vdId', (req, res) => {
                 var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                 fs.unlink(unlinkPath, function (err) {
                     if (err) {
-                        response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                        response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                             res.json(result)
                         })
                     }
@@ -458,7 +460,7 @@ router.put('/video/:vdId', (req, res) => {
                         let unlinkThumbPath = video.thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`)
                         fs.unlink(unlinkThumbPath, function (err) {
                             if (err) {
-                                response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                                response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -466,13 +468,13 @@ router.put('/video/:vdId', (req, res) => {
                                 if (req.files.file != null) {
                                     database.getLessonById(req.body.lsnId, (lesson)=> {
                                         if (lesson == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                 res.json(result)
                                             })
 
                                         }
                                         else if (lesson == 0) {
-                                            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                                            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                                                 res.json(result)
                                             })
 
@@ -481,7 +483,7 @@ router.put('/video/:vdId', (req, res) => {
                                             req.body.lvlId = lesson.lvlId
                                             database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                                                 if (videos == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                         res.json(result)
                                                     })
                                                 }
@@ -535,7 +537,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                     })
                                                                                 }
                                                                                 else if (result == 0) {
-                                                                                    response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                                                                                    response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                                                                                         res.json(result)
                                                                                     })
                                                                                 }
@@ -578,13 +580,13 @@ router.put('/video/:vdId', (req, res) => {
         else {
             database.getLessonById(req.body.lsnId, (lesson)=> {
                 if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
 
                 }
                 else if (lesson == 0) {
-                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                         res.json(result)
                     })
 
@@ -592,12 +594,12 @@ router.put('/video/:vdId', (req, res) => {
                 else {
                     database.updateVideo(req.body, req.params.vdId, (result)=> {
                         if (result == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
                         else if (result == 0) {
-                            response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                            response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                                 res.json(result)
                             })
                         }
@@ -640,7 +642,7 @@ router.put('/sound/:sndId', (req, res) => {
         if (req.files.file) {
             database.getSoundBysndId(req.params.sndId, (sound)=> {
                 if (sound == 0 || sound == -1) {
-                    response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
+                    response.respondNotFound('صدای مورد نظر یافت نشد.', {}, (result)=> {
                         res.json(result)
                     })
                 }
@@ -649,7 +651,7 @@ router.put('/sound/:sndId', (req, res) => {
                     fs.unlink(unlinkPath, function (err) {
                         if (err) {
                             console.log("err in unlinking", err)
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
@@ -658,13 +660,13 @@ router.put('/sound/:sndId', (req, res) => {
                                 // type file
                                 database.getLessonById(req.body.lsnId, (lesson)=> {
                                     if (lesson == -1) {
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                             res.json(result)
                                         })
 
                                     }
                                     else if (lesson == 0) {
-                                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                                        response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                                             res.json(result)
                                         })
 
@@ -672,7 +674,7 @@ router.put('/sound/:sndId', (req, res) => {
                                         req.body.lvlId = lesson.lvlId
                                         database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                                             if (sounds == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                     res.json(result)
                                                 })
                                             }
@@ -712,12 +714,12 @@ router.put('/sound/:sndId', (req, res) => {
                                                                 req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                                 database.updateSound(req.body, req.params.sndId, (updateSound)=> {
                                                                     if (updateSound == -1) {
-                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                             res.json(result)
                                                                         })
                                                                     }
                                                                     else if (updateSound == 0) {
-                                                                        response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
+                                                                        response.respondNotFound('صدای مورد نظر یافت نشد.', {}, (result)=> {
                                                                             res.json(result)
                                                                         })
                                                                     }
@@ -756,12 +758,12 @@ router.put('/sound/:sndId', (req, res) => {
         else {
             database.updateSound(req.body, req.params.sndId, (updateSound)=> {
                 if (updateSound == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
                 }
                 else if (updateSound == 0) {
-                    response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
+                    response.respondNotFound('صدای مورد نظر یافت نشد.', {}, (result)=> {
                         res.json(result)
                     })
                 }
@@ -782,12 +784,12 @@ router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
         if (req.query.cli == 1) {
             if (lesson == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -831,12 +833,12 @@ router.get('/level/:lvlId', (req, res) => {
 router.get('/:lsnId/video', (req, res) => {
     database.getVDbyLesson((video)=> {
         if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -852,12 +854,12 @@ router.get('/:lsnId/video', (req, res) => {
 router.get('/selective', (req, res)=> {
     database.getAllLessons((lesson)=> {
         if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (lesson == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -881,12 +883,12 @@ router.get('/selective', (req, res)=> {
 router.get('/type', (req, res)=> {
     database.getAllTypes((type)=> {
         if (type == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (type == 0) {
-            response.respondNotFound('نوع مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('نوع مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -910,12 +912,12 @@ router.get('/type', (req, res)=> {
 router.get('/video', (req, res)=> {
     database.getAllVideo((video)=> {
         if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (video == 0) {
-            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('ویدیوهای مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -935,12 +937,12 @@ router.get('/video', (req, res)=> {
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (lesson)=> {
         if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (lesson == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -956,12 +958,12 @@ router.get('/:lsnId', (req, res) => {
 router.get('/:lsnId/sound', (req, res) => {
     database.getSndByLsn((sound)=> {
         if (sound == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (sound == 0) {
-            response.respondNotFound('وویس مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('وویس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -977,12 +979,12 @@ router.get('/:lsnId/sound', (req, res) => {
 router.get('/:lsnId/video/:lvlId', (req, res)=> {
     database.getVideoByLsnLvl(req.params.lvlId, req.params.lsnId, (video)=> {
         if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -998,12 +1000,12 @@ router.get('/:lsnId/video/:lvlId', (req, res)=> {
 router.get('/:lsnId/sound/:lvlId', (req, res)=> {
     database.getSoundByLsnLvl(req.params.lvlId, req.params.lsnId, (sound)=> {
         if (sound == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (sound == 0) {
-            response.respondNotFound('وویس مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('وویس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -1024,7 +1026,7 @@ router.get('/', (req, res)=> {
             })
         }
         else if (sound == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -1045,12 +1047,12 @@ router.get('/', (req, res)=> {
 router.delete('/:lsnId', (req, res) => {
     database.delLesson(req.params.lsnId, (result)=> {
         if (result == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (result == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -1068,7 +1070,7 @@ router.delete('/video/:vdId', (req, res) => {
         var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
         fs.unlink(unlinkPath, function (err) {
             if (err) {
-                response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -1076,19 +1078,19 @@ router.delete('/video/:vdId', (req, res) => {
                 let unlinkThumbPath = video.thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                 fs.unlink(unlinkThumbPath, function (err) {
                     if (err) {
-                        response.respondNotFound('فایلی یافت نشد', '', (result)=> {
+                        response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
                             res.json(result)
                         })
                     }
                     else {
                         database.delVideo(req.params.vdId, (result)=> {
                             if (video == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
                             else if (video == 0) {
-                                response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+                                response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -1113,7 +1115,7 @@ router.delete('/video/:vdId', (req, res) => {
 router.delete('/sound/:sndId', (req, res) => {
     database.getSoundBysndId(req.params.sndId, (sound)=> {
         if (sound == 0 || sound == -1) {
-            response.respondNotFound('صدای مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('صدای مورد نظر یافت نشد.', {} , (result)=> {
                 res.json(result)
             })
         }
@@ -1122,19 +1124,19 @@ router.delete('/sound/:sndId', (req, res) => {
             fs.unlink(unlinkPath, function (err) {
                 if (err) {
                     console.log("err in unlinking", err)
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
                 }
                 else {
                     database.delSound(req.params.sndId, (result)=> {
                         if (result == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
                         else if (result == 0) {
-                            response.respondNotFound('ویدیو مورد نظر یافت نشد.', '', (result)=> {
+                            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
                                 res.json(result)
                             })
                         }

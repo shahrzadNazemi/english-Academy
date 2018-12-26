@@ -18,7 +18,7 @@ router.post('/admin/login', (req, res) => {
             })
         }
         else if (loginResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -44,7 +44,7 @@ router.put('/admin/:admId', (req, res) => {
             })
         }
         else if (Putresult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -66,7 +66,7 @@ router.get('/admin', (req, res) => {
             })
         }
         else if (getResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -87,7 +87,7 @@ router.delete('/admin/:admId', (req, res) => {
             })
         }
         else if (deleteResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -114,7 +114,7 @@ router.get('/admin/:admId', (req, res)=> {
             })
         }
         else if (admin == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -220,7 +220,7 @@ router.post('/student/register', (req, res)=> {
                                             })
                                         }
                                         else if (result == 0) {
-                                            response.respondNotFound('کاربر مورد نظر یافت نشد', '', (result)=> {
+                                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
                                                 res.json(result)
                                             })
                                         }
@@ -321,7 +321,7 @@ router.put('/student/:stdId', (req, res) => {
                 })
             }
             else if (Putresult == 0) {
-                response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -345,7 +345,7 @@ router.get('/student', (req, res) => {
             })
         }
         else if (getResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -366,7 +366,7 @@ router.get('/student/best', (req, res) => {
             })
         }
         else if (getResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -398,7 +398,7 @@ router.get('/student/level/best/:lsnId', (req, res) => {
 
         }
         else if (lesson == 0) {
-            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
 
@@ -412,7 +412,7 @@ router.get('/student/level/best/:lsnId', (req, res) => {
 
                 }
                 else if (lesson == 0) {
-                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', '', (result)=> {
+                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
                         res.json(result)
                     })
                 }
@@ -431,7 +431,7 @@ router.get('/student/level/best/:lsnId', (req, res) => {
             })
         }
         else if (getResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -463,7 +463,7 @@ router.get('/student/:stdId', (req, res) => {
             })
         }
         else if (getResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
@@ -500,7 +500,7 @@ router.delete('/student/:stdId', (req, res) => {
                                 })
                             }
                             else if (deleteResult == 0) {
-                                response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -522,7 +522,7 @@ router.delete('/student/:stdId', (req, res) => {
                         })
                     }
                     else if (deleteResult == 0) {
-                        response.respondNotFound('کاربر مورد نظر یافت نشد.', '', (result)=> {
+                        response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }
