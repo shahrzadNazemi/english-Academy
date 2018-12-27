@@ -65,6 +65,7 @@ module.exports.addLevel = (levelInfo, cb)=> {
         body: levelInfo,
         json: true
     }, function (err, response, body) {
+        console.log(response.statusCode)
         if (err) {
             console.log('err in sending data to database')
             cb(-1)
@@ -135,6 +136,12 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if(response.statusCode == 403){
+            cb(-2)
+        }
+        else if(response.statusCode == 402){
+            cb(-3)
         }
         else {
             logger.info("response body", body)
@@ -372,6 +379,9 @@ module.exports.addLesson = (lsnInfo, cb)=> {
         else if (response.statusCode == 403) {
             cb(-3)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
         else {
             logger.info("response body", body)
             cb(body)
@@ -446,6 +456,12 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
         }
         else {
             logger.info("response body", body)

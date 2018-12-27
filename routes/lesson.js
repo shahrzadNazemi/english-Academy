@@ -21,9 +21,10 @@ const lesson = {
     type: "object",
     properties: {
         lvlId: {type: "string"},
-        title: {type: "string"}
+        title: {type: "string"},
+        order: {type: "string"}
     },
-    required: ["lvlId", "title"],
+    required: ["lvlId", "title" , "order"],
     additionalProperties: false
 };
 const type = {
@@ -67,36 +68,139 @@ router.post('/', (req, res) => {
             console.log(Data)
             if (Data == lvlId) {
                 errorData = {"lvlId": ["وارد کردن شناسه ی سطح ضروری است."]}
+            }else if(Data == "order"){
+                errorData = {"order": ["وارد کردن  ترتیب سطح ضروری است."]}
             }
             else {
                 errorData = {"title": ["وارد کردن نام درس ضروری است."]}
             }
         }
-
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
             res.json(result)
         })
     }
     else {
-        database.addLesson(req.body, (lesson)=> {
-            if (lesson == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                    res.json(result)
-                })
+        if (req.files) {
+            if (req.body.avatarUrl == undefined) {
+                req.body.avatarUrl = ""
             }
-            else if (lesson == -3) {
-                let data = {"title": "عنوان نمیتواند تکراری باشد."}
-                response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
-                    res.json(result)
+            if (req.files.file != null) {
+                // type file
+                database.addLesson(req.body, (lesson)=> {
+                    if (lesson == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == -3) {
+                        let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == -2) {
+                        let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        console.log(lesson)
+                        req.body._id = lesson
+                        // res.json(req.body)
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
+                        console.log("dir", dir)
+                        module.exports.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
+                                    // req.body._id = (req.body._id.replace(/"/g, ''));
+                                    console.log("body", req.body)
+                                    // let newLesson = Object.assign({} , lesson, req.body)
+                                    database.updateLesson(req.body, req.body._id, (lesson)=> {
+
+                                        if (lesson == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (lesson == 0) {
+                                            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (lesson == -3) {
+                                            let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (lesson == -2) {
+                                            let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                    });
+                                }
+
+                            })
+                        });
+                    }
                 })
             }
             else {
-                response.responseCreated('اطلاعات مورد نظر ثبت شد.', lesson, (result)=> {
+                let errData = {"file": "فایلی به این نام فرستاده نشده است"}
+                response.validation('فایلی به این نام فرستاده نشده است', errData, "required", (result)=> {
                     res.json(result)
-
                 })
             }
-        })
+        }
+        else {
+            database.addLesson(req.body, (lesson)=> {
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == -3) {
+                    let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                    response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == -2) {
+                    let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                    response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.responseCreated('اطلاعات مورد نظر ثبت شد.', lesson, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            });
+        }
+
     }
 });
 
@@ -400,25 +504,52 @@ router.put('/:lsnId', (req, res) => {
         })
     }
     else {
-        database.updateLesson(req.body, req.params.lsnId, (lesson)=> {
-
-            if (lesson == -1) {
+        database.getLessonById(req.params.lsnId , (lessons)=>{
+            if (lessons == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else if (lesson == 0) {
+            else if (lessons == 0) {
                 response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else {
-                response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
-                    res.json(result)
+            else{
+                let newLesson = Object.assign({} , lessons , req.body)
+                database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
 
-                })
+                    if (lesson == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == 0) {
+                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == -3) {
+                        let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == -2) {
+                        let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                });
             }
-        });
+        })
     }
 });
 
@@ -445,8 +576,8 @@ router.put('/video/:vdId', (req, res) => {
         })
     }
     else {
-        if(req.files){
-            if (req.files.file != null || req.files.file != undefined) {
+        if (req.files) {
+            if (req.files.file != null || req.files.file != undefined   ) {
                 database.getVideoByVDId(req.params.vdId, (video)=> {
                     if (video == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -459,7 +590,7 @@ router.put('/video/:vdId', (req, res) => {
                         })
                     }
                     else {
-                        var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+                        var unlinkPath = video[0].url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                         fs.unlink(unlinkPath, function (err) {
                             if (err) {
                                 response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
@@ -540,7 +671,8 @@ router.put('/video/:vdId', (req, res) => {
                                                                                 else {
                                                                                     let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
                                                                                     req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                                                                    database.updateVideo(req.body, req.params.vdId, (result)=> {
+                                                                                    var newVideo = Object.assign({}, video, req.body)
+                                                                                    database.updateVideo(newVideo, req.params.vdId, (result)=> {
                                                                                         if (result == -1) {
                                                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                                                                                                 res.json(result)
@@ -558,7 +690,6 @@ router.put('/video/:vdId', (req, res) => {
                                                                                             })
                                                                                         }
                                                                                     })
-
                                                                                 }
                                                                             })
 
@@ -604,7 +735,8 @@ router.put('/video/:vdId', (req, res) => {
 
                     }
                     else {
-                        database.updateVideo(req.body, req.params.vdId, (result)=> {
+                        var newVideo = Object.assign({}, video, req.body)
+                        database.updateVideo(newVideo, req.params.vdId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
@@ -640,9 +772,8 @@ router.put('/video/:vdId', (req, res) => {
 
                 }
                 else {
-                    var newVideo = Object.assign(req.body, video)
-
-                    database.updateVideo(newVideo , req.params.vdId , (result)=> {
+                    var newVideo = Object.assign({}, video, req.body)
+                    database.updateVideo(newVideo, req.params.vdId, (result)=> {
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)

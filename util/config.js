@@ -15,3 +15,7 @@ module.exports.downloadPathStuImage= "http://185.94.99.69:9000/upload/student/av
 module.exports.uploadPathLevelImage = "/var/fileAccess/site/upload/level/avatar";
 
 module.exports.downloadPathLevelImage= "http://185.94.99.69:9000/upload/level/avatar";
+
+module.exports.uploadPathLessonImage = "/var/fileAccess/site/upload/lesson/avatar";
+
+module.exports.downloadPathLessonImage= "http://185.94.99.69:9000/upload/lesson/avatar";
