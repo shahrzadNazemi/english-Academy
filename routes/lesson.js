@@ -598,7 +598,7 @@ router.put('/video/:vdId', (req, res) => {
                                 })
                             }
                             else {
-                                let unlinkThumbPath = video.thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`)
+                                let unlinkThumbPath = video[0].thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`)
                                 fs.unlink(unlinkThumbPath, function (err) {
                                     if (err) {
                                         response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
