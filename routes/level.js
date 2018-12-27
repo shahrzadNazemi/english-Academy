@@ -82,6 +82,12 @@ router.post('/', (req, res)=> {
                             res.json(result)
                         })
                     }
+                    else if (level == -3) {
+                        let errData = {"oredr": "ترتیب سطح نمیتواند تکراری باشد"}
+                        response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
                     else {
                         console.log(level)
                         req.body._id = level.lvlID

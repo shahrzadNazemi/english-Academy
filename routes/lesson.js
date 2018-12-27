@@ -998,7 +998,7 @@ router.get('/video/:vdId', (req, res)=> {
             })
         }
         else {
-            response.response('اطلاعات ویدیو', video, (result)=> {
+            response.response('اطلاعات ویدیو', video[0], (result)=> {
                 res.json(result)
             })
 

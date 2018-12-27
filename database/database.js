@@ -79,6 +79,9 @@ module.exports.addLevel = (levelInfo, cb)=> {
             else if(response.statusCode == 403){
             cb(-2)
         }
+        else if(response.statusCode == 402){
+            cb(-3)
+        }
         else {
             logger.info("response body", body)
             cb(body)
