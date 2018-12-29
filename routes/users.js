@@ -151,7 +151,7 @@ router.post('/admin', (req, res)=> {
 
 router.post('/student/register', (req, res)=> {
 console.log(req.body )
-    consoel.log(req.files.file)
+    console.log(req.files.file)
     if (req.body.password == undefined || req.body.username == undefined) {
         let errData = {"password": "پسورد را وارد کنید"}
         response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
