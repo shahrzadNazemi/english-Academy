@@ -138,6 +138,8 @@ router.post('/admin', (req, res)=> {
             })
         }
         else {
+            delete  addedAdmin.password
+
             response.responseCreated('اطلاعات با موفقیت ثبت شد.', addedAdmin, (result)=> {
                 res.json(result)
 
