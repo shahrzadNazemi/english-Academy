@@ -80,6 +80,7 @@ router.get('/admin', (req, res) => {
 });
 
 router.delete('/admin/:admId', (req, res) => {
+    console.log("adminFDelete")
     database.delAdmin(req.params.admId, (deleteResult)=> {
         if (deleteResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
