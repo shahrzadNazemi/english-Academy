@@ -611,7 +611,7 @@ router.put('/:lsnId', (req, res) => {
                             })
                         }
                         else if (lesson == -2) {
-                            let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                            let data = {"title": "عنوان نمیتواند تکراری باشد."}
                             response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
                                 res.json(result)
                             })
