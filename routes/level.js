@@ -19,9 +19,9 @@ const level = {
     properties: {
         title: {type: "string", minLength: 3, maxLength: 20},
         description: {type: "string", minLength: 21},
-        order :{type:"string"}
+        order: {type: "string"}
     },
-    required: ["title", "description" , "order"],
+    required: ["title", "description", "order"],
     additionalProperties: false
 };
 
@@ -230,29 +230,40 @@ router.put('/:lvlId', (req, res)=> {
             }
             else {
                 if (req.files) {
-                    var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
-                    fs.unlink(unlinkPath, function (err) {
-                        if (err) {
-                            response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                    var newLevel = Object.assign({}, level, req.body)
+                    database.updateLevel(newLevel, level._id, (result)=> {
+                        if (result == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == 0) {
+                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == -2) {
+                            let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == -3) {
+                            let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
                                 res.json(result)
                             })
                         }
                         else {
-                            if (req.files.file != null) {
-                                database.getLevelById(req.params.lvlId, (level)=> {
-                                    if (level == -1) {
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-
-                                    }
-                                    else if (level == 0) {
-                                        response.respondNotFound(' سطح یافت نشد.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-
-                                    }
-                                    else {
+                            var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
+                            fs.unlink(unlinkPath, function (err) {
+                                if (err) {
+                                    response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    if (req.files.file != null) {
                                         req.body._id = level._id
                                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                                         var file = req.files.file.name.replace(`.${extension}`, '');
@@ -272,7 +283,7 @@ router.put('/:lvlId', (req, res)=> {
                                                 else {
                                                     req.body.avatarUrl = path.replace(`${config.uploadPathLevelImage}`, `${config.downloadPathLevelImage}`)
                                                     // var newLevel = Object.assign(req.body, level)
-                                                    var newLevel = Object.assign({} , level , req.body)
+                                                    var newLevel = Object.assign({}, level, req.body)
                                                     database.updateLevel(newLevel, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
                                                         if (result == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -307,72 +318,55 @@ router.put('/:lvlId', (req, res)=> {
 
                                             })
                                         });
+
                                     }
-                                })
-                            }
-                            else {
-                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                                    res.json(result)
-                                })
-                            }
+                                    else {
+                                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                }
+                            })
                         }
                     })
+
                 } else {
-                    database.getLevelById(req.params.lvlId , (level)=>{
-                        if (level == -1) {
+                    if (req.body.order != undefined && typeof req.body.order == "string") {
+                        req.body.order = parseInt(req.body.order)
+                    }
+                    var newLevel = Object.assign({}, level, req.body)
+                    database.updateLevel(newLevel, level._id, (result)=> {
+                        if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
-
                         }
-                        else if (level == 0) {
-                            response.respondNotFound(' سطح یافت نشد.', {}, (result)=> {
+                        else if (result == 0) {
+                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
                                 res.json(result)
                             })
-
                         }
-                        else{
-                            if(req.body.order != undefined && typeof req.body.order == "string"){
-                                req.body.order = parseInt(req.body.order)
-                            }
-                            console.log("body" , req.body)
+                        else if (result == -2) {
+                            let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == -3) {
+                            let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                                res.json(result)
 
-                            var newLevel = Object.assign({} , level , req.body)
-                            console.log("newLevel" , newLevel , "level" , level , "req.body" , req.body)
-                            database.updateLevel(newLevel, level._id , (result)=> {
-                                if (result == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (result == 0) {
-                                    response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (result == -2) {
-                                    let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
-                                    response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (result == -3) {
-                                    let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
-                                    response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
-                                        res.json(result)
-
-                                    })
-                                }
                             })
                         }
                     })
-                  
                 }
+
             }
         })
     }
