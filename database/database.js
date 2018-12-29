@@ -537,6 +537,11 @@ module.exports.delLesson = (lsnId, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        } else if (response.statusCode == 402) {
+            cb(-2)
+        }
         else {
             logger.info("response body", body)
             cb(body)

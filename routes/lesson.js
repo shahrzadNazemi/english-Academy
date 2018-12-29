@@ -1356,6 +1356,15 @@ router.delete('/:lsnId', (req, res) => {
                                     res.json(result)
                                 })
                             }
+                            else if (result == -2) {
+                                response.validation('درس قابل حذف شدن نیست', {},"hasSound", (result)=> {
+                                    res.json(result)
+                                })
+                            } else if (result == -3) {
+                                response.validation('درس قابل حذف شدن نیست', {},"hasVideo", (result)=> {
+                                    res.json(result)
+                                })
+                            }
                             else {
                                 response.response('درس مورد نظر حدف شد.', result, (result)=> {
                                     res.json(result)
@@ -1375,6 +1384,15 @@ router.delete('/:lsnId', (req, res) => {
                     }
                     else if (result == 0) {
                         response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (result == -2) {
+                        response.validation('درس قابل حذف شدن نیست', {},"hasSound", (result)=> {
+                            res.json(result)
+                        })
+                    } else if (result == -3) {
+                        response.validation('درس قابل حذف شدن نیست', {},"hasVideo", (result)=> {
                             res.json(result)
                         })
                     }
