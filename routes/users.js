@@ -150,8 +150,9 @@ router.post('/admin', (req, res)=> {
 
 
 router.post('/student/register', (req, res)=> {
-console.log(req.body )
-    console.log(req.files.file)
+    console.log(req.body)
+    if (req.files)
+        console.log(req.files.file)
     if (req.body.password == undefined || req.body.username == undefined) {
         let errData = {"password": "پسورد را وارد کنید"}
         response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
@@ -315,11 +316,11 @@ router.post('/student/placement', (req, res)=> {
             res.json(result)
         })
     }
-    else{
-        if(req.body.lsnId == 0){
-            
+    else {
+        if (req.body.lsnId == 0) {
+
         }
-        else{
+        else {
             database.stuPlacement()
 
         }
