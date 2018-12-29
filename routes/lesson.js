@@ -517,15 +517,40 @@ router.put('/:lsnId', (req, res) => {
             }
             else {
                 if (req.files) {
-                    var unlinkPath = lessons.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
-                    fs.unlink(unlinkPath, function (err) {
-                        if (err) {
-                            response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                    let newLesson = Object.assign({} , lessons , req.body)
+                    database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
+                        if (lesson == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == 0) {
+                            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == -3) {
+                            let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == -2) {
+                            let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
                                 res.json(result)
                             })
                         }
                         else {
-                            if (req.files.file != null) {
+                            var unlinkPath = lessons.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
+                            fs.unlink(unlinkPath, function (err) {
+                                if (err) {
+                                    response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    if (req.files.file != null) {
                                         req.body._id = lessons._id
                                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                                         var file = req.files.file.name.replace(`.${extension}`, '');
@@ -544,9 +569,7 @@ router.put('/:lsnId', (req, res) => {
                                                 }
                                                 else {
                                                     req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
-                                                    // var newLevel = Object.assign(req.body, level)
                                                     var newLesson = Object.assign({} , lesson , req.body)
-
                                                     database.updateLesson(newLesson, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
                                                         if (result == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -582,14 +605,17 @@ router.put('/:lsnId', (req, res) => {
                                             })
                                         });
 
-                            }
-                            else {
-                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                                    res.json(result)
-                                })
-                            }
+                                    }
+                                    else {
+                                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                }
+                            })
                         }
-                    })
+                    });
+
                 }  else {
                     let newLesson = Object.assign({} , lessons , req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
