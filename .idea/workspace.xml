@@ -284,21 +284,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="542" column="17" selection-start-line="542" selection-start-column="17" selection-end-line="542" selection-end-column="17" />
+            <state relative-caret-position="340">
+              <caret line="467" column="20" selection-start-line="467" selection-start-column="20" selection-end-line="467" selection-end-column="20" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="876" column="0" selection-start-line="876" selection-start-column="0" selection-end-line="876" selection-end-column="0" />
+            <state relative-caret-position="219">
+              <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="614" selection-end-column="0" />
               <folding>
                 <element signature="e#324#411#0" expanded="false" />
                 <element signature="e#561#783#0" expanded="false" />
@@ -477,9 +477,7 @@
                 <element signature="e#29574#29654#0" expanded="false" />
                 <element signature="e#29728#29931#0" expanded="false" />
                 <element signature="e#29824#29904#0" expanded="false" />
-                <element signature="e#29979#30279#0" expanded="false" />
                 <element signature="e#30172#30252#0" expanded="false" />
-                <element signature="e#30327#30627#0" expanded="false" />
                 <element signature="e#30520#30600#0" expanded="false" />
                 <element signature="e#30657#30861#0" expanded="false" />
                 <element signature="e#30753#30834#0" expanded="false" />
@@ -1306,12 +1304,12 @@
       <workItem from="1545717505844" duration="12605000" />
       <workItem from="1545803960673" duration="21967000" />
       <workItem from="1545889546705" duration="13566000" />
-      <workItem from="1546063231896" duration="12327000" />
+      <workItem from="1546063231896" duration="12651000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="311873000" />
+    <option name="totallyTimeSpent" value="312197000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -2857,14 +2855,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="542" column="17" selection-start-line="542" selection-start-column="17" selection-end-line="542" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/util/responseHelper.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="121">
@@ -2894,8 +2884,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="876" column="0" selection-start-line="876" selection-start-column="0" selection-end-line="876" selection-end-column="0" />
+        <state relative-caret-position="219">
+          <caret line="613" column="0" selection-start-line="613" selection-start-column="0" selection-end-line="614" selection-end-column="0" />
           <folding>
             <element signature="e#324#411#0" expanded="false" />
             <element signature="e#561#783#0" expanded="false" />
@@ -3074,9 +3064,7 @@
             <element signature="e#29574#29654#0" expanded="false" />
             <element signature="e#29728#29931#0" expanded="false" />
             <element signature="e#29824#29904#0" expanded="false" />
-            <element signature="e#29979#30279#0" expanded="false" />
             <element signature="e#30172#30252#0" expanded="false" />
-            <element signature="e#30327#30627#0" expanded="false" />
             <element signature="e#30520#30600#0" expanded="false" />
             <element signature="e#30657#30861#0" expanded="false" />
             <element signature="e#30753#30834#0" expanded="false" />
@@ -3387,6 +3375,14 @@
             <element signature="e#73475#73547#0" expanded="false" />
             <element signature="e#73566#73646#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="467" column="20" selection-start-line="467" selection-start-column="20" selection-end-line="467" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
