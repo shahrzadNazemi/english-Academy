@@ -504,50 +504,126 @@ router.put('/:lsnId', (req, res) => {
         })
     }
     else {
-        database.getLessonById(req.params.lsnId , (lessons)=>{
+        database.getLessonById(req.params.lsnId, (lessons)=> {
             if (lessons == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else if (lessons == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else{
-                let newLesson = Object.assign({} , lessons , req.body)
-                database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
+            else {
+                if (req.files) {
+                    var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
+                    fs.unlink(unlinkPath, function (err) {
+                        if (err) {
+                            response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            if (req.files.file != null) {
+                                        req.body._id = lessons._id
+                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                        var file = req.files.file.name.replace(`.${extension}`, '');
+                                        var newFile = new Date().getTime() + '.' + extension;
+                                        // path is Upload Directory
+                                        var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
+                                        console.log("dir", dir)
+                                        lesson.addDir(dir, function (newPath) {
+                                            var path = dir + newFile;
+                                            req.files.file.mv(path, function (err) {
+                                                if (err) {
+                                                    console.error(err);
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    req.body.avatarUrl = path.replace(`${config.uploadPathLesonImage}`, `${config.downloadPathLessonImage}`)
+                                                    // var newLevel = Object.assign(req.body, level)
+                                                    var newLesson = Object.assign({} , lesson , req.body)
 
-                    if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (lesson == 0) {
-                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (lesson == -3) {
-                        let data = {"title": "عنوان نمیتواند تکراری باشد."}
-                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (lesson == -2) {
-                        let data = {"order": "ترتیب نمیتواند تکراری باشد."}
-                        response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
-                            res.json(result)
+                                                    database.updateLesson(newLesson, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                                        if (result == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (result == 0) {
+                                                            response.respondNotFound('درس مورد نظر یافت نشد', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (result == -2) {
+                                                            let errData = {"title": "نام درس نمیتواند تکراری باشد"}
+                                                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (result == -3) {
+                                                            let errData = {"order": "ترتیب درس نمیتواند تکراری باشد"}
+                                                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else {
+                                                            response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                                                                res.json(result)
 
-                        })
-                    }
-                });
+                                                            })
+                                                        }
+                                                    })
+                                                }
+
+                                            })
+                                        });
+
+                            }
+                            else {
+                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                        }
+                    })
+                }  else {
+                    let newLesson = Object.assign({} , lessons , req.body)
+                    database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
+
+                        if (lesson == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == 0) {
+                            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == -3) {
+                            let data = {"title": "عنوان نمیتواند تکراری باشد."}
+                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (lesson == -2) {
+                            let data = {"order": "ترتیب نمیتواند تکراری باشد."}
+                            response.validation(`اطلاعات وارد شده اشتباه است.`, data, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    });
+                }
             }
         })
     }
@@ -1248,22 +1324,68 @@ router.get('/', (req, res)=> {
 
 
 router.delete('/:lsnId', (req, res) => {
-    database.delLesson(req.params.lsnId, (result)=> {
-        if (result == -1) {
+    database.getLessonById(req.params.lsnId, (lesson)=> {
+        if (lesson == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (result == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+        else if (lesson == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('ویدیو مورد نظر یافت شد.', result, (result)=> {
-                res.json(result)
+            if (lesson.avatarUrl != undefined || lesson.avatarUrl != null) {
+                var unlinkPath = lesson.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
+                fs.unlink(unlinkPath, function (err) {
+                    if (err) {
+                        response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        database.delLesson(req.params.lsnId, (result)=> {
+                            if (result == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (result == 0) {
+                                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                response.response('درس مورد نظر حدف شد.', result, (result)=> {
+                                    res.json(result)
 
-            })
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+            else {
+                database.delLesson(req.params.lsnId, (result)=> {
+                    if (result == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (result == 0) {
+                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.response('درس مورد نظر حدف شد.', result, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
+            }
         }
     })
 });
