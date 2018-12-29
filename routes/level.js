@@ -82,7 +82,7 @@ router.post('/', (req, res)=> {
                         })
                     }
                     else if (level == -3) {
-                        let errData = {"oredr": "ترتیب سطح نمیتواند تکراری باشد"}
+                        let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
                         response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
                             res.json(result)
                         })
@@ -129,7 +129,7 @@ router.post('/', (req, res)=> {
                                             })
                                         }
                                         else if (result == -3) {
-                                            let errData = {"oredr": "ترتیب سطح نمیتواند تکراری باشد"}
+                                            let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
                                             response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
                                                 res.json(result)
                                             })
@@ -169,7 +169,7 @@ router.post('/', (req, res)=> {
                     })
                 }
                 else if (addResult == -3) {
-                    let errData = {"oredr": "ترتیب سطح نمیتواند تکراری باشد"}
+                    let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
                     response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
                         res.json(result)
                     })
