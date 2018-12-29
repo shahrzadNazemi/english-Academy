@@ -543,7 +543,7 @@ router.put('/:lsnId', (req, res) => {
                                                     })
                                                 }
                                                 else {
-                                                    req.body.avatarUrl = path.replace(`${config.uploadPathLesonImage}`, `${config.downloadPathLessonImage}`)
+                                                    req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
                                                     // var newLevel = Object.assign(req.body, level)
                                                     var newLesson = Object.assign({} , lesson , req.body)
 
