@@ -533,7 +533,7 @@ router.put('/:lsnId', (req, res) => {
                                         // path is Upload Directory
                                         var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
                                         console.log("dir", dir)
-                                        lesson.addDir(dir, function (newPath) {
+                                        module.exports.addDir(dir, function (newPath) {
                                             var path = dir + newFile;
                                             req.files.file.mv(path, function (err) {
                                                 if (err) {
