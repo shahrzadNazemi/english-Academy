@@ -273,7 +273,6 @@ router.put('/:lvlId', (req, res)=> {
                                                     req.body.avatarUrl = path.replace(`${config.uploadPathLevelImage}`, `${config.downloadPathLevelImage}`)
                                                     // var newLevel = Object.assign(req.body, level)
                                                     var newLevel = Object.assign({} , level , req.body)
-
                                                     database.updateLevel(newLevel, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
                                                         if (result == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

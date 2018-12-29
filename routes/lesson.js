@@ -517,7 +517,7 @@ router.put('/:lsnId', (req, res) => {
             }
             else {
                 if (req.files) {
-                    var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
+                    var unlinkPath = lessons.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
                     fs.unlink(unlinkPath, function (err) {
                         if (err) {
                             response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
