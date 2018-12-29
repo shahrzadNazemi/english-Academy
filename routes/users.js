@@ -79,32 +79,6 @@ router.get('/admin', (req, res) => {
     })
 });
 
-router.delete('/admin/:admId', (req, res) => {
-    console.log("adminFDelete")
-    database.delAdmin(req.params.admId, (deleteResult)=> {
-        if (deleteResult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (deleteResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (deleteResult == -4) {
-            response.validation('آخرین ادمین قابل حذف شدن نیست.', {}, 'lastAdmin', (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.respondDeleted('اطلاعات همه ی ادمین ها', deleteResult, (result)=> {
-                res.json(result)
-
-            })
-        }
-    })
-});
 
 router.get('/admin/:admId', (req, res)=> {
     database.getAdminById(req.params.admId, (admin)=> {
@@ -477,7 +451,6 @@ router.get('/student/level/best/:lsnId', (req, res) => {
     });
 });
 
-
 router.get('/student/:stdId', (req, res) => {
     database.getStudentById(req.params.stdId, (getResult)=> {
         if (getResult == -1) {
@@ -493,6 +466,35 @@ router.get('/student/:stdId', (req, res) => {
         else {
             delete getResult.password
             response.response('اطلاعات کاربر مورد نظر', getResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+
+
+router.delete('/admin/:admId', (req, res) => {
+    console.log("adminFDelete")
+    database.delAdmin(req.params.admId, (deleteResult)=> {
+        if (deleteResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (deleteResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (deleteResult == -4) {
+            response.validation('آخرین ادمین قابل حذف شدن نیست.', {}, 'lastAdmin', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.respondDeleted('اطلاعات همه ی ادمین ها', deleteResult, (result)=> {
                 res.json(result)
 
             })
