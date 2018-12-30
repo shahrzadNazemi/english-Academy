@@ -522,7 +522,7 @@ router.put('/:lsnId', (req, res) => {
                 })
             }
             else {
-                if (req.files.file = {}) {
+                if (req.files.file != {}) {
                     let newLesson = Object.assign({}, lessons, req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
                         if (lesson == -1) {
