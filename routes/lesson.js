@@ -45,6 +45,7 @@ const video = {
         typeId: {type: "string"},
         lsnId: {type: "string"},
         order: {type: "string"},
+        text:{type:"string"}
     },
     required: ["typeId", "lsnId", "order"],
     additionalProperties: false
@@ -56,6 +57,7 @@ const sound = {
         typeId: {type: "string"},
         lsnId: {type: "string"},
         order: {type: "string"},
+        text:{type:"string"}
     },
     required: ["typeId", "lsnId", "order"],
     additionalProperties: false

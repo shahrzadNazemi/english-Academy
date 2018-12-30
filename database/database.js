@@ -992,7 +992,7 @@ module.exports.getStudentByLevel = (lvlId , cb)=> {
 
 module.exports.stuPlacement = (placeInfo , cb)=> {
     request.post({
-        url: `${config.databaseServer}/api/student/placement`,
+        url: `${config.databaseServer}/api/users/student/placement`,
         headers: {"content-Type": "application/json"},
         body :placeInfo,
         json: true
