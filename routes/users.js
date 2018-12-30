@@ -288,7 +288,7 @@ router.post('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     console.log(verify.userID)
-    // le usernam
+    req.body.username = verify.userID
     if (req.body.lsnId != undefined) {
         let errData = {"lsnId": "وارد کردن شناسه ی درس ضروری است."}
         response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
@@ -297,7 +297,7 @@ router.post('/student/placement', (req, res)=> {
     }
     else {
         if (req.body.lsnId == 0) {
-            database.stuPlacement(req.body.lsnId , (lesson)=> {
+            database.stuPlacement(req.body , (lesson)=> {
                 if (lesson == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)
@@ -318,7 +318,7 @@ router.post('/student/placement', (req, res)=> {
             })
         }
         else {
-            database.stuPlacement(req.body.lsnId , (lesson)=>{
+            database.stuPlacement(req.body , (lesson)=>{
                 if (lesson == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)

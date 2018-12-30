@@ -990,10 +990,11 @@ module.exports.getStudentByLevel = (lvlId , cb)=> {
 
 };
 
-module.exports.stuPlacement = (lsnId , cb)=> {
-    request.get({
-        url: `${config.databaseServer}/api/student/level/${lvlId}/best`,
+module.exports.stuPlacement = (placeInfo , cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/student/placement`,
         headers: {"content-Type": "application/json"},
+        body :placeInfo,
         json: true
     }, function (err, response, body) {
         if (err) {

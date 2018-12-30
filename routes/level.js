@@ -135,7 +135,7 @@ router.post('/', (req, res)=> {
                                             })
                                         }
                                         else {
-                                            response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
+                                            response.response('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
                                                 res.json(result)
 
                                             })
