@@ -288,6 +288,7 @@ router.post('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     console.log(verify.userID)
+    // le usernam
     if (req.body.lsnId != undefined) {
         let errData = {"lsnId": "وارد کردن شناسه ی درس ضروری است."}
         response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
@@ -296,12 +297,44 @@ router.post('/student/placement', (req, res)=> {
     }
     else {
         if (req.body.lsnId == 0) {
-            database.getFirstLesson((lesson)=> {
-                    
+            database.stuPlacement(req.body.lsnId , (lesson)=> {
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == 0) {
+                    response.respondNotFound('درسی ثبت نشده است.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else
+                    {
+                        response.response('اطلاعات مربوط به درس اول:', lesson[0], (result)=> {
+                            res.json(result)
+                        })
+                    }
+
             })
         }
         else {
-            database.stuPlacement()
+            database.stuPlacement(req.body.lsnId , (lesson)=>{
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == 0) {
+                    response.respondNotFound('چنین درسی ثبت نشده است.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else{
+                    response.response('اطلاعات مربوط به درس :', lesson[0], (result)=> {
+                        res.json(result)
+                    })
+                }
+            })
         }
     }
 });

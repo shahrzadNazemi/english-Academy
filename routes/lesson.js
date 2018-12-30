@@ -495,6 +495,7 @@ router.post('/type', (req, res)=> {
 
 
 router.put('/:lsnId', (req, res) => {
+    console.log("files",req.files)
     let valid = ajv.validate(lesson, req.body);
     if (!valid) {
         let errorData
