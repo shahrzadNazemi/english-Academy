@@ -125,9 +125,9 @@ router.post('/admin', (req, res)=> {
 
 
 router.post('/student/register', (req, res)=> {
-    console.log("body:",req.body)
+    console.log("body:", req.body)
     if (req.files)
-        console.log("file:",req.files.file)
+        console.log("file:", req.files.file)
     if (req.body.password == undefined || req.body.username == undefined) {
         let errData = {"password": "پسورد را وارد کنید"}
         response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
@@ -293,7 +293,9 @@ router.post('/student/placement', (req, res)=> {
     }
     else {
         if (req.body.lsnId == 0) {
-
+            database.getFirstLesson((lesson)=> {
+                    
+            })
         }
         else {
             database.stuPlacement()
@@ -472,7 +474,6 @@ router.get('/student/:stdId', (req, res) => {
         }
     })
 });
-
 
 
 router.delete('/admin/:admId', (req, res) => {

@@ -24,7 +24,7 @@ const lesson = {
         title: {type: "string"},
         order: {type: "string"}
     },
-    required: ["lvlId", "title" , "order"],
+    required: ["lvlId", "title", "order"],
     additionalProperties: false
 };
 const type = {
@@ -68,7 +68,7 @@ router.post('/', (req, res) => {
             console.log(Data)
             if (Data == lvlId) {
                 errorData = {"lvlId": ["وارد کردن شناسه ی سطح ضروری است."]}
-            }else if(Data == "order"){
+            } else if (Data == "order") {
                 errorData = {"order": ["وارد کردن  ترتیب سطح ضروری است."]}
             }
             else {
@@ -517,7 +517,7 @@ router.put('/:lsnId', (req, res) => {
             }
             else {
                 if (req.files) {
-                    let newLesson = Object.assign({} , lessons , req.body)
+                    let newLesson = Object.assign({}, lessons, req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
                         if (lesson == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -569,7 +569,7 @@ router.put('/:lsnId', (req, res) => {
                                                 }
                                                 else {
                                                     req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
-                                                    var newLesson = Object.assign({} , lesson , req.body)
+                                                    var newLesson = Object.assign({}, lesson, req.body)
                                                     database.updateLesson(newLesson, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
                                                         if (result == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -616,8 +616,8 @@ router.put('/:lsnId', (req, res) => {
                         }
                     });
 
-                }  else {
-                    let newLesson = Object.assign({} , lessons , req.body)
+                } else {
+                    let newLesson = Object.assign({}, lessons, req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
 
                         if (lesson == -1) {
@@ -679,7 +679,7 @@ router.put('/video/:vdId', (req, res) => {
     }
     else {
         if (req.files) {
-            if (req.files.file != null || req.files.file != undefined   ) {
+            if (req.files.file != null || req.files.file != undefined) {
                 database.getVideoByVDId(req.params.vdId, (video)=> {
                     if (video == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1094,20 +1094,30 @@ router.get('/level/:lvlId', (req, res) => {
         }
         else {
             if (lesson == -1) {
-                res.status(500).end('')
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
             }
             else if (lesson == 0) {
-                res.status(404).end('')
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
             }
             else {
                 if (req.query.offset && req.query.limit) {
                     response.pagination(req.query.offset, req.query.limit, lesson, (resp)=> {
-                        res.json(resp)
+                        if(lesson.length == 1){
+                            lesson = lesson[0]
+                        }
+                        response.response('اطلاعات مورد نظر یافت شد', lesson, (resp)=> {
+                            res.json(resp)
+                        })
                     })
                 }
                 else {
-                    res.json(lesson)
-
+                    response.response('اطلاعات مورد نظر یافت شد', lesson, (result)=> {
+                        res.json(result)
+                    })
                 }
             }
         }
@@ -1383,11 +1393,11 @@ router.delete('/:lsnId', (req, res) => {
                                 })
                             }
                             else if (result == -2) {
-                                response.validation('درس قابل حذف شدن نیست', {},"hasSound", (result)=> {
+                                response.validation('درس قابل حذف شدن نیست', {}, "hasSound", (result)=> {
                                     res.json(result)
                                 })
                             } else if (result == -3) {
-                                response.validation('درس قابل حذف شدن نیست', {},"hasVideo", (result)=> {
+                                response.validation('درس قابل حذف شدن نیست', {}, "hasVideo", (result)=> {
                                     res.json(result)
                                 })
                             }
@@ -1414,11 +1424,11 @@ router.delete('/:lsnId', (req, res) => {
                         })
                     }
                     else if (result == -2) {
-                        response.validation('درس قابل حذف شدن نیست', {},"hasSound", (result)=> {
+                        response.validation('درس قابل حذف شدن نیست', {}, "hasSound", (result)=> {
                             res.json(result)
                         })
                     } else if (result == -3) {
-                        response.validation('درس قابل حذف شدن نیست', {},"hasVideo", (result)=> {
+                        response.validation('درس قابل حذف شدن نیست', {}, "hasVideo", (result)=> {
                             res.json(result)
                         })
                     }
