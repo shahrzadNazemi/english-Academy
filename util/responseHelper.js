@@ -84,7 +84,6 @@ module.exports.validation = (message, data, status, cb)=> {
 };
 
 module.exports.pagination = (offset, limit, data, cb)=> {
-    console.log(offset, limit, data)
     let temp = []
     let k = 0
     if (limit > data.length || offset > data.length) {

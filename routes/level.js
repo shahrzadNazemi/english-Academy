@@ -18,10 +18,10 @@ const level = {
     type: "object",
     properties: {
         title: {type: "string", minLength: 3, maxLength: 20},
-        description: {type: "string", minLength: 21},
+        description: {type: "string"},
         order: {type: "string"}
     },
-    required: ["title", "description", "order"],
+    required: ["title", "order"],
     additionalProperties: false
 };
 

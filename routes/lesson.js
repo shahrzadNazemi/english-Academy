@@ -15,6 +15,7 @@ const ajv = require("ajv")({
 var normalise = require('ajv-error-messages');
 const translate = require('google-translate-api');
 var ffmpeg = require('ffmpeg');
+let jwt = require('../util/jwtHelper')
 
 
 const lesson = {
@@ -22,7 +23,9 @@ const lesson = {
     properties: {
         lvlId: {type: "string"},
         title: {type: "string"},
-        order: {type: "string"}
+        order: {type: "string"},
+        description:{type:"string"},
+        deadline:{type:"string"}
     },
     required: ["lvlId", "title", "order"],
     additionalProperties: false
@@ -153,7 +156,7 @@ router.post('/', (req, res) => {
                                             })
                                         }
                                         else {
-                                            response.response('درس مورد نظر تغییر یافت .', lesson, (result)=> {
+                                            response.response('درس مورد نظر  ثبت شد .', lesson, (result)=> {
                                                 res.json(result)
 
                                             })
@@ -1066,6 +1069,7 @@ router.put('/sound/:sndId', (req, res) => {
 
 
 router.get('/level/:lvlId', (req, res) => {
+
     database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
         if (req.query.cli == 1) {
             if (lesson == -1) {
