@@ -1080,7 +1080,7 @@ router.get('/level/:lvlId', (req, res) => {
                 })
             }
             else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
                     res.json(result)
                 })
             }
@@ -1105,7 +1105,7 @@ router.get('/level/:lvlId', (req, res) => {
                 })
             }
             else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
                     res.json(result)
                 })
             }
@@ -1136,14 +1136,13 @@ router.get('/:lsnId/video', (req, res) => {
             })
         }
         else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
         else {
             response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
                 res.json(result)
-
             })
         }
     })
@@ -1152,7 +1151,7 @@ router.get('/:lsnId/video', (req, res) => {
 router.get('/selective', (req, res)=> {
     database.getAllLessons((lesson)=> {
         if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {} , (result)=> {
                 res.json(result)
             })
         }
@@ -1378,12 +1377,6 @@ router.delete('/:lsnId', (req, res) => {
             if (lesson.avatarUrl != undefined || lesson.avatarUrl != null) {
                 var unlinkPath = lesson.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
                 fs.unlink(unlinkPath, function (err) {
-                    if (err) {
-                        response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
                         database.delLesson(req.params.lsnId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1411,7 +1404,7 @@ router.delete('/:lsnId', (req, res) => {
                                 })
                             }
                         })
-                    }
+                    
                 })
             }
             else {

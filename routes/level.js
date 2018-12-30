@@ -387,12 +387,6 @@ router.delete('/:lvlId', (req, res)=> {
             if (level.avatarUrl != undefined || level.avatarUrl != null) {
                 var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
                 fs.unlink(unlinkPath, function (err) {
-                    if (err) {
-                        response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
                         database.delLevel(req.params.lvlId, (delResult)=> {
                             if (delResult == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -416,7 +410,7 @@ router.delete('/:lvlId', (req, res)=> {
                                 })
                             }
                         })
-                    }
+                    
                 })
             }
             else {
