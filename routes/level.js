@@ -257,12 +257,7 @@ router.put('/:lvlId', (req, res)=> {
                         else {
                             var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
                             fs.unlink(unlinkPath, function (err) {
-                                if (err) {
-                                    response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
+                                try{
                                     if (req.files.file != null) {
                                         req.body._id = level._id
                                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
@@ -326,6 +321,11 @@ router.put('/:lvlId', (req, res)=> {
                                         })
                                     }
                                 }
+                                catch(e){
+                                    console.log(e)
+                                }
+                                   
+                                
                             })
                         }
                     })
@@ -387,6 +387,7 @@ router.delete('/:lvlId', (req, res)=> {
             if (level.avatarUrl != undefined || level.avatarUrl != null) {
                 var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
                 fs.unlink(unlinkPath, function (err) {
+                    try{
                         database.delLevel(req.params.lvlId, (delResult)=> {
                             if (delResult == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -410,6 +411,10 @@ router.delete('/:lvlId', (req, res)=> {
                                 })
                             }
                         })
+                    }
+                    catch(e){
+                        console.log(e)
+                    }
                     
                 })
             }

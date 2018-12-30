@@ -495,8 +495,6 @@ router.post('/type', (req, res)=> {
 
 
 router.put('/:lsnId', (req, res) => {
-    console.log("file",req.files)
-
     let valid = ajv.validate(lesson, req.body);
     if (!valid) {
         let errorData
@@ -549,12 +547,7 @@ router.put('/:lsnId', (req, res) => {
                         else {
                             var unlinkPath = lessons.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
                             fs.unlink(unlinkPath, function (err) {
-                                if (err) {
-                                    response.respondNotFound('فایلی یافت نشد', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
+                                try{
                                     if (req.files.file != null) {
                                         req.body._id = lessons._id
                                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
@@ -617,6 +610,11 @@ router.put('/:lsnId', (req, res) => {
                                         })
                                     }
                                 }
+                                catch (e){
+                                    console.log(e)
+                                }
+
+
                             })
                         }
                     });
@@ -1377,6 +1375,7 @@ router.delete('/:lsnId', (req, res) => {
             if (lesson.avatarUrl != undefined || lesson.avatarUrl != null) {
                 var unlinkPath = lesson.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
                 fs.unlink(unlinkPath, function (err) {
+                    try{
                         database.delLesson(req.params.lsnId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1404,7 +1403,10 @@ router.delete('/:lsnId', (req, res) => {
                                 })
                             }
                         })
-                    
+                    }
+                    catch (e){
+                        console.log(e)
+                    }
                 })
             }
             else {
