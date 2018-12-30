@@ -497,7 +497,6 @@ router.post('/type', (req, res)=> {
 router.put('/:lsnId', (req, res) => {
     console.log("file",req.files)
 
-    console.log("files",req.files.file)
     let valid = ajv.validate(lesson, req.body);
     if (!valid) {
         let errorData
@@ -522,7 +521,7 @@ router.put('/:lsnId', (req, res) => {
                 })
             }
             else {
-                if (req.files.file != {}) {
+                if (req.files) {
                     let newLesson = Object.assign({}, lessons, req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
                         if (lesson == -1) {
