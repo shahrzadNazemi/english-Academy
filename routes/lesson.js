@@ -1112,9 +1112,6 @@ router.get('/level/:lvlId', (req, res) => {
             else {
                 if (req.query.offset && req.query.limit) {
                     response.pagination(req.query.offset, req.query.limit, lesson, (resp)=> {
-                        if(lesson.length == 1){
-                            lesson = lesson[0]
-                        }
                         response.response('اطلاعات مورد نظر یافت شد', lesson, (resp)=> {
                             res.json(resp)
                         })

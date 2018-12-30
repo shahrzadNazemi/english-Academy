@@ -366,7 +366,6 @@ router.put('/:lvlId', (req, res)=> {
                         }
                     })
                 }
-
             }
         })
     }
