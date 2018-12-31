@@ -935,7 +935,7 @@ router.put('/sound/:sndId', (req, res) => {
                     })
                 }
                 else {
-                    var unlinkPath = sound.url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+                    var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
                     fs.unlink(unlinkPath, function (err) {
                         try{
                                 if (req.files.file != null) {
@@ -1577,7 +1577,7 @@ router.delete('/sound/:sndId', (req, res) => {
             })
         }
         else {
-            var unlinkPath = sound.url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+            var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
             fs.unlink(unlinkPath, function (err) {
                 try{
                         database.delSound(req.params.sndId, (result)=> {
