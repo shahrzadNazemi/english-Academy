@@ -782,7 +782,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                 })
                                                                                             }
                                                                                             else {
-                                                                                                response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
+                                                                                                response.response('اطلاعات با موفقیت تغییر یافت', req.body, (result1)=> {
                                                                                                     res.json(result1)
 
                                                                                                 })
@@ -852,7 +852,7 @@ router.put('/video/:vdId', (req, res) => {
                                 })
                             }
                             else {
-                                response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
+                                response.response('اطلاعات با موفقیت تغییر یافت', req.body, (result1)=> {
                                     res.json(result1)
                                 })
                             }
@@ -889,7 +889,7 @@ router.put('/video/:vdId', (req, res) => {
                             })
                         }
                         else {
-                            response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
+                            response.response('اطلاعات با موفقیت تغییر یافت', req.body, (result1)=> {
                                 res.json(result1)
                             })
                         }

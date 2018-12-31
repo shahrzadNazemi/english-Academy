@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/lesson.js" afterPath="$PROJECT_DIR$/routes/lesson.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -439,7 +438,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="324">
@@ -733,12 +732,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="61">
-              <caret line="772" column="53" selection-start-line="772" selection-start-column="53" selection-end-line="772" selection-end-column="53" />
-              <folding />
+            <state relative-caret-position="284">
+              <caret line="784" column="154" selection-start-line="784" selection-start-column="146" selection-end-line="784" selection-end-column="154" />
+              <folding>
+                <element signature="e#70018#72357#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1257,12 +1258,12 @@
       <workItem from="1545889546705" duration="13566000" />
       <workItem from="1546063231896" duration="17587000" />
       <workItem from="1546148585911" duration="14772000" />
-      <workItem from="1546236665410" duration="2623000" />
+      <workItem from="1546236665410" duration="2790000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="334528000" />
+    <option name="totallyTimeSpent" value="334695000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -1274,9 +1275,9 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4957265" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08034188" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47179487" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33509833" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24615385" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24615385" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.115733735" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -4722,14 +4723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/lesson.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="772" column="53" selection-start-line="772" selection-start-column="53" selection-end-line="772" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -5018,6 +5011,16 @@
             <element signature="e#26260#26349#0" expanded="false" />
             <element signature="e#26395#26462#0" expanded="false" />
             <element signature="e#26508#26537#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/lesson.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="784" column="154" selection-start-line="784" selection-start-column="146" selection-end-line="784" selection-end-column="154" />
+          <folding>
+            <element signature="e#70018#72357#0" expanded="false" />
           </folding>
         </state>
       </provider>
