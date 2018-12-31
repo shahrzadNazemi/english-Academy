@@ -889,6 +889,31 @@ module.exports.getAllVideo = (cb)=> {
 
 };
 
+module.exports.getAllSound = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/sound`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     console.log(updateInfo)
     request.put({

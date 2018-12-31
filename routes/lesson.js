@@ -1255,6 +1255,30 @@ router.get('/video', (req, res)=> {
     })
 });
 
+router.get('/sound', (req, res)=> {
+    database.getAllSound((sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('صداهای مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                let countPages = Math.ceil(sound.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی صداها', result1, (result)=> {
+                    res.json(result)
+                })
+            })
+        }
+    })
+});
+
 router.get('/video/:vdId', (req, res)=> {
     database.getVideoByVDId(req.params.vdId, (video)=> {
         if (video == -1) {
