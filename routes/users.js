@@ -310,7 +310,7 @@ router.post('/student/placement', (req, res)=> {
                 }
                 else
                     {
-                        response.response('اطلاعات مربوط به درس اول:', lesson[0], (result)=> {
+                        response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
                             res.json(result)
                         })
                     }
