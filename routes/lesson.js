@@ -1313,7 +1313,7 @@ router.get('/sound/:sndId', (req, res)=> {
             })
         }
         else {
-            response.response('اطلاعات صدا', sound, (result)=> {
+            response.response('اطلاعات صدا', sound[0], (result)=> {
                 res.json(result)
             })
 
