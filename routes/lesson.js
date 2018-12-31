@@ -1007,7 +1007,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                                             })
                                                                         }
                                                                         else{
-                                                                            let newSound = Object.assign({} , getSoundResult , req.body)
+                                                                            let newSound = Object.assign({} , getSoundResult[0] , req.body)
                                                                             database.updateSound(newSound, req.params.sndId, (updateSound)=> {
                                                                                 if (updateSound == -1) {
                                                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1068,7 +1068,7 @@ router.put('/sound/:sndId', (req, res) => {
                     })
                 }
                 else{
-                    let newSound = Object.assign({} , getSoundResult , req.body)
+                    let newSound = Object.assign({} , getSoundResult[0] , req.body)
                     database.updateSound(newSound, req.params.sndId, (updateSound)=> {
                         if (updateSound == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
