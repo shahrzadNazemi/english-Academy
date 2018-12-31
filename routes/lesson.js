@@ -1300,6 +1300,27 @@ router.get('/video/:vdId', (req, res)=> {
     })
 });
 
+router.get('/sound/:sndId', (req, res)=> {
+    database.getSoundBysndId(req.params.sndId, (sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('صدا مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات صدا', sound, (result)=> {
+                res.json(result)
+            })
+
+        }
+    })
+});
+
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (lesson)=> {
         if (lesson == -1) {
