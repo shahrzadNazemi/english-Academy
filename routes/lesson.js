@@ -863,6 +863,7 @@ router.put('/video/:vdId', (req, res) => {
         }
         else {
             database.getVideoByVDId(req.params.vdId, (video)=> {
+                console.log(video)
                 if (video == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -876,7 +877,7 @@ router.put('/video/:vdId', (req, res) => {
 
                 }
                 else {
-                    var newVideo = Object.assign({}, video, req.body)
+                    var newVideo = Object.assign({}, video[0], req.body)
                     database.updateVideo(newVideo, req.params.vdId, (result)=> {
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -889,7 +890,7 @@ router.put('/video/:vdId', (req, res) => {
                             })
                         }
                         else {
-                            response.response('اطلاعات با موفقیت تغییر یافت', req.body, (result1)=> {
+                            response.response('اطلاعات با موفقیت تغییر یافت', video[0], (result1)=> {
                                 res.json(result1)
                             })
                         }
