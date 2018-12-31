@@ -235,6 +235,7 @@ router.post('/video', (req, res) => {
         if (req.files) {
             if (req.files.file != null) {
                 database.getLessonById(req.body.lsnId, (lesson)=> {
+                    console.log(lesson)
                     if (lesson == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
@@ -781,7 +782,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                 })
                                                                                             }
                                                                                             else {
-                                                                                                response.response('اطلاعات با موفقیت تغییر یافت', result, (result1)=> {
+                                                                                                response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
                                                                                                     res.json(result1)
 
                                                                                                 })
@@ -851,7 +852,7 @@ router.put('/video/:vdId', (req, res) => {
                                 })
                             }
                             else {
-                                response.response('اطلاعات با موفقیت تغییر یافت', result, (result1)=> {
+                                response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
                                     res.json(result1)
                                 })
                             }
@@ -888,7 +889,7 @@ router.put('/video/:vdId', (req, res) => {
                             })
                         }
                         else {
-                            response.response('اطلاعات با موفقیت تغییر یافت', result, (result1)=> {
+                            response.response('اطلاعات با موفقیت تغییر یافت', newVideo, (result1)=> {
                                 res.json(result1)
                             })
                         }
