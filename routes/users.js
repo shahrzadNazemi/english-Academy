@@ -260,29 +260,31 @@ router.post('/student/login', (req, res) => {
             res.json(result)
         })
     }
-    req.body.password = hashHelper.hash(req.body.password)
+    else {
+        req.body.password = hashHelper.hash(req.body.password)
+        database.stuLogin(req.body, function (loginResult) {
+            if (loginResult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (loginResult == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                delete loginResult.password
+                let data = loginResult
+                data.jwt = jwt.signUser(loginResult.username)
+                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                    res.json(result)
 
-    database.stuLogin(req.body, function (loginResult) {
-        if (loginResult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (loginResult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            delete loginResult.password
-            let data = loginResult
-            data.jwt = jwt.signUser(loginResult.username)
-            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                res.json(result)
+                })
+            }
+        })
+    }
 
-            })
-        }
-    })
 });
 
 router.post('/student/placement', (req, res)=> {
@@ -440,6 +442,62 @@ router.put('/student/:stdId', (req, res) => {
             }
         })
     }
+
+});
+
+router.put('/student/:stdId/changePass', (req, res) => {
+    if (req.body.oldPass == undefined) {
+        let errData = {"OldPassword": "پسورد را وارد کنید"}
+        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        req.body.oldPassword = hashHelper.hash(req.body.oldPassword)
+        req.body.password = hashHelper.hash(req.body.newPassword)
+        database.getStudentById(req.params.stdId, (student)=> {
+            if (student == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (student == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else{
+                if(req.body.oldPassword == student.password){
+                    database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
+                        if (Putresult == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (Putresult == 0) {
+                            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            delete Putresult.password
+                            response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    })
+                }
+                else{
+                    let errData = {"OldPassword": "پسورد اشتباه است"}
+                    response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+                        res.json(result)
+                    })
+                }
+            }
+        })
+    }
+
 
 });
 
