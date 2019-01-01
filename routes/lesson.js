@@ -1133,7 +1133,7 @@ router.put('/sound/:sndId', (req, res) => {
                                 var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
                                 // path is Upload Directory
                                 var CoverDir = `${config.uploadPathSound}/cover/${req.body.lvlId}/${req.body.lsnId}/`;
-                                console.log("dir", dir)
+                                // console.log("dir", dir)
                                 module.exports.addDir(CoverDir, function (newPath) {
                                     var Coverpath = CoverDir + newFile;
                                     req.files.pic.mv(Coverpath, function (err) {
@@ -1144,9 +1144,9 @@ router.put('/sound/:sndId', (req, res) => {
                                             })
                                         }
                                         else {
-                                            req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                            // req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                             req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                            let newSound = Object.assign({}, sound, req.body)
+                                            let newSound = Object.assign({}, sound[0], req.body)
                                             database.updateSound(newSound,req.params.sndId, (result)=> {
                                                 if (result == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
