@@ -235,7 +235,6 @@ router.post('/video', (req, res) => {
         if (req.files) {
             if (req.files.file != null) {
                 database.getLessonById(req.body.lsnId, (lesson)=> {
-                    console.log(lesson)
                     if (lesson == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
@@ -251,7 +250,7 @@ router.post('/video', (req, res) => {
                     else {
                         req.body.lvlId = lesson.lvlId
                         database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
-                            if (videos == -1) {
+                            if (videos == -1 || videos == 0) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
                                 })
@@ -287,32 +286,83 @@ router.post('/video', (req, res) => {
                                                 })
                                             }
                                             else {
-                                                req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
-                                                let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
-                                                module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
-                                                    if (thumbResult == -1) {
-                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
-                                                            res.json(result1)
-                                                        })
-                                                    }
-                                                    else {
-                                                        let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
-                                                        req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                                        database.addVideo(req.body, (result)=> {
-                                                            if (result == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
-                                                                    res.json(result1)
+                                                if (req.files.srt) {
+                                                    var extension = req.files.srt.name.substring(req.files.srt.name.lastIndexOf('.') + 1).toLowerCase();
+                                                    var file = req.files.srt.name.replace(`.${extension}`, '');
+                                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                                    // path is Upload Directory
+                                                    var srtDir = `${config.uploadPathVideo}/srt/${req.body.lvlId}/${req.body.lsnId}/`;
+                                                    // console.log("dir", dir)
+                                                    module.exports.addDir(srtDir, function (newPath) {
+                                                        var srtPath = srtDir + newFile;
+                                                        req.files.srt.mv(srtPath, function (err) {
+                                                            if (err) {
+                                                                console.error(err);
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                    res.json(result)
                                                                 })
                                                             }
                                                             else {
-                                                                response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
-                                                                    res.json(result1)
+                                                                req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                                                req.body.srtUrl = srtPath.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
 
+                                                                let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
+                                                                module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
+                                                                    if (thumbResult == -1) {
+                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                            res.json(result1)
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
+                                                                        req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
+                                                                        database.addVideo(req.body, (result)=> {
+                                                                            if (result == -1) {
+                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                    res.json(result1)
+                                                                                })
+                                                                            }
+                                                                            else {
+                                                                                response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                                                    res.json(result1)
+
+                                                                                })
+                                                                            }
+                                                                        })
+                                                                    }
                                                                 })
                                                             }
                                                         })
-                                                    }
-                                                })
+                                                    });
+                                                }
+                                                else {
+                                                    req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                                    let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
+                                                    module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
+                                                        if (thumbResult == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                res.json(result1)
+                                                            })
+                                                        }
+                                                        else {
+                                                            let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
+                                                            req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
+                                                            database.addVideo(req.body, (result)=> {
+                                                                if (result == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                        res.json(result1)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                                        res.json(result1)
+
+                                                                    })
+                                                                }
+                                                            })
+                                                        }
+                                                    })
+                                                }
 
 
                                             }
@@ -1038,7 +1088,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                                                             req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                                                             req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                                                             let newSound = Object.assign({}, sound[0], req.body)
-                                                                                            database.updateSound(newSound,req.params.sndId , (result)=> {
+                                                                                            database.updateSound(newSound, req.params.sndId, (result)=> {
                                                                                                 if (result == -1) {
                                                                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
                                                                                                         res.json(result1)
@@ -1147,7 +1197,7 @@ router.put('/sound/:sndId', (req, res) => {
                                             // req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                             req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                             let newSound = Object.assign({}, sound[0], req.body)
-                                            database.updateSound(newSound,req.params.sndId, (result)=> {
+                                            database.updateSound(newSound, req.params.sndId, (result)=> {
                                                 if (result == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
                                                         res.json(result1)
