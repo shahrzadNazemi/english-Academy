@@ -342,13 +342,6 @@ router.post('/student/placement', (req, res)=> {
 
 
 router.put('/student/:stdId', (req, res) => {
-    if (req.body.password == undefined) {
-        let errData = {"password": "پسورد را وارد کنید"}
-        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
-            res.json(result)
-        })
-    }
-    else {
         req.body.password = hashHelper.hash(req.body.password)
         if (req.files) {
             database.getStudentById(req.params.stdId , (student)=>{
@@ -446,7 +439,6 @@ router.put('/student/:stdId', (req, res) => {
                 }
             })
         }
-    }
 
 });
 
