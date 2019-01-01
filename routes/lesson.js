@@ -1738,23 +1738,35 @@ router.delete('/sound/:sndId', (req, res) => {
             var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
             fs.unlink(unlinkPath, function (err) {
                 try {
-                    database.delSound(req.params.sndId, (result)=> {
-                        if (result == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else if (result == 0) {
-                            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else {
-                            response.response('فایل مورد نظر حذف شد.', result, (result)=> {
-                                res.json(result)
+                    var unlinkPath = sound[0].coverUrl.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
+                    fs.unlink(unlinkPath, function (err) {
+                        try {
+                            // type file
+                            database.delSound(req.params.sndId, (result)=> {
+                                if (result == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else if (result == 0) {
+                                    response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    response.response('فایل مورد نظر حذف شد.', result, (result)=> {
+                                        res.json(result)
 
+                                    })
+                                }
                             })
+
+
                         }
+                        catch (e) {
+                            console.log(e)
+                        }
+
                     })
                 }
                 catch (e) {
