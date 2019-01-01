@@ -466,8 +466,8 @@ router.put('/student/:stdId/changePass', (req, res) => {
                     res.json(result)
                 })
             }
-            else{
-                if(req.body.oldPassword == student.password){
+            else {
+                if (req.body.oldPassword == student.password) {
                     database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
                         if (Putresult == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -488,7 +488,7 @@ router.put('/student/:stdId/changePass', (req, res) => {
                         }
                     })
                 }
-                else{
+                else {
                     let errData = {"OldPassword": "پسورد اشتباه است"}
                     response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
                         res.json(result)

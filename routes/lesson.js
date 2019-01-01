@@ -1628,7 +1628,7 @@ router.get('/:lsnId', (req, res) => {
             })
         }
         else {
-            response.response('درس مورد نظر یافت شد.', lesson, (result)=> {
+            response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
                 res.json(result)
 
             })
