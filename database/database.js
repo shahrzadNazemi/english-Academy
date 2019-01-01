@@ -622,6 +622,37 @@ module.exports.delSound = (sndId, cb)=> {
     })
 };
 
+module.exports.delType = (typeId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/type/${typeId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.getVideoByLsnLvl = (lvlId, lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}/video/${lvlId}`,
@@ -696,6 +727,29 @@ module.exports.getSoundBysndId = (sndId, cb)=> {
 module.exports.getVideoByVDId = (vdId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/video/${vdId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
+module.exports.getStuOfLevel = (lsnId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/bestLevel/${lsnId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {

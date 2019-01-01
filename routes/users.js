@@ -297,8 +297,8 @@ router.post('/student/placement', (req, res)=> {
         })
     }
     else {
-        if (req.body.lsnId == 0 ) {
-            database.stuPlacement(req.body , (lesson)=> {
+        if (req.body.lsnId == 0) {
+            database.stuPlacement(req.body, (lesson)=> {
                 if (lesson == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)
@@ -309,17 +309,16 @@ router.post('/student/placement', (req, res)=> {
                         res.json(result)
                     })
                 }
-                else
-                    {
-                        response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
-                            res.json(result)
-                        })
-                    }
+                else {
+                    response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
+                        res.json(result)
+                    })
+                }
 
             })
         }
         else {
-            database.stuPlacement(req.body , (lesson)=>{
+            database.stuPlacement(req.body, (lesson)=> {
                 if (lesson == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                         res.json(result)
@@ -330,7 +329,7 @@ router.post('/student/placement', (req, res)=> {
                         res.json(result)
                     })
                 }
-                else{
+                else {
                     response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
                         res.json(result)
                     })
@@ -339,6 +338,7 @@ router.post('/student/placement', (req, res)=> {
         }
     }
 });
+
 
 router.put('/student/:stdId', (req, res) => {
     if (req.body.stu_password == undefined) {
@@ -371,6 +371,7 @@ router.put('/student/:stdId', (req, res) => {
     }
 
 });
+
 
 router.get('/student', (req, res) => {
     database.getAdmins((getResult)=> {
@@ -424,69 +425,33 @@ router.get('/student/best', (req, res) => {
     })
 });
 
-router.get('/student/level/best/:lsnId', (req, res) => {
-    database.getLessonById(req.params.lsnId, (lesson)=> {
-        if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-
-        }
-        else if (lesson == 0) {
-            response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-
-        } else {
-            let lvlId = lesson.lvlId
-            database.getStudentByLevel(lvlId, (student)=> {
-                if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                        res.json(result)
-                    })
-
-                }
-                else if (lesson == 0) {
-                    response.respondNotFound('ویدیویی با این شناسه ی درس یافت نشد.', {}, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    response.response('اطلاعات بهترین دانش آموزان این سطح', student, (result1)=> {
-                        res.json(result1)
-                    })
-                }
-            })
-        }
-    })
-    database.getAllStu((getResult)=> {
-        if (getResult == -1) {
+router.get('/student/bestOfLevel/:lsnId', (req, res) => {
+    database.getStuOfLevel(req.params.lsnId, (student)=> {
+        if (student == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (getResult == 0) {
+        else if (student == 0) {
             response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
             let temp = []
-            let length = getResult.length
-            if (length <= 3) {
-                res.json(getResult)
-            }
-            else {
-                temp[0] = getResult[length - 1]
-                temp[1] = getResult[length - 2]
-                temp[2] = getResult[length - 3]
-                response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
+            if (student.length < 3 || student.length == 3) {
+                response.response('اطلاعات بهترین دانش آموزان یک سطح', student, (result)=> {
                     res.json(result)
-
                 })
             }
+            else {
+                temp[0] = student[length - 1]
+                temp[1] = student[length - 2]
+                temp[3] = student[length - 3]
+            }
+
         }
-    });
+    })
 });
 
 router.get('/student/:stdId', (req, res) => {

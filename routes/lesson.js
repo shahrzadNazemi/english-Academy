@@ -1539,6 +1539,41 @@ router.delete('/:lsnId', (req, res) => {
     })
 });
 
+router.delete('/type/:typId', (req, res) => {
+    database.delType(req.params.typId , (result)=>{
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == -2) {
+            let errData = {"video":["نوع مورد نظر دارای ویدیو است"]}
+            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData,"hasVideo", (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == -3) {
+            let errData = {"sound":["نوع مورد نظر دارای صدا است"]}
+            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData,"hasSound", (result)=> {
+                res.json(result)
+            })
+        }
+
+        else {
+            response.response('نوع مورد نظر حذف شد.', result, (result)=> {
+                res.json(result)
+
+            })
+        }
+
+    })
+});
+
 router.delete('/video/:vdId', (req, res) => {
     database.getVideoByVDId(req.params.vdId, (video)=> {
         if (video == -1) {
