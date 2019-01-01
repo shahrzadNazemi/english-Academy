@@ -1153,26 +1153,6 @@ router.get('/level/:lvlId', (req, res) => {
     })
 });
 
-router.get('/:lsnId/video', (req, res) => {
-    database.getVDbyLesson((video)=> {
-        if (video == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', [], (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
-                res.json(result)
-            })
-        }
-    })
-});
-
 router.get('/selective', (req, res)=> {
     database.getAllLessons((lesson)=> {
         if (lesson == -1) {
@@ -1367,40 +1347,27 @@ router.get('/:lsnId', (req, res) => {
     })
 });
 
-router.get('/:lsnId/sound', (req, res) => {
-    database.getSndByLsn((sound)=> {
-        if (sound == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (sound == 0) {
-            response.respondNotFound('وویس مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.response('وویس مورد نظر یافت شد.', sound, (result)=> {
-                res.json(result)
-
-            })
-        }
-    })
-});
-
-router.get('/:lsnId/video/:lvlId', (req, res)=> {
-    database.getVideoByLsnLvl(req.params.lvlId, req.params.lsnId, (video)=> {
+router.get('/:lsnId/video', (req, res)=> {
+    database.getAllVideo((video)=> {
         if (video == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (video == 0) {
-            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
         else {
+            let k =0
+            let temp = []
+            for(var i=0;i<video.length;i++){
+                if(video[i].lsnId == req.params.lsnId){
+                    temp[k] = video[i]
+                }
+            }
+            video = temp
             response.response('ویدیو مورد نظر یافت شد.', video, (result)=> {
                 res.json(result)
 
@@ -1409,25 +1376,34 @@ router.get('/:lsnId/video/:lvlId', (req, res)=> {
     })
 });
 
-router.get('/:lsnId/sound/:lvlId', (req, res)=> {
-    database.getSoundByLsnLvl(req.params.lvlId, req.params.lsnId, (sound)=> {
+router.get('/:lsnId/sound', (req, res)=> {
+    database.getAllSound((sound)=> {
         if (sound == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else if (sound == 0) {
-            response.respondNotFound('وویس مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('وویس مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
         else {
+            let k =0
+            let temp = []
+            for(var i=0;i<sound.length;i++){
+                if(sound[i].lsnId == req.params.lsnId){
+                    temp[k] = sound[i]
+                }
+            }
+            sound = temp
             response.response('وویس مورد نظر یافت شد.', sound, (result)=> {
                 res.json(result)
 
             })
         }
     })
+
 });
 
 router.get('/', (req, res)=> {
