@@ -76,12 +76,12 @@ router.post('/', (req, res)=> {
             req.body.lesson = {}
             req.body.type = ""
         }
-        for(var i=0;i<req.body.answer.length;i++){
+        for(var i=0;i<req.body.answers.length;i++){
             if(i == req.body.trueIndex){
-                req.body.answer[i].isTrue = true
+                req.body.answers[i].isTrue = true
             }
             else{
-                req.body.answer[i].isTrue = false
+                req.body.answers[i].isTrue = false
             }
         }
         database.addQuestion(req.body, (addResult)=> {
