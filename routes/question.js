@@ -17,7 +17,7 @@ const question = {
         content: {type: "string"},
         score: {type: "number"},
         type: {type: "string"},
-        answer: {type: "array"},
+        answers: {type: "array"},
         lesson: {type: "object"},
         exam: {type: "object"},
         trueIndex :{type:"number"}
