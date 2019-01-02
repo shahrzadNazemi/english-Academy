@@ -20,7 +20,7 @@ const question = {
         answers: {type: "array"},
         lesson: {type: "object"},
         exam: {type: "object"},
-        trueIndex :{type:"number"}
+        trueIndex :{type:"string"}
     },
     required: [],
     additionalProperties: false
@@ -75,6 +75,9 @@ router.post('/', (req, res)=> {
             req.body.exam = {}
             req.body.lesson = {}
             req.body.type = ""
+        }
+        if(typeof req.body.trueIndex == "string"){
+            req.body.trueIndex  = parseInt(req.body.trueIndex)
         }
         for(var i=0;i<req.body.answers.length;i++){
             if(i == req.body.trueIndex){
