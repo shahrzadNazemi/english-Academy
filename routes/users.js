@@ -361,15 +361,17 @@ router.put('/student/:stdId', (req, res) => {
     if (req.body.avatarUrl == "") {
         delete req.body.avatarUrl
     }
-    if (req.body.score = "") {
+    if (req.body.score == "") {
         delete req.body.score
     }
-    if (req.body.lastPassedLesson = "") {
+    if (req.body.lastPassedLesson == "") {
         delete req.body.lastPassedLesson
     }
-    if (req.body.passedLessonScore = "") {
+    if (req.body.passedLessonScore == "") {
         delete req.body.passedLessonScore
     }
+    if (req.body.password == "")
+        delete req.body.password 
     if (req.files) {
         database.getStudentById(req.params.stdId, (student)=> {
             if (student == -1) {
