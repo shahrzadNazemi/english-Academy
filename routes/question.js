@@ -19,13 +19,15 @@ const question = {
         type: {type: "string"},
         answer: {type: "array"},
         lesson: {type: "object"},
-        exam: {type: "object"}
+        exam: {type: "object"},
+        trueIndex :{type:"number"}
     },
     required: [],
     additionalProperties: false
 };
 
 router.post('/', (req, res)=> {
+
     let valid = ajv.validate(question, req.body);
     if (!valid) {
         // console.log(ajv.errors)
@@ -73,6 +75,14 @@ router.post('/', (req, res)=> {
             req.body.exam = {}
             req.body.lesson = {}
             req.body.type = ""
+        }
+        for(var i=0;i<req.body.answer.length;i++){
+            if(i == req.body.trueIndex){
+                req.body.answer[i].isTrue = true
+            }
+            else{
+                req.body.answer[i].isTrue = false
+            }
         }
         database.addQuestion(req.body, (addResult)=> {
             if (addResult == -1) {
