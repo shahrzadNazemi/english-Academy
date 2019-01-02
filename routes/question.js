@@ -17,9 +17,9 @@ const question = {
         content: {type: "string"},
         score: {type: "number"},
         type: {type: "string"},
-        answer:{type:"array"},
-        lesson:{type:"object"},
-        exam:{type:"object"}
+        answer: {type: "array"},
+        lesson: {type: "object"},
+        exam: {type: "object"}
     },
     required: [],
     additionalProperties: false
@@ -63,43 +63,43 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
-        if(req.body.type == "quiz"){
+        if (req.body.type == "quiz") {
             req.body.exam = {}
         }
-        else if(req.body.type == "exam"){
+        else if (req.body.type == "exam") {
             req.body.lesson = {}
         }
-        if(!req.body.type){
+        if (!req.body.type) {
             req.body.exam = {}
             req.body.lesson = {}
             req.body.type = ""
         }
-            database.addQuestion(req.body, (addResult)=> {
-                if (addResult == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                        res.json(result)
-                    })
-                }
-                else if (addResult == -2) {
-                    let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
-                    response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                        res.json(result)
-                    })
-                }
-                else if (addResult == -3) {
-                    let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
-                    response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                        res.json(result)
+        database.addQuestion(req.body, (addResult)=> {
+            if (addResult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (addResult == -2) {
+                let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
+                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (addResult == -3) {
+                let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
+                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                    res.json(result)
 
-                    })
-                }
-            })
-        
+                })
+            }
+        })
+
 
     }
 });
@@ -135,40 +135,25 @@ router.put('/:QId', (req, res)=> {
         })
     }
     else {
-        database.getQuestionById(req.params.QId, (question)=> {
-            if (question == -1) {
+        database.updateQuestion(req.body, req.params.QId, (result)=> {
+            if (result == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else if (question == 0) {
-                response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+            else if (result == 0) {
+                response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
                     res.json(result)
                 })
             }
             else {
-                    var newQuestion = Object.assign({}, question, req.body)
-                    database.updateQuestion(newQuestion, question._id, (result)=> {
-                        if (result == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else if (result == 0) {
-                            response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else {
-                            response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
-                                res.json(result)
+                response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                    res.json(result)
 
-                            })
-                        }
-                    })
-                
+                })
             }
         })
+
     }
 });
 
@@ -188,7 +173,7 @@ router.delete('/:lvlId', (req, res)=> {
             if (level.avatarUrl != undefined || level.avatarUrl != null) {
                 var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
                 fs.unlink(unlinkPath, function (err) {
-                    try{
+                    try {
                         database.delLevel(req.params.lvlId, (delResult)=> {
                             if (delResult == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -213,7 +198,7 @@ router.delete('/:lvlId', (req, res)=> {
                             }
                         })
                     }
-                    catch(e){
+                    catch (e) {
                         console.log(e)
                     }
 
