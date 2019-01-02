@@ -417,6 +417,13 @@ router.put('/student/:stdId', (req, res) => {
                                                     res.json(result)
                                                 })
                                             }
+                                            else if (Putresult == -2) {
+                                                errData = {"username":["نام کاربری نمیتواند تکراری باشد"]}
+                                                response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated",(result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+
                                             else {
                                                 delete Putresult.password
                                                 response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
@@ -466,7 +473,7 @@ router.put('/student/:stdId', (req, res) => {
 
                 })
             }
-        })
+        });
     }
 
 });

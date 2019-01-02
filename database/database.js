@@ -1048,7 +1048,6 @@ module.exports.getAllSound = (cb)=> {
 };
 
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
-    console.log(updateInfo)
     request.put({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
         headers: {"content-Type": "application/json"},
@@ -1066,6 +1065,10 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
         else {
             logger.info("response body", body)
             cb(body)
