@@ -157,78 +157,26 @@ router.put('/:QId', (req, res)=> {
     }
 });
 
-router.delete('/:lvlId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
-        if (level == -1) {
+router.delete('/:QId', (req, res)=> {
+    database.delQuestion(req.params.QId, (question)=> {
+        if (question == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (level == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            if (level.avatarUrl != undefined || level.avatarUrl != null) {
-                var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
-                fs.unlink(unlinkPath, function (err) {
-                    try {
-                        database.delLevel(req.params.lvlId, (delResult)=> {
-                            if (delResult == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else if (delResult == 0) {
-                                response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else if (delResult == -3) {
-                                response.validation('سطح قابل حذف شدن نیست.', {}, 'hasLesson', (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else {
-                                response.respondDeleted('اطلاعات با موفقیت حذف شد.', delResult, (result)=> {
-                                    res.json(result)
-
-                                })
-                            }
-                        })
-                    }
-                    catch (e) {
-                        console.log(e)
-                    }
+                response.respondDeleted('اطلاعات با موفقیت حذف شد.', question, (result)=> {
+                    res.json(result)
 
                 })
-            }
-            else {
-                database.delLevel(req.params.lvlId, (delResult)=> {
-                    if (delResult == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (delResult == 0) {
-                        response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (delResult == -3) {
-                        response.validation('سطح قابل حذف شدن نیست.', {}, 'hasLesson', (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        response.respondDeleted('اطلاعات با موفقیت حذف شد.', delResult, (result)=> {
-                            res.json(result)
 
-                        })
-                    }
-                })
-            }
+
+
         }
     })
 });

@@ -77,10 +77,10 @@ module.exports.addLevel = (levelInfo, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
-            else if(response.statusCode == 403){
+        else if (response.statusCode == 403) {
             cb(-2)
         }
-        else if(response.statusCode == 402){
+        else if (response.statusCode == 402) {
             cb(-3)
         }
         else {
@@ -137,10 +137,10 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
-        else if(response.statusCode == 403){
+        else if (response.statusCode == 403) {
             cb(-2)
         }
-        else if(response.statusCode == 402){
+        else if (response.statusCode == 402) {
             cb(-3)
         }
         else {
@@ -169,7 +169,7 @@ module.exports.delLevel = (lvlId, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
-            else if(response.statusCode == 403){
+        else if (response.statusCode == 403) {
             cb(-3)
         }
         else {
@@ -347,7 +347,7 @@ module.exports.delStudent = (stuId, cb)=> {
             console.log('last admin can not be deleted')
             cb(-4)
         }
-            
+
         else if (response.statusCode == 404) {
             cb(0)
         }
@@ -530,7 +530,7 @@ module.exports.updateVideo = (updateInfo, vdId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/lesson/video/${vdId}`,
         headers: {"content-Type": "application/json"},
-        body:updateInfo,
+        body: updateInfo,
         json: true
     }, function (err, response, body) {
         if (err) {
@@ -608,6 +608,29 @@ module.exports.delLesson = (lsnId, cb)=> {
 module.exports.delAdmin = (admId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/users/admin/${admId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+module.exports.delQuestion = (QId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/question/${QId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -914,7 +937,7 @@ module.exports.addStu = (stuInfo, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
-            else if(response.statusCode== 403){
+        else if (response.statusCode == 403) {
             cb(-2)
         }
         else {
@@ -924,7 +947,7 @@ module.exports.addStu = (stuInfo, cb)=> {
     })
 };
 
-module.exports.getStudentById = (stdId , cb)=> {
+module.exports.getStudentById = (stdId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
         headers: {"content-Type": "application/json"},
@@ -1050,7 +1073,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
-module.exports.getAdminById = (admId , cb)=> {
+module.exports.getAdminById = (admId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin/${admId}`,
         headers: {"content-Type": "application/json"},
@@ -1075,7 +1098,7 @@ module.exports.getAdminById = (admId , cb)=> {
 
 };
 
-module.exports.getLessonById = (lsnId , cb)=> {
+module.exports.getLessonById = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}`,
         headers: {"content-Type": "application/json"},
@@ -1100,7 +1123,7 @@ module.exports.getLessonById = (lsnId , cb)=> {
 
 };
 
-module.exports.getStudentByLevel = (lvlId , cb)=> {
+module.exports.getStudentByLevel = (lvlId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/student/level/${lvlId}/best`,
         headers: {"content-Type": "application/json"},
@@ -1125,11 +1148,11 @@ module.exports.getStudentByLevel = (lvlId , cb)=> {
 
 };
 
-module.exports.stuPlacement = (placeInfo , cb)=> {
+module.exports.stuPlacement = (placeInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/users/student/placement`,
         headers: {"content-Type": "application/json"},
-        body :placeInfo,
+        body: placeInfo,
         json: true
     }, function (err, response, body) {
         if (err) {
