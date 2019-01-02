@@ -154,6 +154,9 @@ router.post('/student/register', (req, res)=> {
         if (req.body.lastPassedLesson == undefined) {
             req.body.lastPassedLesson = 0
         }
+        if (req.body.passedLessonScore = undefined) {
+             req.body.passedLessonScore = 0
+        }
         req.body.password = hashHelper.hash(req.body.password)
         if (req.files) {
             if (req.files.file != null) {
@@ -346,6 +349,27 @@ router.post('/student/placement', (req, res)=> {
 router.put('/student/:stdId', (req, res) => {
     if (req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
+    if (req.body.fname == "") {
+        delete req.body.fname
+    }
+    if (req.body.lname == "") {
+        delete req.body.lname
+    }
+    if (req.body.mobile == "") {
+        delete req.body.mobile
+    }
+    if (req.body.avatarUrl == "") {
+        delete req.body.avatarUrl
+    }
+    if (req.body.score = "") {
+        delete req.body.score
+    }
+    if (req.body.lastPassedLesson = "") {
+        delete req.body.lastPassedLesson
+    }
+    if (req.body.passedLessonScore = "") {
+        delete req.body.passedLessonScore
+    }
     if (req.files) {
         database.getStudentById(req.params.stdId, (student)=> {
             if (student == -1) {
@@ -446,7 +470,7 @@ router.put('/student/:stdId', (req, res) => {
 });
 
 router.put('/student/:stdId/changePass', (req, res) => {
-    if (req.body.oldPass == undefined) {
+    if (req.body.oldPassword == undefined) {
         let errData = {"OldPassword": "پسورد را وارد کنید"}
         response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
             res.json(result)
@@ -468,7 +492,8 @@ router.put('/student/:stdId/changePass', (req, res) => {
             }
             else {
                 if (req.body.oldPassword == student.password) {
-                    database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
+                    let newStudent = Object.assign({} , student , req.body)
+                    database.updateStudent(newStudent, req.params.stdId, (Putresult)=> {
                         if (Putresult == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
