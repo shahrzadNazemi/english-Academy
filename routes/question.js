@@ -228,7 +228,7 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            if(req.query.page ){
+            if(req.query.page != undefined){
                 response.paginationClient(req.query.page, req.query.limit, question, (result1)=> {
                     let countPages = Math.ceil(question.length / req.query.limit)
                     result1.totalPage = countPages
