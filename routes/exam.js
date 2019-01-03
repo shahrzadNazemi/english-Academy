@@ -19,7 +19,6 @@ const exam = {
     type: "object",
     properties: {
         title: {type: "string"},
-        score: {type: "string"},
         time: {type: "string"},
         preLesson: {type: "object"},
     },
@@ -68,9 +67,6 @@ router.post('/', (req, res)=> {
             if (req.files) {
                 if (req.files.file != null) {
                     // type file
-                    if (typeof req.body.score == "string") {
-                        req.body.score = parseInt(req.body.score)
-                    }
                     if (typeof req.body.time == "string") {
                         req.body.time = parseInt(req.body.time)
                     }
@@ -103,9 +99,6 @@ router.post('/', (req, res)=> {
                                             // req.body._id = (req.body._id.replace(/"/g, ''));
                                             console.log("body", req.body)
 
-                                            if (req.body.score  && typeof req.body.score == "string") {
-                                                req.body.score = parseInt(req.body.score)
-                                            }
                                             if (req.body.time  &&typeof req.body.time == "string") {
                                                 req.body.time = parseInt(req.body.time)
                                             }
@@ -143,10 +136,7 @@ router.post('/', (req, res)=> {
                 }
         }
         else{
-            if (typeof req.body.score == "string") {
-                req.body.score = parseInt(req.body.score)
-            }
-            if (typeof req.body.time == "string") {
+            if (req.body.time !=undefined && typeof req.body.time == "string") {
                 req.body.time = parseInt(req.body.time)
             }
             database.addExam(req.body, (addResult)=> {
@@ -197,9 +187,6 @@ router.put('/:exId', (req, res)=> {
         })
     }
     else {
-        if (req.body.score  && typeof req.body.score == "string") {
-            req.body.score = parseInt(req.body.score)
-        }
         if (req.body.time  &&typeof req.body.time == "string") {
             req.body.time = parseInt(req.body.time)
         }
