@@ -248,6 +248,7 @@ router.post('/video', (req, res) => {
 
                     }
                     else {
+                        lesson = lesson[0]
                         req.body.lvlId = lesson.lvlId
                         database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                             if (videos == -1 || videos == 0) {
@@ -432,6 +433,7 @@ router.post('/sound', (req, res) => {
 
                     }
                     else {
+                        lesson = lesson[0]
                         req.body.lvlId = lesson.lvlId
                         database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                             if (sounds == -1) {
@@ -592,6 +594,7 @@ router.put('/:lsnId', (req, res) => {
                 })
             }
             else {
+                lessons = lesson[0]
                 if (req.files) {
                     let newLesson = Object.assign({}, lessons, req.body)
                     database.updateLesson(newLesson, req.params.lsnId, (lesson)=> {
@@ -789,6 +792,8 @@ router.put('/video/:vdId', (req, res) => {
 
                                                     }
                                                     else {
+                                                        lesson = lesson[0]
+
                                                         req.body.lvlId = lesson.lvlId
                                                         database.getVideoByLsnLvl(req.body.lvlId, req.body.lsnId, (videos)=> {
                                                             if (videos == -1) {
@@ -1025,6 +1030,8 @@ router.put('/video/:vdId', (req, res) => {
 
                     }
                     else {
+                        lesson = lesson[0]
+
                         var newVideo = Object.assign({}, video, req.body)
                         database.updateVideo(newVideo, req.params.vdId, (result)=> {
                             if (result == -1) {
@@ -1140,6 +1147,8 @@ router.put('/sound/:sndId', (req, res) => {
                                             })
 
                                         } else {
+                                            lesson = lesson[0]
+
                                             req.body.lvlId = lesson.lvlId
                                             database.getSoundByLsnLvl(req.body.lvlId, req.body.lsnId, (sounds)=> {
                                                 if (sounds == -1) {
@@ -1424,6 +1433,7 @@ router.get('/level/:lvlId', (req, res) => {
                 })
             }
             else {
+                
                 if (req.query.offset && req.query.limit) {
                     response.pagination(req.query.offset, req.query.limit, lesson, (resp)=> {
                         response.response('اطلاعات مورد نظر یافت شد', lesson, (resp)=> {
@@ -1734,6 +1744,7 @@ router.delete('/:lsnId', (req, res) => {
             })
         }
         else {
+            lesson = lesson[0]
             if (lesson.avatarUrl != undefined || lesson.avatarUrl != null) {
                 var unlinkPath = lesson.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
                 fs.unlink(unlinkPath, function (err) {
