@@ -89,7 +89,7 @@ router.post('/', (req, res)=> {
         }
         database.addQuestion(req.body, (addResult)=> {
             if (addResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }

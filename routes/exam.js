@@ -66,7 +66,7 @@ router.post('/', (req, res)=> {
     } else {
         database.addExam(req.body, (addResult)=> {
             if (addResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -135,25 +135,54 @@ router.put('/:exId', (req, res)=> {
     }
 });
 
-router.delete('/:QId', (req, res)=> {
-    database.delQuestion(req.params.QId, (question)=> {
-        if (question == -1) {
+router.delete('/:exId', (req, res)=> {
+    database.delExam(req.params.exId, (exam)=> {
+        if (exam == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (question == 0) {
+        else if (exam == 0) {
             response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.respondDeleted('اطلاعات با موفقیت حذف شد.', question, (result)=> {
+            response.respondDeleted('اطلاعات با موفقیت حذف شد.', exam, (result)=> {
                 res.json(result)
 
             })
 
 
+
+        }
+    })
+});
+
+router.get('/selective', (req, res)=> {
+    database.getAllExams((exam)=> {
+        if (exam == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (exam == 0) {
+            response.respondNotFound('آزمون مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let temp = []
+
+            for (var i = 0; i < exam.length; i++) {
+                temp[i] = {}
+                temp[i].label = exam[i].title;
+                temp[i].value = exam[i]._id
+                console.log(temp)
+            }
+            response.response('اطلاعات همه ی آزمونها', temp, (result)=> {
+                res.json(result)
+            })
 
         }
     })
@@ -201,6 +230,8 @@ router.get('/', (req, res)=> {
     })
     // res.json({"status":"success"})
 });
+
+
 
 
 module.exports = router

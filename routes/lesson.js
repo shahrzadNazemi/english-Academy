@@ -93,7 +93,7 @@ router.post('/', (req, res) => {
                 // type file
                 database.addLesson(req.body, (lesson)=> {
                     if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
                     }
@@ -181,7 +181,7 @@ router.post('/', (req, res) => {
         else {
             database.addLesson(req.body, (lesson)=> {
                 if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
                 }
@@ -281,7 +281,7 @@ router.post('/video', (req, res) => {
                                         req.files.file.mv(path, function (err) {
                                             if (err) {
                                                 console.error(err);
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                     res.json(result)
                                                 })
                                             }
@@ -298,7 +298,7 @@ router.post('/video', (req, res) => {
                                                         req.files.srt.mv(srtPath, function (err) {
                                                             if (err) {
                                                                 console.error(err);
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                     res.json(result)
                                                                 })
                                                             }
@@ -309,7 +309,7 @@ router.post('/video', (req, res) => {
                                                                 let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
                                                                 module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
                                                                     if (thumbResult == -1) {
-                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                             res.json(result1)
                                                                         })
                                                                     }
@@ -318,7 +318,7 @@ router.post('/video', (req, res) => {
                                                                         req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                                                         database.addVideo(req.body, (result)=> {
                                                                             if (result == -1) {
-                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                     res.json(result1)
                                                                                 })
                                                                             }
@@ -340,7 +340,7 @@ router.post('/video', (req, res) => {
                                                     let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
                                                     module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
                                                         if (thumbResult == -1) {
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                 res.json(result1)
                                                             })
                                                         }
@@ -349,7 +349,7 @@ router.post('/video', (req, res) => {
                                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                                             database.addVideo(req.body, (result)=> {
                                                                 if (result == -1) {
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                         res.json(result1)
                                                                     })
                                                                 }
@@ -465,7 +465,7 @@ router.post('/sound', (req, res) => {
                                         req.files.file.mv(path, function (err) {
                                             if (err) {
                                                 console.error(err);
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                     res.json(result)
                                                 })
                                             }
@@ -481,7 +481,7 @@ router.post('/sound', (req, res) => {
                                                     req.files.pic.mv(Coverpath, function (err) {
                                                         if (err) {
                                                             console.error(err);
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                 res.json(result)
                                                             })
                                                         }
@@ -490,7 +490,7 @@ router.post('/sound', (req, res) => {
                                                             req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                             database.addSound(req.body, (result)=> {
                                                                 if (result == -1) {
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                         res.json(result1)
                                                                     })
                                                                 }
@@ -545,7 +545,7 @@ router.post('/type', (req, res)=> {
     else {
         database.addType(req.body, (type)=> {
             if (type == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
@@ -823,7 +823,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                         req.files.file.mv(path, function (err) {
                                                                             if (err) {
                                                                                 console.error(err);
-                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                                     res.json(result)
                                                                                 })
                                                                             }
@@ -845,7 +845,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                 req.files.srt.mv(srtPath, function (err) {
                                                                                                     if (err) {
                                                                                                         console.error(err);
-                                                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                                                             res.json(result)
                                                                                                         })
                                                                                                     }
@@ -856,7 +856,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                         let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
                                                                                                         module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
                                                                                                             if (thumbResult == -1) {
-                                                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                                     res.json(result1)
                                                                                                                 })
                                                                                                             }
@@ -865,7 +865,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                                 req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                                                                                                 database.addVideo(req.body, (result)=> {
                                                                                                                     if (result == -1) {
-                                                                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                                             res.json(result1)
                                                                                                                         })
                                                                                                                     }
@@ -892,7 +892,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                     let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
                                                                                     module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
                                                                                         if (thumbResult == -1) {
-                                                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                 res.json(result1)
                                                                                             })
                                                                                         }
@@ -902,7 +902,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                             var newVideo = Object.assign({}, video, req.body)
                                                                                             database.updateVideo(newVideo, req.params.vdId, (result)=> {
                                                                                                 if (result == -1) {
-                                                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                                                         res.json(result)
                                                                                                     })
                                                                                                 }
@@ -967,7 +967,7 @@ router.put('/video/:vdId', (req, res) => {
                             req.files.srt.mv(srtPath, function (err) {
                                 if (err) {
                                     console.error(err);
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                         res.json(result)
                                     })
                                 }
@@ -978,7 +978,7 @@ router.put('/video/:vdId', (req, res) => {
                                     let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
                                     module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
                                         if (thumbResult == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                 res.json(result1)
                                             })
                                         }
@@ -987,7 +987,7 @@ router.put('/video/:vdId', (req, res) => {
                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                             database.addVideo(req.body, (result)=> {
                                                 if (result == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                         res.json(result1)
                                                     })
                                                 }
@@ -1175,7 +1175,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                             req.files.file.mv(path, function (err) {
                                                                 if (err) {
                                                                     console.error(err);
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                         res.json(result)
                                                                     })
                                                                 }
@@ -1196,7 +1196,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                                                     req.files.pic.mv(Coverpath, function (err) {
                                                                                         if (err) {
                                                                                             console.error(err);
-                                                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                                                                 res.json(result)
                                                                                             })
                                                                                         }
@@ -1206,7 +1206,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                                                             let newSound = Object.assign({}, sound[0], req.body)
                                                                                             database.updateSound(newSound, req.params.sndId, (result)=> {
                                                                                                 if (result == -1) {
-                                                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                         res.json(result1)
                                                                                                     })
                                                                                                 }
@@ -1305,7 +1305,7 @@ router.put('/sound/:sndId', (req, res) => {
                                     req.files.pic.mv(Coverpath, function (err) {
                                         if (err) {
                                             console.error(err);
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                 res.json(result)
                                             })
                                         }
@@ -1315,7 +1315,7 @@ router.put('/sound/:sndId', (req, res) => {
                                             let newSound = Object.assign({}, sound[0], req.body)
                                             database.updateSound(newSound, req.params.sndId, (result)=> {
                                                 if (result == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result1)=> {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                         res.json(result1)
                                                     })
                                                 }
@@ -1698,7 +1698,7 @@ router.get('/:lsnId/sound', (req, res)=> {
 router.get('/', (req, res)=> {
     database.getAllLessons((sound)=> {
         if (sound == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
