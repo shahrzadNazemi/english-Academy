@@ -82,7 +82,7 @@ router.post('/', (req, res)=> {
     }
 });
 
-router.put('/:QId', (req, res)=> {
+router.put('/:exId', (req, res)=> {
     let valid = ajv.validate(question, req.body);
     if (!valid) {
         console.log(ajv.errors)
@@ -113,7 +113,7 @@ router.put('/:QId', (req, res)=> {
         })
     }
     else {
-        database.updateQuestion(req.body, req.params.QId, (result)=> {
+        database.updateExam(req.body, req.params.QId, (result)=> {
             if (result == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)

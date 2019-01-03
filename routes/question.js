@@ -20,7 +20,7 @@ const question = {
         answers: {type: "array"},
         lesson: {type: "object"},
         exam: {type: "object"},
-        trueIndex :{type:"string"}
+        trueIndex: {type: "string"}
     },
     required: [],
     additionalProperties: false
@@ -76,14 +76,14 @@ router.post('/', (req, res)=> {
             req.body.lesson = {}
             req.body.type = ""
         }
-        if(typeof req.body.trueIndex == "string"){
-            req.body.trueIndex  = parseInt(req.body.trueIndex)
+        if (typeof req.body.trueIndex == "string") {
+            req.body.trueIndex = parseInt(req.body.trueIndex)
         }
-        for(var i=0;i<req.body.answers.length;i++){
-            if(i == req.body.trueIndex){
+        for (var i = 0; i < req.body.answers.length; i++) {
+            if (i == req.body.trueIndex) {
                 req.body.answers[i].isTrue = true
             }
-            else{
+            else {
                 req.body.answers[i].isTrue = false
             }
         }
@@ -148,6 +148,19 @@ router.put('/:QId', (req, res)=> {
         })
     }
     else {
+        if (req.body.trueIndex && typeof req.body.trueIndex == "string") {
+            req.body.trueIndex = parseInt(req.body.trueIndex)
+        }
+        if (req.body.answers != undefined && req.body.trueIndex!= undefined)
+            for (var i = 0; i < req.body.answers.length; i++) {
+                if (i == req.body.trueIndex) {
+                    req.body.answers[i].isTrue = true
+                }
+                else {
+                    req.body.answers[i].isTrue = false
+                }
+            }
+        console.log(req.body)
         database.updateQuestion(req.body, req.params.QId, (result)=> {
             if (result == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -160,7 +173,7 @@ router.put('/:QId', (req, res)=> {
                 })
             }
             else {
-                response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                response.response('ویرایش با موفقیت انجام شد', result, (result)=> {
                     res.json(result)
 
                 })
@@ -183,11 +196,10 @@ router.delete('/:QId', (req, res)=> {
             })
         }
         else {
-                response.respondDeleted('اطلاعات با موفقیت حذف شد.', question, (result)=> {
-                    res.json(result)
+            response.respondDeleted('اطلاعات با موفقیت حذف شد.', question, (result)=> {
+                res.json(result)
 
-                })
-
+            })
 
 
         }
@@ -228,7 +240,7 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            if(req.query.page != undefined){
+            if (req.query.page != undefined) {
                 response.paginationClient(req.query.page, req.query.limit, question, (result1)=> {
                     let countPages = Math.ceil(question.length / req.query.limit)
                     result1.totalPage = countPages
@@ -238,10 +250,10 @@ router.get('/', (req, res)=> {
                 })
 
             }
-            else{
+            else {
                 response.response('اطلاعات همه ی سوالات', question, (result)=> {
                     res.json(result)
-                })                
+                })
             }
 
         }
