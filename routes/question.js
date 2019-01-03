@@ -216,25 +216,37 @@ router.get('/:lvlId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getLevels((getREsult)=> {
-        if (getREsult == -1) {
+    database.getAllQuestions((question)=> {
+        if (question == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (getREsult == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('سطح مورد نظر یافت شد.', getREsult, (result)=> {
-                res.json(result)
+            if(req.query.page ){
+                response.paginationClient(req.query.page, req.query.limit, question, (result1)=> {
+                    let countPages = Math.ceil(question.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی سوالات', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
 
-            })
+            }
+            else{
+                response.response('اطلاعات همه ی سوالات', question, (result)=> {
+                    res.json(result)
+                })                
+            }
+
         }
     })
-    // res.json({"status":"success"})
+
 });
 
 
