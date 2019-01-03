@@ -18,8 +18,8 @@ const exam = {
     type: "object",
     properties: {
         title: {type: "string"},
-        score: {type: "number"},
-        time: {type: "number"},
+        score: {type: "string"},
+        time: {type: "string"},
         preLesson: {type: "object"},
     },
     required: [],
@@ -64,6 +64,12 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
+        if (typeof req.body.score == "string") {
+            req.body.score = parseInt(req.body.score)
+        }
+        if (typeof req.body.time == "string") {
+            req.body.time = parseInt(req.body.time)
+        }
         database.addExam(req.body, (addResult)=> {
             if (addResult == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -113,6 +119,12 @@ router.put('/:exId', (req, res)=> {
         })
     }
     else {
+        if (req.body.score  && typeof req.body.score == "string") {
+            req.body.score = parseInt(req.body.score)
+        }
+        if (req.body.time  &&typeof req.body.time == "string") {
+            req.body.time = parseInt(req.body.time)
+        }
         database.updateExam(req.body, req.params.exId, (result)=> {
             if (result == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

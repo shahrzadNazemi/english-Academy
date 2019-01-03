@@ -15,7 +15,7 @@ const question = {
     type: "object",
     properties: {
         content: {type: "string"},
-        score: {type: "number"},
+        score: {type: "string"},
         type: {type: "string"},
         answers: {type: "array"},
         lesson: {type: "object"},
@@ -78,6 +78,9 @@ router.post('/', (req, res)=> {
         }
         if (typeof req.body.trueIndex == "string") {
             req.body.trueIndex = parseInt(req.body.trueIndex)
+        }
+        if (typeof req.body.score == "string") {
+            req.body.score = parseInt(req.body.score)
         }
         for (var i = 0; i < req.body.answers.length; i++) {
             if (i == req.body.trueIndex) {
@@ -148,6 +151,9 @@ router.put('/:QId', (req, res)=> {
         })
     }
     else {
+        if (req.body.score &&typeof req.body.score == "string") {
+            req.body.score = parseInt(req.body.score)
+        }
         if (req.body.trueIndex && typeof req.body.trueIndex == "string") {
             req.body.trueIndex = parseInt(req.body.trueIndex)
         }
