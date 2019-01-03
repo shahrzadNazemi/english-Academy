@@ -83,7 +83,7 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:exId', (req, res)=> {
-    let valid = ajv.validate(question, req.body);
+    let valid = ajv.validate(exam, req.body);
     if (!valid) {
         console.log(ajv.errors)
         let errorData
@@ -113,7 +113,7 @@ router.put('/:exId', (req, res)=> {
         })
     }
     else {
-        database.updateExam(req.body, req.params.QId, (result)=> {
+        database.updateExam(req.body, req.params.exId, (result)=> {
             if (result == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
@@ -125,7 +125,7 @@ router.put('/:exId', (req, res)=> {
                 })
             }
             else {
-                response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                response.response('ویرایش با موفقیت انجام شد', result , (result)=> {
                     res.json(result)
 
                 })
