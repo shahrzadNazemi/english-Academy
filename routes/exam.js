@@ -20,16 +20,19 @@ const exam = {
     properties: {
         title: {type: "string"},
         time: {type: "string"},
-        preLesson: {type: "object"},
+        preLesson: {type: "string"},
     },
     required: [],
     additionalProperties: false
 };
 
 router.post('/', (req, res)=> {
+    if(req.body.preLesson){
+        req.body.preLesson = JSON.parse(req.body.preLesson)
+    }
     let valid = ajv.validate(exam, req.body);
     if (!valid) {
-        // console.log(ajv.errors)
+        console.log(ajv.errors)
         // let normalisedErrors = normalise(ajv.errors);
 
         // console.log(normalisedErrors)
@@ -114,7 +117,7 @@ router.post('/', (req, res)=> {
                                                     })
                                                 }
                                                 else {
-                                                    response.response('ویرایش با موفقیت انجام شد', result , (result)=> {
+                                                    response.response('اطلاعات با موفقیت ثبت شد.', result , (result)=> {
                                                         res.json(result)
 
                                                     })
@@ -157,6 +160,9 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:exId', (req, res)=> {
+    if(req.body.preLesson){
+        req.body.preLesson = JSON.parse(req.body.preLesson)
+    }
     let valid = ajv.validate(exam, req.body);
     if (!valid) {
         console.log(ajv.errors)
