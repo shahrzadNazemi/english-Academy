@@ -1063,6 +1063,34 @@ module.exports.addStu = (stuInfo, cb)=> {
     })
 };
 
+module.exports.addView = (viewInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/view`,
+        headers: {"content-Type": "application/json"},
+        body: viewInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.getStudentById = (stdId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
@@ -1166,6 +1194,34 @@ module.exports.getAllSound = (cb)=> {
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/view/${lsnId}`,
         headers: {"content-Type": "application/json"},
         body: updateInfo,
         json: true

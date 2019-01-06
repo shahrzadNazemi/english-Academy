@@ -154,10 +154,10 @@ router.post('/student/register', (req, res)=> {
         if (req.body.lastPassedLesson == undefined) {
             req.body.lastPassedLesson = 0
         }
-        if (req.body.passedLessonScore = undefined) {
+        if (req.body.passedLessonScore == undefined) {
              req.body.passedLessonScore = 0
         }
-        req.body.password = hashHelper.hash(req.body.password)
+        req.body.password = hashHelper.hash(req.body.password);
         if (req.files) {
             if (req.files.file != null) {
                 // type file
@@ -174,53 +174,61 @@ router.post('/student/register', (req, res)=> {
                         })
                     }
                     else {
-                        delete student.password
-                        req.body._id = student
-                        // res.json(req.body)
-                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                        var file = req.files.file.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '.' + extension;
-                        // path is Upload Directory
-                        var dir = `${config.uploadPathStuImage}/${req.body._id}/`;
-                        console.log("dir", dir)
-                        lesson.addDir(dir, function (newPath) {
-                            var path = dir + newFile;
-                            req.files.file.mv(path, function (err) {
-                                if (err) {
-                                    console.error(err);
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
-                                    req.body._id = (req.body._id.replace(/"/g, ''));
-                                    req.body.setAvatar = true
-                                    database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
-                                        if (result == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (result == 0) {
-                                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else {
-                                            delete  req.body.setAvatar
-                                            delete req.body.password
-                                            req.body.jwt = jwt.signUser(req.body.username)
-                                            response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
-                                                res.json(result)
+                        let viewInfo = {}
+                        viewInfo.usrId = student
+                        viewInfo.lsnId = "0";
+                        viewInfo.video = [];
+                        viewInfo.sound = [];
+                        database.addView(viewInfo , (addResult)=>{
+                            delete student.password
+                            req.body._id = student
+                            // res.json(req.body)
+                            var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                            var file = req.files.file.name.replace(`.${extension}`, '');
+                            var newFile = new Date().getTime() + '.' + extension;
+                            // path is Upload Directory
+                            var dir = `${config.uploadPathStuImage}/${req.body._id}/`;
+                            console.log("dir", dir)
+                            lesson.addDir(dir, function (newPath) {
+                                var path = dir + newFile;
+                                req.files.file.mv(path, function (err) {
+                                    if (err) {
+                                        console.error(err);
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        req.body.avatarUrl = path.replace(`${config.uploadPathStuImage}`, `${config.downloadPathStuImage}`)
+                                        req.body._id = (req.body._id.replace(/"/g, ''));
+                                        req.body.setAvatar = true
+                                        database.updateStudent(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                            if (result == -1) {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else if (result == 0) {
+                                                response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                delete  req.body.setAvatar
+                                                delete req.body.password
+                                                req.body.jwt = jwt.signUser(req.body.username)
+                                                response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
+                                                    res.json(result)
 
-                                            })
-                                        }
-                                    })
-                                }
+                                                })
+                                            }
+                                        })
+                                    }
 
-                            })
-                        });
+                                })
+                            });
+                        })
+
                     }
                 })
             }
@@ -239,13 +247,19 @@ router.post('/student/register', (req, res)=> {
                     })
                 }
                 else {
-
                     delete req.body.password
                     req.body._id = student
                     req.body.jwt = jwt.signUser(req.body.username)
-                    response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
-                        res.json(result)
+                    let viewInfo = {}
+                    viewInfo.usrId = req.body._id
+                    viewInfo.lsnId = "0";
+                    viewInfo.video = [];
+                    viewInfo.sound = [];
+                    database.addView(viewInfo , (addResult)=>{
+                        response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
+                            res.json(result)
 
+                        })
                     })
                 }
             })
