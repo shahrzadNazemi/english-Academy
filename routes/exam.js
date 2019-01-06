@@ -293,7 +293,7 @@ router.get('/:lvlId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getLevels((getREsult)=> {
+    database.getAllExams((getREsult)=> {
         if (getREsult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -305,9 +305,13 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            response.response('سطح مورد نظر یافت شد.', getREsult, (result)=> {
-                res.json(result)
 
+            response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
+                let countPages = Math.ceil(getREsult.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+                    res.json(result)
+                })
             })
         }
     })
