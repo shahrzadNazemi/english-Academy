@@ -14,6 +14,7 @@ const ajv = require("ajv")({
 });
 let config = require('../util/config')
 let lesson = require('../routes/lesson')
+let fs = require('fs')
 
 const exam = {
     type: "object",
