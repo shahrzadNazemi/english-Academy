@@ -271,20 +271,20 @@ router.get('/selective', (req, res)=> {
     })
 });
 
-router.get('/:lvlId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
-        if (level == -1) {
+router.get('/:exId', (req, res)=> {
+    database.getExamById(req.params.exId, (exam)=> {
+        if (exam == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (level == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+        else if (exam == 0) {
+            response.respondNotFound('آزمون مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('سطح مورد نظر یافت شد.', level, (result)=> {
+            response.response('آزمون مورد نظر یافت شد.', exam, (result)=> {
                 res.json(result)
 
             })
