@@ -27,9 +27,7 @@ const exam = {
 };
 
 router.post('/', (req, res)=> {
-    if(req.body.preLesson){
-        req.body.preLesson = JSON.parse(req.body.preLesson)
-    }
+
     let valid = ajv.validate(exam, req.body);
     if (!valid) {
         console.log(ajv.errors)
@@ -67,6 +65,9 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
+        if(req.body.preLesson){
+            req.body.preLesson = JSON.parse(req.body.preLesson)
+        }
             if (req.files) {
                 if (req.files.file != null) {
                     // type file
@@ -160,9 +161,6 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:exId', (req, res)=> {
-    if(req.body.preLesson){
-        req.body.preLesson = JSON.parse(req.body.preLesson)
-    }
     let valid = ajv.validate(exam, req.body);
     if (!valid) {
         console.log(ajv.errors)
@@ -193,27 +191,123 @@ router.put('/:exId', (req, res)=> {
         })
     }
     else {
+        if(req.body.preLesson){
+            req.body.preLesson = JSON.parse(req.body.preLesson)
+        }
         if (req.body.time  &&typeof req.body.time == "string") {
             req.body.time = parseInt(req.body.time)
         }
-        database.updateExam(req.body, req.params.exId, (result)=> {
-            if (result == -1) {
+        database.getExamById(req.params.exId, (exam)=> {
+            if (exam == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else if (result == 0) {
-                response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
+            else if (exam == 0) {
+                response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else {
-                response.response('ویرایش با موفقیت انجام شد', result , (result)=> {
-                    res.json(result)
+                if (req.files) {
+                    let newExam = Object.assign({}, exam, req.body)
+                    database.updateExam(newExam, req.params.exId, (result)=> {
+                        if (result == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == 0) {
+                            response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            var unlinkPath = exam.avatarUrl.replace(`${config.downloadPathExamImage}`, `${config.uploadPathExamImage}`);
+                            fs.unlink(unlinkPath, function (err) {
+                                try {
+                                    if (req.files.file != null) {
+                                        req.body._id = exam._id
+                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                        var file = req.files.file.name.replace(`.${extension}`, '');
+                                        var newFile = new Date().getTime() + '.' + extension;
+                                        // path is Upload Directory
+                                        var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
+                                        console.log("dir", dir)
+                                        module.exports.addDir(dir, function (newPath) {
+                                            var path = dir + newFile;
+                                            req.files.file.mv(path, function (err) {
+                                                if (err) {
+                                                    console.error(err);
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
+                                                    var newExam = Object.assign({}, exam, req.body)
+                                                    database.updateExam(newExam, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                                        if (result == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (result == 0) {
+                                                            response.respondNotFound('آزمون مورد نظر یافت نشد', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else {
+                                                            response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                                                                res.json(result)
 
-                })
+                                                            })
+                                                        }
+                                                    })
+                                                }
+
+                                            })
+                                        });
+
+                                    }
+                                    else {
+                                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                }
+                                catch (e) {
+                                    console.log(e)
+                                }
+
+
+                            })
+                        }
+                    });
+
+                } else {
+                    database.updateExam(req.body, req.params.exId, (result)=> {
+                        if (result == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result == 0) {
+                            response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            response.response('ویرایش با موفقیت انجام شد', result , (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    })
+                }
             }
         })
+
 
     }
 });

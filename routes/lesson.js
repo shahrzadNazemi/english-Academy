@@ -513,11 +513,19 @@ router.post('/sound', (req, res) => {
                                                                     })
                                                                 }
                                                                 else {
-                                                                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', result, (result1)=> {
-                                                                        res.json(result1)
+                                                                    let info ={}
+                                                                    info.sound = {
+                                                                        sndId: result,
+                                                                        viewed: false
+                                                                    }
+                                                                    database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                        response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
+                                                                            res.json(result1)
 
+                                                                        })
                                                                     })
                                                                 }
+
                                                             })
                                                         }
 
