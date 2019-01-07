@@ -179,6 +179,7 @@ router.post('/student/register', (req, res)=> {
                         viewInfo.lsnId = "0";
                         viewInfo.video = [];
                         viewInfo.sound = [];
+                        viewInfo.viewPermission = false
                         database.addView(viewInfo , (addResult)=>{
                             delete student.password
                             req.body._id = student
@@ -340,7 +341,7 @@ router.post('/student/placement', (req, res)=> {
         else {
             database.stuPlacement(req.body, (lesson)=> {
                 if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
                 }

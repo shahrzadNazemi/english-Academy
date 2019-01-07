@@ -210,20 +210,20 @@ router.delete('/:QId', (req, res)=> {
     })
 });
 
-router.get('/:lvlId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
-        if (level == -1) {
+router.get('/:QId', (req, res)=> {
+    database.getQuestionById(req.params.QId, (question)=> {
+        if (question == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else if (level == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('سطح مورد نظر یافت شد.', level, (result)=> {
+            response.response('سوال مورد نظر یافت شد.', question, (result)=> {
                 res.json(result)
 
             })

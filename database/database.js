@@ -1115,6 +1115,30 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 
 };
+module.exports.getStudentByUsername = (username, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/student/username/${username}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
 
 module.exports.getAllStu = (cb)=> {
     request.get({
@@ -1247,6 +1271,33 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
         }
     })
 };
+module.exports.updateViewToSetTrue = (id,userId,type, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/view/${type}/${id}/${userId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
 
 module.exports.getAdminById = (admId, cb)=> {
     request.get({
@@ -1300,6 +1351,30 @@ module.exports.getExamById = (exId, cb)=> {
 module.exports.getLessonById = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+module.exports.getQuestionById = (QId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/question/${QId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
