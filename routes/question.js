@@ -119,6 +119,7 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:QId', (req, res)=> {
+    console.log("req.body in updateQ" , req.body)
     let valid = ajv.validate(question, req.body);
     if (!valid) {
         console.log(ajv.errors)
