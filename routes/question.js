@@ -120,36 +120,7 @@ router.post('/', (req, res)=> {
 
 router.put('/:QId', (req, res)=> {
     console.log("req.body in updateQ" , req.body)
-    let valid = ajv.validate(question, req.body);
-    if (!valid) {
-        console.log(ajv.errors)
-        let errorData
-        if (ajv.errors[0].keyword == 'required') {
-            Data = ajv.errors[0].params.missingProperty
-            if (Data == "title ") {
-                errorData = {"title": ["وارد کردن عنوان ضروری است."]}
-            }
-            else {
-                errorData = {"description": ["وارد کردن توضیحات ضروری است."]}
-            }
-        }
-        else if (ajv.errors[0].keyword == 'minLength') {
-            if (ajv.errors[0].params.limit == level.properties.title.minLength) {
-                errorData = {"title": ["عنوان نباید کمتر از 3 حرف باشد."]}
-
-            }
-            else {
-                errorData = {"description": ["توضیحات  نباید کمتر از 20 حرف باشد."]}
-            }
-        }
-        else if (ajv.errors[0].keyword == 'maxLength') {
-            errorData = {"title": ["عنوان نباید بیشتر از 30 حرف باشد."]}
-        }
-        response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
-            res.json(result)
-        })
-    }
-    else {
+   
         if (req.body.score &&typeof req.body.score == "string") {
             req.body.score = parseInt(req.body.score)
         }
@@ -185,7 +156,6 @@ router.put('/:QId', (req, res)=> {
             }
         })
 
-    }
 });
 
 router.delete('/:QId', (req, res)=> {

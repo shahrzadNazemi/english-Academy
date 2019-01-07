@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/question.js" afterPath="$PROJECT_DIR$/routes/question.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,13 +45,10 @@
       <file leaf-file-name="question.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/question.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="121" column="49" selection-start-line="121" selection-start-column="49" selection-end-line="121" selection-end-column="49" />
+            <state relative-caret-position="414">
+              <caret line="167" column="29" selection-start-line="167" selection-start-column="29" selection-end-line="167" selection-end-column="29" />
               <folding>
                 <element signature="e#230#317#0" expanded="false" />
-                <element signature="e#377#711#0" expanded="false" />
-                <element signature="e#415#658#0" expanded="false" />
-                <element signature="e#744#3997#0" expanded="false" />
                 <element signature="e#813#2138#0" expanded="false" />
                 <element signature="e#823#849#0" expanded="false" />
                 <element signature="e#1021#1485#0" expanded="false" />
@@ -64,7 +60,6 @@
                 <element signature="e#1736#1835#0" expanded="false" />
                 <element signature="e#1901#1985#0" expanded="false" />
                 <element signature="e#2091#2131#0" expanded="false" />
-                <element signature="e#2144#3995#0" expanded="false" />
                 <element signature="e#2183#2225#0" expanded="false" />
                 <element signature="e#2268#2312#0" expanded="false" />
                 <element signature="e#2341#2447#0" expanded="false" />
@@ -82,7 +77,6 @@
                 <element signature="e#3723#3779#0" expanded="false" />
                 <element signature="e#3812#3978#0" expanded="false" />
                 <element signature="e#3906#3963#0" expanded="false" />
-                <element signature="e#4152#5205#0" expanded="false" />
                 <element signature="e#4257#4555#0" expanded="false" />
                 <element signature="e#4349#4434#0" expanded="false" />
                 <element signature="e#4452#4545#0" expanded="false" />
@@ -2422,12 +2416,12 @@
       <workItem from="1546411583984" duration="15809000" />
       <workItem from="1546492672274" duration="12849000" />
       <workItem from="1546751784631" duration="11496000" />
-      <workItem from="1546838140721" duration="7223000" />
+      <workItem from="1546838140721" duration="7611000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="416291000" />
+    <option name="totallyTimeSpent" value="416679000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -7815,13 +7809,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/question.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="121" column="49" selection-start-line="121" selection-start-column="49" selection-end-line="121" selection-end-column="49" />
+        <state relative-caret-position="414">
+          <caret line="167" column="29" selection-start-line="167" selection-start-column="29" selection-end-line="167" selection-end-column="29" />
           <folding>
             <element signature="e#230#317#0" expanded="false" />
-            <element signature="e#377#711#0" expanded="false" />
-            <element signature="e#415#658#0" expanded="false" />
-            <element signature="e#744#3997#0" expanded="false" />
             <element signature="e#813#2138#0" expanded="false" />
             <element signature="e#823#849#0" expanded="false" />
             <element signature="e#1021#1485#0" expanded="false" />
@@ -7833,7 +7824,6 @@
             <element signature="e#1736#1835#0" expanded="false" />
             <element signature="e#1901#1985#0" expanded="false" />
             <element signature="e#2091#2131#0" expanded="false" />
-            <element signature="e#2144#3995#0" expanded="false" />
             <element signature="e#2183#2225#0" expanded="false" />
             <element signature="e#2268#2312#0" expanded="false" />
             <element signature="e#2341#2447#0" expanded="false" />
@@ -7851,7 +7841,6 @@
             <element signature="e#3723#3779#0" expanded="false" />
             <element signature="e#3812#3978#0" expanded="false" />
             <element signature="e#3906#3963#0" expanded="false" />
-            <element signature="e#4152#5205#0" expanded="false" />
             <element signature="e#4257#4555#0" expanded="false" />
             <element signature="e#4349#4434#0" expanded="false" />
             <element signature="e#4452#4545#0" expanded="false" />
