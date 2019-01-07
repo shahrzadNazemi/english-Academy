@@ -10,6 +10,10 @@ module.exports.downloadPathSound = "http://185.94.99.69:9000/upload/sound";
 
 module.exports.uploadPathStuImage = "/var/fileAccess/site/upload/student/avatar";
 
+module.exports.uploadPathNotifImage = "/var/fileAccess/site/upload/notification/avatar";
+
+module.exports.downloadPathNotifImage = "http://185.94.99.69:9000/upload/notification/avatar";
+
 module.exports.downloadPathStuImage = "http://185.94.99.69:9000/upload/student/avatar";
 
 module.exports.uploadPathLevelImage = "/var/fileAccess/site/upload/level/avatar";

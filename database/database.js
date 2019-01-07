@@ -90,6 +90,38 @@ module.exports.addLevel = (levelInfo, cb)=> {
     })
 };
 
+module.exports.addNotif = (notifInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/notification`,
+        headers: {"content-Type": "application/json"},
+        body: notifInfo,
+        json: true
+    }, function (err, response, body) {
+        console.log(response.statusCode)
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else if (response.statusCode == 402) {
+            cb(-3)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.addType = (typeInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/lesson/type`,
@@ -600,6 +632,7 @@ module.exports.updateSound = (updateInfo, sndId, cb)=> {
         }
     })
 };
+
 module.exports.updateExam = (updateInfo, exId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/exam/${exId}`,
@@ -677,6 +710,7 @@ module.exports.delAdmin = (admId, cb)=> {
         }
     })
 };
+
 module.exports.delQuestion = (QId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/question/${QId}`,
@@ -700,6 +734,7 @@ module.exports.delQuestion = (QId, cb)=> {
         }
     })
 };
+
 module.exports.delExam = (exId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/exam/${exId}`,
@@ -723,7 +758,6 @@ module.exports.delExam = (exId, cb)=> {
         }
     })
 };
-
 
 module.exports.delVideo = (vdId, cb)=> {
     request.delete({
@@ -943,6 +977,7 @@ module.exports.getAllLessons = (cb)=> {
         }
     })
 };
+
 module.exports.getAllQuestions = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question`,
@@ -965,6 +1000,7 @@ module.exports.getAllQuestions = (cb)=> {
         }
     })
 };
+
 module.exports.getAllExams = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/exam`,
@@ -1115,6 +1151,7 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 
 };
+
 module.exports.getStudentByUsername = (username, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/student/username/${username}`,
@@ -1243,6 +1280,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
         }
     })
 };
+
 module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/view/${lsnId}`,
@@ -1271,6 +1309,7 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
         }
     })
 };
+
 module.exports.updateViewToSetTrue = (id,userId,type, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/view/${type}/${id}/${userId}`,
@@ -1323,6 +1362,7 @@ module.exports.getAdminById = (admId, cb)=> {
     })
 
 };
+
 module.exports.getExamById = (exId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/exam/${exId}`,
@@ -1372,6 +1412,7 @@ module.exports.getLessonById = (lsnId, cb)=> {
     })
 
 };
+
 module.exports.getQuestionById = (QId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question/${QId}`,

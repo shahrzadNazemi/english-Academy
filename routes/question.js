@@ -136,6 +136,7 @@ router.put('/:QId', (req, res)=> {
                     req.body.answers[i].isTrue = false
                 }
             }
+    
         console.log(req.body)
         database.updateQuestion(req.body, req.params.QId, (result)=> {
             if (result == -1) {

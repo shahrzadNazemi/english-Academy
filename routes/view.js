@@ -40,7 +40,7 @@ router.get('/', (req, res)=> {
                 })
             }
             else if (req.query.sndId) {
-                database.updateViewToSetTrue(req.query.sndId, 'sound',(result)=> {
+                database.updateViewToSetTrue(req.query.sndId,userId ,'sound',(result)=> {
                     if (result == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
