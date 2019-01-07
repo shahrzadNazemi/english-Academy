@@ -256,6 +256,8 @@ router.post('/student/register', (req, res)=> {
                     viewInfo.lsnId = "0";
                     viewInfo.video = [];
                     viewInfo.sound = [];
+                    viewInfo.viewPermission = false
+
                     database.addView(viewInfo , (addResult)=>{
                         response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
                             res.json(result)
