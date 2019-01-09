@@ -783,6 +783,30 @@ module.exports.delVideo = (vdId, cb)=> {
     })
 };
 
+module.exports.delNotification = (NId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/notification/${NId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.delSound = (sndId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/lesson/sound/${sndId}`,
@@ -1281,6 +1305,35 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
+module.exports.updateNotif = (updateInfo, NId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/notification/${NId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/view/${lsnId}`,
@@ -1363,6 +1416,31 @@ module.exports.getAdminById = (admId, cb)=> {
 
 };
 
+module.exports.getResultUsrLsn = (usrId , lsnId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/result/${usrId}/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 module.exports.getExamById = (exId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/exam/${exId}`,
@@ -1391,6 +1469,56 @@ module.exports.getExamById = (exId, cb)=> {
 module.exports.getLessonById = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getAllNotifications = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/notification`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getNotificationById = (NId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/notification/${NId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {

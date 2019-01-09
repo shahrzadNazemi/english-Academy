@@ -155,7 +155,7 @@ router.post('/student/register', (req, res)=> {
             req.body.lastPassedLesson = 0
         }
         if (req.body.passedLessonScore == undefined) {
-             req.body.passedLessonScore = 0
+            req.body.passedLessonScore = 0
         }
         req.body.password = hashHelper.hash(req.body.password);
         if (req.files) {
@@ -180,7 +180,7 @@ router.post('/student/register', (req, res)=> {
                         viewInfo.video = [];
                         viewInfo.sound = [];
                         viewInfo.viewPermission = false
-                        database.addView(viewInfo , (addResult)=>{
+                        database.addView(viewInfo, (addResult)=> {
                             delete student.password
                             req.body._id = student
                             // res.json(req.body)
@@ -258,7 +258,7 @@ router.post('/student/register', (req, res)=> {
                     viewInfo.sound = [];
                     viewInfo.viewPermission = false
 
-                    database.addView(viewInfo , (addResult)=>{
+                    database.addView(viewInfo, (addResult)=> {
                         response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
                             res.json(result)
 
@@ -364,6 +364,9 @@ router.post('/student/placement', (req, res)=> {
 
 
 router.put('/student/:stdId', (req, res) => {
+    console.log(req.body, "body before done")
+    if (req.body.password == "")
+        delete req.body.password
     if (req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
     if (req.body.fname == "") {
@@ -387,9 +390,9 @@ router.put('/student/:stdId', (req, res) => {
     if (req.body.passedLessonScore == "") {
         delete req.body.passedLessonScore
     }
-    if (req.body.password == "")
-        delete req.body.password 
-    if (req.files) {
+    console.log(req.body, "body after done")
+    if (req.files || req.files == "") {
+
         database.getStudentById(req.params.stdId, (student)=> {
             if (student == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -435,8 +438,8 @@ router.put('/student/:stdId', (req, res) => {
                                                 })
                                             }
                                             else if (Putresult == -2) {
-                                                errData = {"username":["نام کاربری نمیتواند تکراری باشد"]}
-                                                response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated",(result)=> {
+                                                errData = {"username": ["نام کاربری نمیتواند تکراری باشد"]}
+                                                response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated", (result)=> {
                                                     res.json(result)
                                                 })
                                             }
@@ -518,7 +521,7 @@ router.put('/student/:stdId/changePass', (req, res) => {
             }
             else {
                 if (req.body.oldPassword == student.password) {
-                    let newStudent = Object.assign({} , student , req.body)
+                    let newStudent = Object.assign({}, student, req.body)
                     database.updateStudent(newStudent, req.params.stdId, (Putresult)=> {
                         if (Putresult == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

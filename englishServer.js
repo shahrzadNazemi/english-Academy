@@ -6,6 +6,8 @@ var logger = require('./util/customMorgan');
 var app = express();
 const fileupload = require('express-fileupload');
 let jwt = require('./util/jwtHelper')
+const trimmer = require('express-trimmer');
+
 
 
 let user = require('./routes/users');
@@ -14,6 +16,7 @@ let lesson = require('./routes/lesson');
 let question = require('./routes/question');
 let exam = require('./routes/exam');
 let view = require('./routes/view');
+let notification = require('./routes/notification');
 
 
 app.use(logger);
@@ -22,6 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileupload());
+app.use(trimmer)
 
 app.use(function (req, res, next) {
     if (req.path.includes('/login') || req.path.includes('/register')) {
@@ -51,6 +55,7 @@ app.use('/api/lesson', lesson);
 app.use('/api/question', question);
 app.use('/api/exam', exam);
 app.use('/api/view', view);
+app.use('/api/notification', notification);
 
 
 

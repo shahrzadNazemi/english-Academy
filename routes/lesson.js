@@ -364,7 +364,7 @@ router.post('/video', (req, res) => {
                                                                     })
                                                                 }
                                                                 else {
-                                                                    let info ={}
+                                                                    let info = {}
                                                                     info.video = {
                                                                         vdId: result,
                                                                         viewed: false
@@ -513,7 +513,7 @@ router.post('/sound', (req, res) => {
                                                                     })
                                                                 }
                                                                 else {
-                                                                    let info ={}
+                                                                    let info = {}
                                                                     info.sound = {
                                                                         sndId: result,
                                                                         viewed: false
@@ -899,7 +899,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                                     })
                                                                                                                 }
                                                                                                                 else {
-                                                                                                                    let info ={}
+                                                                                                                    let info = {}
 
                                                                                                                     info.video = {
                                                                                                                         vdId: result,
@@ -1029,7 +1029,7 @@ router.put('/video/:vdId', (req, res) => {
                                                     })
                                                 }
                                                 else {
-                                                    let info ={}
+                                                    let info = {}
 
                                                     info.video = {
                                                         vdId: result,
@@ -1665,24 +1665,75 @@ router.get('/sound/:sndId', (req, res)=> {
 });
 
 router.get('/:lsnId', (req, res) => {
-    database.getLessonById(req.params.lsnId, (lesson)=> {
-        if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (lesson == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
-                res.json(result)
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "admin") {
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                let usrId = student[0]._id
+                database.getLessonById(req.params.lsnId, (lesson)=> {
+                    if (lesson == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == 0) {
+                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
+                            console.log("result get result" , result)
+                            if (result == -1 || result == 0) {
 
-            })
-        }
-    })
+                            }
+                            else {
+                                lesson[0].quiz = result.quiz
+                                lesson[0].exam = result.exam
+                                response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                                    res.json(result)
+
+                                })
+
+                            }
+                        })
+                        // response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                        //     res.json(result)
+                        //
+                        // })
+                    }
+                })
+            }
+        })
+    }
+    else {
+        database.getLessonById(req.params.lsnId, (lesson)=> {
+            if (lesson == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (lesson == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+
 });
 
 router.get('/:lsnId/video', (req, res)=> {
