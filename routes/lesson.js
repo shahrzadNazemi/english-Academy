@@ -25,6 +25,7 @@ const lesson = {
         title: {type: "string"},
         order: {type: "string"},
         description: {type: "string"},
+        commonMistake:{type:"string"},
         deadline: {type: "string"}
     },
     required: ["lvlId", "title", "order"],
@@ -62,9 +63,21 @@ const sound = {
     required: ["typeId", "lsnId", "order"],
     additionalProperties: false
 };
+const text = {
+    type: "object",
+    properties: {
+        description: {type: "string"},
+        typeId:{type:"string"},
+        title:{type:"string"},
+        lsnId:{type:"string"}
+    },
+    required: ["typeId", "lsnId"],
+    additionalProperties: false
+};
 
 
 router.post('/', (req, res) => {
+
     let valid = ajv.validate(lesson, req.body);
     if (!valid) {
         let errorData
@@ -584,6 +597,38 @@ router.post('/type', (req, res)=> {
             }
             else {
                 response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+});
+
+router.post('/text', (req, res)=> {
+    let valid = ajv.validate(text, req.body);
+    if (!valid) {
+        let errorData
+        if (ajv.errors[0].keyword == 'required') {
+            Data = ajv.errors[0].params.missingProperty
+            if(Data == "lsnId")
+            errorData = {"lesson": ["وارد کردن درس ضروری است."]}
+           else  if(Data == "typeId")
+                errorData = {"type": ["وارد کردن نوع ضروری است."]}
+        }
+        response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        database.addText(req.body, (text)=> {
+            if (type == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
                     res.json(result)
 
                 })
@@ -1431,6 +1476,39 @@ router.put('/sound/:sndId', (req, res) => {
     }
 });
 
+router.put('/text/:txtId', (req, res)=> {
+    let valid = ajv.validate(text, req.body);
+    if (!valid) {
+        let errorData
+        if (ajv.errors[0].keyword == 'required') {
+            Data = ajv.errors[0].params.missingProperty
+            if(Data == "lsnId")
+                errorData = {"lesson": ["وارد کردن درس ضروری است."]}
+            else  if(Data == "typeId")
+                errorData = {"type": ["وارد کردن نوع ضروری است."]}
+        }
+        response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        database.updateText(req.body,req.params.txtId , (text)=> {
+            if (text == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات مورد نظر ویرایش شد.', req.body, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+});
+
+
 
 router.get('/level/:lvlId', (req, res) => {
 
@@ -1549,6 +1627,29 @@ router.get('/type', (req, res)=> {
     })
 });
 
+router.get('/text/:txtId', (req, res)=> {
+    database.getTextBytxtId(req.params.txtId ,(text)=> {
+        if (text == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (text == 0) {
+            response.respondNotFound('متن مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+       else{
+            text[0].lesson = text[0].lesson[0]
+            text[0].type = text[0].type[0]
+
+            response.response('اطلاعات مورد نظر یافت شد', text[0], (result1)=> {
+                res.json(result1)
+            })
+        }
+    })
+});
+
 router.get('/video', (req, res)=> {
     database.getAllVideo((video)=> {
         if (video == -1) {
@@ -1583,6 +1684,50 @@ router.get('/video', (req, res)=> {
                     res.json(result)
                 })
             })
+        }
+    })
+});
+
+router.get('/text', (req, res)=> {
+    console.log("text")
+    database.getAllText((text)=> {
+        if (text == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (text == 0) {
+            response.respondNotFound('متن های مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            if (req.query.lsnId) {
+                let temp = []
+                let k = 0
+                for (var i = 0; i < text.length; i++) {
+                    if (text[i].lsnId == req.query.lsnId) {
+                        temp[k] = text[i]
+                        k++
+                    }
+                }
+                text = temp
+            }
+            if(req.query.page){
+                response.paginationClient(req.query.page, req.query.limit, text, (result1)=> {
+                    let countPages = Math.ceil(text.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی متنها', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
+            }
+            else{
+                response.response('اطلاعات همه ی متنها', text, (result)=> {
+                    res.json(result)
+                })
+            }
+
         }
     })
 });
@@ -1932,6 +2077,29 @@ router.delete('/type/:typId', (req, res) => {
 
         else {
             response.response('نوع مورد نظر حذف شد.', result, (result)=> {
+                res.json(result)
+
+            })
+        }
+
+    })
+});
+
+router.delete('/text/:txtId', (req, res) => {
+    database.delText(req.params.txtId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('متن مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+
+        else {
+            response.response('متن مورد نظر حذف شد.', result, (result)=> {
                 res.json(result)
 
             })

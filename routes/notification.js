@@ -318,7 +318,7 @@ router.get('/', (req, res)=> {
         else {
             if (req.query.page != undefined) {
                 response.paginationClient(req.query.page, req.query.limit, notification, (result1)=> {
-                    let countPages = Math.ceil(question.length / req.query.limit)
+                    let countPages = Math.ceil(notification.length / req.query.limit)
                     result1.totalPage = countPages
                     response.response('اطلاعات همه ی سوالات', result1, (result)=> {
                         res.json(result)

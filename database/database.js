@@ -521,9 +521,65 @@ module.exports.addExam = (examInfo, cb)=> {
     })
 };
 
+module.exports.addText = (textInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/lesson/text`,
+        headers: {"content-Type": "application/json"},
+        body: textInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/lesson/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updateText = (updateInfo, txtId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/lesson/text/${txtId}`,
         headers: {"content-Type": "application/json"},
         body: updateInfo,
         json: true
@@ -862,6 +918,37 @@ module.exports.delType = (typeId, cb)=> {
     })
 };
 
+module.exports.delText = (txtId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/text/${txtId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.getVideoByLsnLvl = (lvlId, lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}/video/${lvlId}`,
@@ -912,6 +999,30 @@ module.exports.getSoundByLsnLvl = (lvlId, lsnId, cb)=> {
 module.exports.getSoundBysndId = (sndId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/sound/${sndId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            console.log(body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getTextBytxtId = (txtId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/text/${txtId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -1254,6 +1365,31 @@ module.exports.getAllVideo = (cb)=> {
 module.exports.getAllSound = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/sound`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getAllText = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/text`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
