@@ -13,6 +13,7 @@ let config = require('../util/config')
 let lesson = require('./lesson')
 let fs = require('fs')
 
+
 const trick = {
     type: "object",
     properties: {
