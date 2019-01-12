@@ -18,6 +18,8 @@ const trick = {
     type: "object",
     properties: {
         text: {type: "string"},
+        title: {type: "string"},
+        order: {type: "string"},
 
     },
     required: [],
@@ -25,7 +27,6 @@ const trick = {
 };
 
 router.post('/', (req, res)=> {
-
     let valid = ajv.validate(trick, req.body);
     if (!valid) {
         let errorData
