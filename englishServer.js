@@ -17,6 +17,7 @@ let question = require('./routes/question');
 let exam = require('./routes/exam');
 let view = require('./routes/view');
 let notification = require('./routes/notification');
+let trick = require('./routes/trick');
 
 
 app.use(logger);
@@ -56,6 +57,7 @@ app.use('/api/question', question);
 app.use('/api/exam', exam);
 app.use('/api/view', view);
 app.use('/api/notification', notification);
+app.use('/api/trick', trick);
 
 
 

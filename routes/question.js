@@ -119,43 +119,43 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:QId', (req, res)=> {
-    console.log("req.body in updateQ" , req.body)
-   
-        if (req.body.score &&typeof req.body.score == "string") {
-            req.body.score = parseInt(req.body.score)
-        }
-        if (req.body.trueIndex && typeof req.body.trueIndex == "string") {
-            req.body.trueIndex = parseInt(req.body.trueIndex)
-        }
-        if (req.body.answers != undefined && req.body.trueIndex!= undefined)
-            for (var i = 0; i < req.body.answers.length; i++) {
-                if (i == req.body.trueIndex) {
-                    req.body.answers[i].isTrue = true
-                }
-                else {
-                    req.body.answers[i].isTrue = false
-                }
-            }
-    
-        console.log(req.body)
-        database.updateQuestion(req.body, req.params.QId, (result)=> {
-            if (result == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (result == 0) {
-                response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
-                    res.json(result)
-                })
+    console.log("req.body in updateQ", req.body)
+
+    if (req.body.score && typeof req.body.score == "string") {
+        req.body.score = parseInt(req.body.score)
+    }
+    if (req.body.trueIndex && typeof req.body.trueIndex == "string") {
+        req.body.trueIndex = parseInt(req.body.trueIndex)
+    }
+    if (req.body.answers != undefined && req.body.trueIndex != undefined)
+        for (var i = 0; i < req.body.answers.length; i++) {
+            if (i == req.body.trueIndex) {
+                req.body.answers[i].isTrue = true
             }
             else {
-                response.response('ویرایش با موفقیت انجام شد', result, (result)=> {
-                    res.json(result)
-
-                })
+                req.body.answers[i].isTrue = false
             }
-        })
+        }
+
+    console.log(req.body)
+    database.updateQuestion(req.body, req.params.QId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('ویرایش با موفقیت انجام شد', result, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
 
 });
 
@@ -237,5 +237,44 @@ router.get('/', (req, res)=> {
 
 });
 
+router.get('/quiz/:lsnId', (req, res)=> {
+    database.getQuestionByLsnId(req.params.lsnId, (question)=> {
+        if (question == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات سوالات', question[0], (result)=> {
+                res.json(result)
+            })
+        }
+    })
+})
+
+router.get('/exam/:exId', (req, res)=> {
+    database.getExamQUestion(req.params.exId, (question)=> {
+        if (question == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات سوالات', question[0], (result)=> {
+                res.json(result)
+            })
+        }
+    })
+})
 
 module.exports = router

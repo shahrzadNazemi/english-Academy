@@ -2,11 +2,15 @@ module.exports.databaseServer = 'http://localhost:9090'
 
 module.exports.uploadPathVideo = "/var/fileAccess/site/upload/video";
 
+module.exports.uploadPathTrick = "/var/fileAccess/site/upload/trick";
+
 module.exports.uploadPathSound = "/var/fileAccess/site/upload/sound";
 
 module.exports.downloadPathVideo = "http://185.94.99.69:9000/upload/video";
 
 module.exports.downloadPathSound = "http://185.94.99.69:9000/upload/sound";
+
+module.exports.downloadPathTrick = "http://185.94.99.69:9000/upload/trick";
 
 module.exports.uploadPathStuImage = "/var/fileAccess/site/upload/student/avatar";
 

@@ -212,6 +212,34 @@ module.exports.delLevel = (lvlId, cb)=> {
 
 };
 
+module.exports.delTrick = (trckId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/trick/${trckId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 module.exports.getLevelById = (lvlId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/level/${lvlId}`,
@@ -446,6 +474,31 @@ module.exports.addVideo = (videoInfo, cb)=> {
     })
 };
 
+module.exports.addTrick = (trickInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/trick`,
+        headers: {"content-Type": "application/json"},
+        body: trickInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.addSound = (soundInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/lesson/sound`,
@@ -642,6 +695,31 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
 module.exports.updateVideo = (updateInfo, vdId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/lesson/video/${vdId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updateTrick = (updateInfo, trckId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/trick/${trckId}`,
         headers: {"content-Type": "application/json"},
         body: updateInfo,
         json: true
@@ -1067,6 +1145,29 @@ module.exports.getVideoByVDId = (vdId, cb)=> {
     })
 };
 
+module.exports.getTrickById = (trckId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/trick/${trckId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
 module.exports.getStuOfLevel = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/bestLevel/${lsnId}`,
@@ -1093,6 +1194,29 @@ module.exports.getStuOfLevel = (lsnId, cb)=> {
 module.exports.getAllLessons = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
+module.exports.getAllTrickes = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/trick`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -1390,6 +1514,56 @@ module.exports.getAllSound = (cb)=> {
 module.exports.getAllText = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/text`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getQuestionByLsnId = (lsnId ,cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/question/quiz/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getExamQUestion = (exId ,cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/question/exam/${exId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
