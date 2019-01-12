@@ -486,7 +486,7 @@ router.get('/:trckId', (req, res)=> {
             })
         }
         else {
-            response.response(' مورد نظر یافت شد.', trick, (result)=> {
+            response.response(' مورد نظر یافت شد.', trick[0], (result)=> {
                 res.json(result)
 
             })
