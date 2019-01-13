@@ -102,7 +102,7 @@ router.post('/', (req, res)=> {
                                                             })
                                                         }
                                                         else {
-                                                            response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                            response.responseCreated('نکته با موفقیت ثبت شد.', result, (result1)=> {
                                                                 res.json(result1)
 
                                                             })
@@ -135,7 +135,7 @@ router.post('/', (req, res)=> {
                                                 })
                                             }
                                             else {
-                                                response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                response.responseCreated('نکته با موفقیت ثبت شد.', result, (result1)=> {
                                                     res.json(result1)
 
                                                 })
@@ -199,7 +199,7 @@ router.put('/:trckId', (req, res)=> {
                         })
                     }
                     else if (trick == 0) {
-                        response.respondNotFound('فایل مورد نظر یافت نشد.', {}, (result)=> {
+                        response.respondNotFound('نکته مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }
@@ -267,7 +267,7 @@ router.put('/:trckId', (req, res)=> {
                                                                                                         })
                                                                                                     }
                                                                                                     else {
-                                                                                                            response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                                                                            response.response('نکته با موفقیت تغییر یافت.', result, (result1)=> {
                                                                                                                 res.json(result1)
 
                                                                                                             })
@@ -384,7 +384,7 @@ router.put('/:trckId', (req, res)=> {
                                                     })
                                                 }
                                                 else {
-                                                        response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                        response.response('اطلاعات با موفقیت تغییر یافت.', result, (result1)=> {
                                                             res.json(result1)
 
                                                         })
@@ -481,12 +481,12 @@ router.get('/:trckId', (req, res)=> {
             })
         }
         else if (trick == 0) {
-            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('نکته مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response(' مورد نظر یافت شد.', trick[0], (result)=> {
+            response.response(' نکته مورد نظر یافت شد.', trick[0], (result)=> {
                 res.json(result)
 
             })
@@ -502,7 +502,7 @@ router.get('/', (req, res)=> {
             })
         }
         else if (trick == 0) {
-            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('نکته مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
