@@ -840,10 +840,11 @@ router.put('/video/:vdId', (req, res) => {
                         })
                     }
                     else {
-                        var unlinkPath = video[0].url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+                        video = video[0]
+                        var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
-                                let unlinkThumbPath = video[0].thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`)
+                                let unlinkThumbPath = video.thumbUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`)
                                 fs.unlink(unlinkThumbPath, function (err) {
                                     try {
                                         if (req.files.file != null) {
@@ -905,7 +906,7 @@ router.put('/video/:vdId', (req, res) => {
 
                                                                             req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
                                                                             if (req.files.srt) {
-                                                                                var unlinkPath = video[0].srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+                                                                                var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                                                                                 fs.unlink(unlinkPath, function (err) {
                                                                                     try {
                                                                                         var extension = req.files.srt.name.substring(req.files.srt.name.lastIndexOf('.') + 1).toLowerCase();
@@ -937,7 +938,9 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                         else {
                                                                                                             let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
                                                                                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                                                                                            database.addVideo(req.body, (result)=> {
+                                                                                                            var newVideo = Object.assign({}, video, req.body)
+
+                                                                                                            database.updateVideo(newVideo,req.params.vdId, (result)=> {
                                                                                                                 if (result == -1) {
                                                                                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                                         res.json(result1)
@@ -1035,7 +1038,7 @@ router.put('/video/:vdId', (req, res) => {
 
             }
             else if (req.files.srt) {
-                var unlinkPath = video[0].srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
+                var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                 fs.unlink(unlinkPath, function (err) {
                     try {
                         var extension = req.files.srt.name.substring(req.files.srt.name.lastIndexOf('.') + 1).toLowerCase();
@@ -1067,7 +1070,8 @@ router.put('/video/:vdId', (req, res) => {
                                         else {
                                             let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                            database.addVideo(req.body, (result)=> {
+                                            var newVideo = Object.assign({}, video, req.body)
+                                            database.updateVideo(newVideo,req.params.vdId, (result)=> {
                                                 if (result == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                         res.json(result1)
@@ -1155,7 +1159,9 @@ router.put('/video/:vdId', (req, res) => {
 
                 }
                 else {
-                    var newVideo = Object.assign({}, video[0], req.body)
+                    video = video[0]
+
+                    var newVideo = Object.assign({}, video, req.body)
                     database.updateVideo(newVideo, req.params.vdId, (result)=> {
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1168,7 +1174,7 @@ router.put('/video/:vdId', (req, res) => {
                             })
                         }
                         else {
-                            response.response('اطلاعات با موفقیت تغییر یافت', video[0], (result1)=> {
+                            response.response('اطلاعات با موفقیت تغییر یافت', video, (result1)=> {
                                 res.json(result1)
                             })
                         }

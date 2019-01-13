@@ -7,60 +7,60 @@ let jwt = require('../util/jwtHelper');
 
 
 router.get('/', (req, res)=> {
-    let statistic= {};
-    database.getAdmins((admins)=>{
-        if(admins == -1){
+    let statistic = {};
+    database.getAdmins((admins)=> {
+        if (admins == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else{
-            database.getAllLessons((lessons)=>{
-                if(lessons == -1){
+        else {
+            database.getAllLessons((lessons)=> {
+                if (lessons == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
                 }
-                else{
-                    database.getAllStu((students)=>{
-                        if(students == -1){
+                else {
+                    database.getAllStu((students)=> {
+                        if (students == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
-                        else{
-                            database.getLevels((levels)=>{
-                                if(levels == -1){
+                        else {
+                            database.getLevels((levels)=> {
+                                if (levels == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                         res.json(result)
                                     })
                                 }
-                                else{
-                                    if(levels == 0){
+                                else {
+                                    if (levels == 0) {
                                         statistic.levels = 0
                                     }
-                                    else{
+                                    else {
                                         statistic.levels = levels.length
                                     }
-                                    if(students == 0){
+                                    if (students == 0) {
                                         statistic.students = 0
                                     }
-                                    else{
+                                    else {
                                         statistic.students = students.length
                                     }
-                                    if(lessons == 0){
+                                    if (lessons == 0) {
                                         statistic.lessons = 0
                                     }
-                                    else{
+                                    else {
                                         statistic.lessons = lessons.length
                                     }
-                                    if(admins == 0){
+                                    if (admins == 0) {
                                         statistic.admins = 0
                                     }
-                                    else{
+                                    else {
                                         statistic.admins = admins.length
                                     }
-                                    response.response('اطلاعات آماری' , statistic  , (result)=>{
+                                    response.response('اطلاعات آماری', statistic, (result)=> {
                                         res.json(result)
                                     })
                                 }
