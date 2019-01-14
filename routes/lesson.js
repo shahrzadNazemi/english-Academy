@@ -1516,62 +1516,107 @@ router.put('/text/:txtId', (req, res)=> {
 
 
 router.get('/level/:lvlId', (req, res) => {
-
-    database.getLessonByLvlId(req.params.lvlId, (lesson)=> {
-        if (req.query.cli == 1) {
-            if (lesson == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0 || student == -1) {
+                response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else {
-                if (req.query.offset && req.query.limit) {
-                    response.pagination(req.query.offset, req.query.limit, lesson, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    response.response('اطلاعات مورد نظر یافت شد', lesson, (result)=> {
-                        res.json(result)
-                    })
-                }
-
-            }
-        }
-        else {
-            if (lesson == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (lesson == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-
-                if (req.query.offset && req.query.limit) {
-                    response.pagination(req.query.offset, req.query.limit, lesson, (resp)=> {
-                        response.response('اطلاعات مورد نظر یافت شد', lesson, (resp)=> {
-                            res.json(resp)
+                let usrId = student[0]._id
+                database.getViewUser(usrId , (view)=> {
+                    if (view == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
                         })
-                    })
-                }
-                else {
-                    response.response('اطلاعات مورد نظر یافت شد', lesson, (result)=> {
-                        res.json(result)
-                    })
-                }
-            }
-        }
+                    }
+                    else if (view == 0) {
+                        response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        database.getLessonByLvlId(req.params.lvlId,(lessons)=> {
+                            console.log("lessons" , lessons)
+                            if (lessons == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (lessons == 0) {
+                                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                for(var i=0;i<lessons.length;i++){
+                                    lessons[i].lock = true
+                                    if(lessons[i]._id == view[0].lsnId){
+                                        lessons[i].lock = false
+                                    }
+                                }
+                                if (req.query.cli == 1) {
+                                    if (lessons == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (lessons == 0) {
+                                        response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        if (req.query.offset && req.query.limit) {
+                                            response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
 
-    })
+                                    }
+                                }
+                                else {
+                                    if (lessons == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (lessons == 0) {
+                                        response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+
+                                        if (req.query.offset && req.query.limit) {
+                                            response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
+                                                response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
+                                                    res.json(resp)
+                                                })
+                                            })
+                                        }
+                                        else {
+                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                    }
+                                }
+
+                            }
+                        })
+                    }
+                })
+            }
+        })
 });
 
 router.get('/selective', (req, res)=> {
