@@ -277,4 +277,24 @@ router.get('/exam/:exId', (req, res)=> {
     })
 })
 
+router.get('/lesson/:lsnId', (req, res)=> {
+    database.getAllQuestionOfLesson(req.params.lsnId, (question)=> {
+        if (question == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (question == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات سوالات', question, (result)=> {
+                res.json(result)
+            })
+        }
+    })
+})
+
 module.exports = router

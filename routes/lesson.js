@@ -25,7 +25,7 @@ const lesson = {
         title: {type: "string"},
         order: {type: "string"},
         description: {type: "string"},
-        commonMistake:{type:"string"},
+        commonMistake: {type: "string"},
         deadline: {type: "string"}
     },
     required: ["lvlId", "title", "order"],
@@ -67,9 +67,9 @@ const text = {
     type: "object",
     properties: {
         description: {type: "string"},
-        typeId:{type:"string"},
-        title:{type:"string"},
-        lsnId:{type:"string"}
+        typeId: {type: "string"},
+        title: {type: "string"},
+        lsnId: {type: "string"}
     },
     required: ["typeId", "lsnId"],
     additionalProperties: false
@@ -611,9 +611,9 @@ router.post('/text', (req, res)=> {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            if(Data == "lsnId")
-            errorData = {"lesson": ["وارد کردن درس ضروری است."]}
-           else  if(Data == "typeId")
+            if (Data == "lsnId")
+                errorData = {"lesson": ["وارد کردن درس ضروری است."]}
+            else if (Data == "typeId")
                 errorData = {"type": ["وارد کردن نوع ضروری است."]}
         }
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
@@ -940,7 +940,7 @@ router.put('/video/:vdId', (req, res) => {
                                                                                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                                                                                             var newVideo = Object.assign({}, video, req.body)
 
-                                                                                                            database.updateVideo(newVideo,req.params.vdId, (result)=> {
+                                                                                                            database.updateVideo(newVideo, req.params.vdId, (result)=> {
                                                                                                                 if (result == -1) {
                                                                                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                                                                         res.json(result1)
@@ -1071,7 +1071,7 @@ router.put('/video/:vdId', (req, res) => {
                                             let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
                                             req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
                                             var newVideo = Object.assign({}, video, req.body)
-                                            database.updateVideo(newVideo,req.params.vdId, (result)=> {
+                                            database.updateVideo(newVideo, req.params.vdId, (result)=> {
                                                 if (result == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                         res.json(result1)
@@ -1488,9 +1488,9 @@ router.put('/text/:txtId', (req, res)=> {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            if(Data == "lsnId")
+            if (Data == "lsnId")
                 errorData = {"lesson": ["وارد کردن درس ضروری است."]}
-            else  if(Data == "typeId")
+            else if (Data == "typeId")
                 errorData = {"type": ["وارد کردن نوع ضروری است."]}
         }
         response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
@@ -1498,7 +1498,7 @@ router.put('/text/:txtId', (req, res)=> {
         })
     }
     else {
-        database.updateText(req.body,req.params.txtId , (text)=> {
+        database.updateText(req.body, req.params.txtId, (text)=> {
             if (text == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
@@ -1513,7 +1513,6 @@ router.put('/text/:txtId', (req, res)=> {
         })
     }
 });
-
 
 
 router.get('/level/:lvlId', (req, res) => {
@@ -1634,7 +1633,7 @@ router.get('/type', (req, res)=> {
 });
 
 router.get('/text/:txtId', (req, res)=> {
-    database.getTextBytxtId(req.params.txtId ,(text)=> {
+    database.getTextBytxtId(req.params.txtId, (text)=> {
         if (text == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -1645,7 +1644,7 @@ router.get('/text/:txtId', (req, res)=> {
                 res.json(result)
             })
         }
-       else{
+        else {
             text[0].lesson = text[0].lesson[0]
             text[0].type = text[0].type[0]
 
@@ -1719,7 +1718,7 @@ router.get('/text', (req, res)=> {
                 }
                 text = temp
             }
-            if(req.query.page){
+            if (req.query.page) {
                 response.paginationClient(req.query.page, req.query.limit, text, (result1)=> {
                     let countPages = Math.ceil(text.length / req.query.limit)
                     result1.totalPage = countPages
@@ -1728,7 +1727,7 @@ router.get('/text', (req, res)=> {
                     })
                 })
             }
-            else{
+            else {
                 response.response('اطلاعات همه ی متنها', text, (result)=> {
                     res.json(result)
                 })
@@ -1841,17 +1840,27 @@ router.get('/:lsnId', (req, res) => {
                     }
                     else {
                         database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
-                            console.log("result get result" , result)
-                            if (result == -1 || result == 0) {
-
+                            if (result == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
                             }
                             else {
-                                lesson[0].quiz = result.quiz
-                                lesson[0].exam = result.exam
-                                response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
-                                    res.json(result)
+                                if (result != 0) {
+                                    lesson[0].quiz = result.quiz
+                                    lesson[0].exam = result.exam
+                                    response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                                        res.json(result)
 
-                                })
+                                    })
+                                }
+                                else {
+                                    response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                                        res.json(result)
+
+                                    })
+                                }
+
 
                             }
                         })
@@ -1947,28 +1956,88 @@ router.get('/:lsnId/sound', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getAllLessons((sound)=> {
-        if (sound == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (sound == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
-                let countPages = Math.ceil(sound.length / req.query.limit)
-                result1.totalPage = countPages
-                response.response('اطلاعات همه ی درسها', result1, (result)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "admin") {
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0 || student == -1) {
+                response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
-            })
+            }
+            else {
+                let usrId = student[0]._id
+                database.getViewUser(usrId , (view)=> {
+                    if (view == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (view == 0) {
+                        response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        database.getAllLessons((lessons)=> {
+                            console.log("lessons" , lessons)
+                            if (lessons == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (lessons == 0) {
+                                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                for(var i=0;i<lessons.length;i++){
+                                    lessons[i].lock = true
+                                    if(lessons[i]._id == view[0].lsnId){
+                                        lessons[i].lock = false
+                                    }
+                                }
+                                response.paginationClient(req.query.page, req.query.limit, lessons, (result1)=> {
+                                    let countPages = Math.ceil(lessons.length / req.query.limit)
+                                    result1.totalPage = countPages
+                                    response.response('اطلاعات همه ی درسها', result1, (result)=> {
+                                        res.json(result)
+                                    })
+                                })
 
-        }
-    })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+    else{
+        database.getAllLessons((sound)=> {
+            if (sound == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (sound == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                    let countPages = Math.ceil(sound.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی درسها', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
+
+            }
+        })
+    }
 });
 
 
