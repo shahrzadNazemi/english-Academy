@@ -1896,18 +1896,24 @@ router.get('/:lsnId', (req, res) => {
                             type.push(lesson[0].video[i].type)
 
                         }
-                        let temp = type
-let index = []
-
+                        let index = []
                         for (var i = 0; i < type.length; i++) {
-                            for (var k = 0; k < temp.length; k++) {
-                                if (type[i]._id == temp[k]._id) {
-                                    index.push(type[i] ,i)
-                                }
+                            index.push(type[i]._id)
+                        }
+                        index.sort();
+                        console.log(index)
+                        let tmp = []
+                        for (var i = 0; i < index.length; i++) {
+                            if (index[i] == index[i + 1]) {
+                                tmp.push(i)
                             }
                         }
-                        console.log(index)
-
+                        console.log(tmp)
+                        for (var i = 0; i < tmp.length; i++) {
+                            // delete type[tmp[i]]
+                            type.splice(tmp[i], 1);
+                        }
+                        console.log(type)
                         lesson[0].type = type
                         database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
                             if (result == -1) {
