@@ -151,6 +151,35 @@ module.exports.addType = (typeInfo, cb)=> {
     })
 };
 
+module.exports.addCategory = (categoryInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/lesson/category`,
+        headers: {"content-Type": "application/json"},
+        body: categoryInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/level/${lvlId}`,
@@ -342,6 +371,30 @@ module.exports.getAdmins = (cb)=> {
 module.exports.getAllTypes = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/type`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getAllCategories = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/category`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -1536,7 +1589,7 @@ module.exports.getAllText = (cb)=> {
 
 };
 
-module.exports.getQuestionByLsnId = (lsnId ,cb)=> {
+module.exports.getQuestionByLsnId = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question/quiz/${lsnId}`,
         headers: {"content-Type": "application/json"},
@@ -1561,7 +1614,7 @@ module.exports.getQuestionByLsnId = (lsnId ,cb)=> {
 
 };
 
-module.exports.getAllQuestionOfLesson = (lsnId ,cb)=> {
+module.exports.getAllQuestionOfLesson = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question/lesson/${lsnId}`,
         headers: {"content-Type": "application/json"},
@@ -1586,7 +1639,7 @@ module.exports.getAllQuestionOfLesson = (lsnId ,cb)=> {
 
 };
 
-module.exports.getExamQUestion = (exId ,cb)=> {
+module.exports.getExamQUestion = (exId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question/exam/${exId}`,
         headers: {"content-Type": "application/json"},
@@ -1611,7 +1664,7 @@ module.exports.getExamQUestion = (exId ,cb)=> {
 
 };
 
-module.exports.getViewUser = (usrId ,cb)=> {
+module.exports.getViewUser = (usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/view/user/${usrId}`,
         headers: {"content-Type": "application/json"},
@@ -1639,6 +1692,35 @@ module.exports.getViewUser = (usrId ,cb)=> {
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/users/student/${stdId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updateResult = (updateInfo, stdId, lsnId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/result/${stdId}/${lsnId}`,
         headers: {"content-Type": "application/json"},
         body: updateInfo,
         json: true
@@ -1723,7 +1805,7 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     })
 };
 
-module.exports.updateViewToSetTrue = (id,userId,type, cb)=> {
+module.exports.updateViewToSetTrue = (id, userId, type, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/view/${type}/${id}/${userId}`,
         headers: {"content-Type": "application/json"},
@@ -1776,7 +1858,7 @@ module.exports.getAdminById = (admId, cb)=> {
 
 };
 
-module.exports.getResultUsrLsn = (usrId , lsnId, cb)=> {
+module.exports.getResultUsrLsn = (usrId, lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/result/${usrId}/${lsnId}`,
         headers: {"content-Type": "application/json"},

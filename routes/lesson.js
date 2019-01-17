@@ -35,6 +35,7 @@ const type = {
     type: "object",
     properties: {
         title: {type: "string"},
+        category: {type: "object"},
     },
     required: ["title"],
     additionalProperties: false
@@ -72,6 +73,16 @@ const text = {
         lsnId: {type: "string"}
     },
     required: ["typeId", "lsnId"],
+    additionalProperties: false
+};
+const category = {
+    type: "object",
+    properties: {
+        title: {type: "string"},
+
+
+    },
+    required: ["title"],
     additionalProperties: false
 };
 
@@ -583,6 +594,42 @@ router.post('/type', (req, res)=> {
     }
     else {
         database.addType(req.body, (type)=> {
+            if (type == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (type == -3) {
+                let data = {"title": "عنوان نباید تکراری باشد"}
+                response.validation('اطلاعات وارد شده اشتباه است.', data, 'duplicated', (result)=> {
+                    res.json(result)
+
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+});
+
+router.post('/category', (req, res)=> {
+    let valid = ajv.validate(category, req.body);
+    if (!valid) {
+        let errorData
+        if (ajv.errors[0].keyword == 'required') {
+            Data = ajv.errors[0].params.missingProperty
+            errorData = {"title": ["وارد کردن عنوان ضروری است."]}
+        }
+        response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, ajv.errors[0].keyword, (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        database.addCategory(req.body, (type)=> {
             if (type == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
@@ -1677,6 +1724,34 @@ router.get('/type', (req, res)=> {
     })
 });
 
+router.get('/category', (req, res)=> {
+    database.getAllCategories((type)=> {
+        if (type == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (type == 0) {
+            response.respondNotFound('نوع مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let temp = []
+
+            for (var i = 0; i < type.length; i++) {
+                temp[i] = {}
+                temp[i].label = type[i].title;
+                temp[i].value = type[i]._id
+            }
+            response.response('اطلاعات انواع فایل', temp, (result1)=> {
+                res.json(result1)
+            })
+
+        }
+    })
+});
+
 router.get('/text/:txtId', (req, res)=> {
     database.getTextBytxtId(req.params.txtId, (text)=> {
         if (text == -1) {
@@ -1886,18 +1961,21 @@ router.get('/:lsnId', (req, res) => {
                     else {
                         let type = []
                         for (var i = 0; i < lesson[0].video.length; i++) {
-                            type.push(lesson[0].video[i].type)
+                                type.push(lesson[0].video[i].type)
                         }
                         for (var i = 0; i < lesson[0].sound.length; i++) {
-                            type.push(lesson[0].video[i].type)
+                            type.push(lesson[0].sound[i].type)
 
                         }
                         for (var i = 0; i < lesson[0].text.length; i++) {
-                            type.push(lesson[0].video[i].type)
+                            type.push(lesson[0].text[i].type)
 
                         }
                         let index = []
+                        let category = []
+                        console.log("type", type)
                         for (var i = 0; i < type.length; i++) {
+                            category.push(type[i].category)
                             index.push(type[i]._id)
                         }
                         index.sort();
@@ -1912,9 +1990,12 @@ router.get('/:lsnId', (req, res) => {
                         for (var i = 0; i < tmp.length; i++) {
                             // delete type[tmp[i]]
                             type.splice(tmp[i], 1);
+                            category.splice(tmp[i], 1)
                         }
                         console.log(type)
                         lesson[0].type = type
+                        lesson[0].category = category
+
                         database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1923,12 +2004,23 @@ router.get('/:lsnId', (req, res) => {
                             }
                             else {
                                 if (result != 0) {
-                                    lesson[0].quiz = result.quiz
-                                    lesson[0].exam = result.exam
+                                    let info = {}
+                                    // if(result.timePassed <24){
+                                    //     info.passedLesson = false
+                                    // }
+                                    // else{
+                                    //    info.passedLesson = true
+                                    // }
+                                    // database.updateResult(info , usrId , req.params.lsnId , (result1)=>{
+                                    //     lesson[0].quiz = result.quiz
+                                    //     lesson[0].exam = result.exam
+                                    //     lesson[0].passedLesson = result.passedLesson
                                     response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
                                         res.json(result)
 
+                                        // })
                                     })
+
                                 }
                                 else {
                                     response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
@@ -2198,6 +2290,41 @@ router.delete('/:lsnId', (req, res) => {
 });
 
 router.delete('/type/:typId', (req, res) => {
+    database.delType(req.params.typId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('ویدیو مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == -2) {
+            let errData = {"video": ["نوع مورد نظر دارای ویدیو است"]}
+            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData, "hasVideo", (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == -3) {
+            let errData = {"sound": ["نوع مورد نظر دارای صدا است"]}
+            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData, "hasSound", (result)=> {
+                res.json(result)
+            })
+        }
+
+        else {
+            response.response('نوع مورد نظر حذف شد.', result, (result)=> {
+                res.json(result)
+
+            })
+        }
+
+    })
+});
+
+router.delete('/category/:typId', (req, res) => {
     database.delType(req.params.typId, (result)=> {
         if (result == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
