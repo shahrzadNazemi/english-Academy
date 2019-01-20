@@ -2010,9 +2010,7 @@ router.get('/:lsnId', (req, res) => {
 
                         }
                         let index = []
-                        let category = []
                         for (var i = 0; i < type.length; i++) {
-                            category.push(type[i].category)
                             index.push(type[i]._id)
                         }
                         index.sort();
@@ -2025,9 +2023,7 @@ router.get('/:lsnId', (req, res) => {
                         for (var i = 0; i < tmp.length; i++) {
                             // delete type[tmp[i]]
                             type.splice(tmp[i], 1);
-                            category.splice(tmp[i], 1)
                         }
-                        lesson[0].category = category
                         for (var i = 0; i < lesson[0].video.length; i++) {
                             for (var k = 0; k < type.length; k++) {
                                 if (lesson[0].video[i] != undefined) {
@@ -2056,6 +2052,7 @@ router.get('/:lsnId', (req, res) => {
                             }
                         }
                         lesson[0].type = type
+                        console.log("testTTTTT" , lesson[0].type[0].video[0].type)
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
