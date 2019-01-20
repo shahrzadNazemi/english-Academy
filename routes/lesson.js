@@ -1997,66 +1997,73 @@ router.get('/:lsnId', (req, res) => {
                         })
                     }
                     else {
-                        let type = []
+                        let types = []
                         for (var i = 0; i < lesson[0].video.length; i++) {
-                            type.push(lesson[0].video[i].type)
+                            types.push(lesson[0].video[i].type)
                         }
                         for (var i = 0; i < lesson[0].sound.length; i++) {
-                            type.push(lesson[0].sound[i].type)
+                            types.push(lesson[0].sound[i].type)
 
                         }
                         for (var i = 0; i < lesson[0].text.length; i++) {
-                            type.push(lesson[0].text[i].type)
+                            types.push(lesson[0].text[i].type)
 
                         }
                         let index = []
-                        for (var i = 0; i < type.length; i++) {
-                            index.push(type[i]._id)
+                        for (var i = 0; i < types.length; i++) {
+
+                            index.push(types[i]._id)
                         }
                         index.sort();
                         let tmp = []
                         for (var i = 0; i < index.length; i++) {
                             if (index[i] == index[i + 1]) {
-                                tmp.push(i)
+                                tmp.push(index[i])
                             }
                         }
-                        for (var i = 0; i < tmp.length; i++) {
-                            // delete type[tmp[i]]
-                            type.splice(tmp[i], 1);
+                        for (var i = 0; i < types.length; i++) {
+                            for(var k=0;k<tmp.length;k++){
+                                if(tmp[k] == types[i]._id){
+                                    types.splice(i, 1);
+                                }
+
+                            }
+
                         }
-                        for (var i = 0; i < lesson[0].video.length; i++) {
-                            for (var k = 0; k < type.length; k++) {
+                        let max = [];
+                        max.push(lesson[0].video.length)
+                        max.push(lesson[0].sound.length)
+                        max.push(lesson[0].text.length)
+                        max.sort()
+                        for (var i = 0; i < max[max.length - 1]; i++) {
+                            for (var k = 0; k < types.length; k++) {
                                 if (lesson[0].video[i] != undefined) {
-                                    type[k].video = []
-                                    if (lesson[0].video[i].typeId == type[k]._id) {
-                                        type[k].video.push(lesson[0].video[i])
+                                    types[k].video = []
+                                    if (lesson[0].video[i].typeId == types[k]._id) {
+                                        types[k].video.push(lesson[0].video[i])
                                     }
                                 }
                                 if (lesson[0].sound[i] != undefined) {
-                                    type[k].sound = []
+                                    types[k].sound = []
 
-                                    if (lesson[0].sound[i].typeId == type[k]._id) {
-                                        type[k].sound.push(lesson[0].sound[i])
+                                    if (lesson[0].sound[i].typeId == types[k]._id) {
+                                        types[k].sound.push(lesson[0].sound[i])
                                     }
                                 }
-
                                 if (lesson[0].text[i] != undefined) {
-                                    type[k].text = []
+                                    types[k].text = []
 
-                                    if (lesson[0].text[i].typeId == type[k]._id) {
-                                        type[k].text.push(lesson[0].text[i])
+                                    if (lesson[0].text[i].typeId == types[k]._id) {
+                                        types[k].text.push(lesson[0].text[i])
                                     }
                                 }
-
-
                             }
                         }
-                        lesson[0].type = type
-                        // console.log("testTTTTT" , lesson[0].type[0].video[0].type)
+                        console.log("trkjwkdjkjcksdc" ,types)
+                        lesson[0].type = types
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
-
                         database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2074,7 +2081,7 @@ router.get('/:lsnId', (req, res) => {
                                 })
                             }
                             else {
-                                lesson[0] = circJson.stringify(lesson[0])
+                                // lesson[0] = circJson.stringify(lesson[0])
                                 response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                     res.json(result)
 
