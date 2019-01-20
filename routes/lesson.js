@@ -2109,8 +2109,7 @@ router.get('/:lsnId', (req, res) => {
             }
         })
     }
-})
-;
+});
 
 router.get('/:lsnId/video', (req, res)=> {
     database.getAllVideo((video)=> {
