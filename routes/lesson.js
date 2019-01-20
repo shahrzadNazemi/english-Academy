@@ -2052,7 +2052,7 @@ router.get('/:lsnId', (req, res) => {
                             }
                         }
                         lesson[0].type = type
-                        console.log("testTTTTT" , lesson[0].type[0].video[0].type)
+                        // console.log("testTTTTT" , lesson[0].type[0].video[0].type)
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
@@ -2375,8 +2375,8 @@ router.delete('/type/:typId', (req, res) => {
     })
 });
 
-router.delete('/category/:typId', (req, res) => {
-    database.delType(req.params.typId, (result)=> {
+router.delete('/category/:catId', (req, res) => {
+    database.delCategory(req.params.catId, (result)=> {
         if (result == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -2387,19 +2387,6 @@ router.delete('/category/:typId', (req, res) => {
                 res.json(result)
             })
         }
-        else if (result == -2) {
-            let errData = {"video": ["نوع مورد نظر دارای ویدیو است"]}
-            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData, "hasVideo", (result)=> {
-                res.json(result)
-            })
-        }
-        else if (result == -3) {
-            let errData = {"sound": ["نوع مورد نظر دارای صدا است"]}
-            response.validation('نوع مورد نظر قابل حذف شدن نیست', errData, "hasSound", (result)=> {
-                res.json(result)
-            })
-        }
-
         else {
             response.response('نوع مورد نظر حذف شد.', result, (result)=> {
                 res.json(result)
