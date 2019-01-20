@@ -1608,7 +1608,7 @@ router.get('/level/:lvlId', (req, res) => {
                                     })
                                 }
                                 else {
-                                    let usrLsnId = view.lsnId
+                                    let usrLsnId = view[0].lsnId
                                     database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
                                         if (resultInfo == -1 || resultInfo == 0) {
                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
