@@ -6,6 +6,8 @@ let config = require('../util/config');
 let fse = require('fs-extra');
 let fs = require('fs');
 let response = require('../util/responseHelper')
+var util = require('util')
+const circJson = require('circular-json')
 const ajv = require("ajv")({
     removeAdditional: true,
     $data: true,
@@ -1599,65 +1601,101 @@ router.get('/level/:lvlId', (req, res) => {
                             })
                         }
                         else {
-                            for (var i = 0; i < lessons.length; i++) {
-                                lessons[i].lock = true
-                                if (lessons[i]._id == view[0].lsnId) {
-                                    lessons[i].lock = false
-                                }
-                            }
-                            if (req.query.cli == 1) {
-                                if (lessons == -1) {
+                            database.getViewUser(usrId, (view)=> {
+                                if (view == 0 || view == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                         res.json(result)
                                     })
                                 }
-                                else if (lessons == 0) {
-                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                        res.json(result)
-                                    })
-                                }
                                 else {
-                                    if (req.query.offset && req.query.limit) {
-                                        response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else {
-                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-
-                                }
-                            }
-                            else {
-                                if (lessons == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (lessons == 0) {
-                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-
-                                    if (req.query.offset && req.query.limit) {
-                                        response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
-                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
-                                                res.json(resp)
+                                    let usrLsnId = view.lsnId
+                                    database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
+                                        if (resultInfo == -1 || resultInfo == 0) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
                                             })
-                                        })
-                                    }
-                                    else {
-                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                }
-                            }
+                                        }
+                                        else {
+                                            // if (resultInfo.timePassed != "") {
+                                            //     let pass = new Date(new Date(resultInfo.timePassed).getTime() + 60 * 60 * 24 * 1000);
+                                            //     let currentTime = new Date().getTime()
+                                            //     if (currentTime < pass) {
+                                            //         lesson[0].allowToPass = true
+                                            //         response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                                            //             res.json(result)
+                                            //         })
+                                            //     }
+                                            //     else {
+                                            //         lesson[0].allowToPass = false
+                                            //         response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                                            //             res.json(result)
+                                            //         })
+                                            //     }
+                                            // }
+                                            // else {}
+                                            for (var i = 0; i < lessons.length; i++) {
+                                                lessons[i].lock = true
+                                                if (lessons[i]._id == view[0].lsnId) {
+                                                    lessons[i].lock = false
+                                                }
+                                            }
+                                            if (req.query.cli == 1) {
+                                                if (lessons == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (lessons == 0) {
+                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    if (req.query.offset && req.query.limit) {
+                                                        response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                    else {
+                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
 
+                                                }
+                                            }
+                                            else {
+                                                if (lessons == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (lessons == 0) {
+                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+
+                                                    if (req.query.offset && req.query.limit) {
+                                                        response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
+                                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
+                                                                res.json(resp)
+                                                            })
+                                                        })
+                                                    }
+                                                    else {
+                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    })
+                                }
+                            })
                         }
                     })
                 }
@@ -1961,7 +1999,7 @@ router.get('/:lsnId', (req, res) => {
                     else {
                         let type = []
                         for (var i = 0; i < lesson[0].video.length; i++) {
-                                type.push(lesson[0].video[i].type)
+                            type.push(lesson[0].video[i].type)
                         }
                         for (var i = 0; i < lesson[0].sound.length; i++) {
                             type.push(lesson[0].sound[i].type)
@@ -1973,28 +2011,54 @@ router.get('/:lsnId', (req, res) => {
                         }
                         let index = []
                         let category = []
-                        console.log("type", type)
                         for (var i = 0; i < type.length; i++) {
                             category.push(type[i].category)
                             index.push(type[i]._id)
                         }
                         index.sort();
-                        console.log(index)
                         let tmp = []
                         for (var i = 0; i < index.length; i++) {
                             if (index[i] == index[i + 1]) {
                                 tmp.push(i)
                             }
                         }
-                        console.log(tmp)
                         for (var i = 0; i < tmp.length; i++) {
                             // delete type[tmp[i]]
                             type.splice(tmp[i], 1);
                             category.splice(tmp[i], 1)
                         }
-                        console.log(type)
-                        lesson[0].type = type
                         lesson[0].category = category
+                        for (var i = 0; i < lesson[0].video.length; i++) {
+                            for (var k = 0; k < type.length; k++) {
+                                if (lesson[0].video[i] != undefined) {
+                                    type[k].video = []
+                                    if (lesson[0].video[i].typeId == type[k]._id) {
+                                        type[k].video.push(lesson[0].video[i])
+                                    }
+                                }
+                                if (lesson[0].sound[i] != undefined) {
+                                    type[k].sound = []
+
+                                    if (lesson[0].sound[i].typeId == type[k]._id) {
+                                        type[k].sound.push(lesson[0].sound[i])
+                                    }
+                                }
+
+                                if (lesson[0].text[i] != undefined) {
+                                    type[k].text = []
+
+                                    if (lesson[0].text[i].typeId == type[k]._id) {
+                                        type[k].text.push(lesson[0].text[i])
+                                    }
+                                }
+
+
+                            }
+                        }
+                        lesson[0].type = type
+                        delete lesson[0].video
+                        delete lesson[0].sound
+                        delete lesson[0].text
 
                         database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
                             if (result == -1) {
@@ -2002,36 +2066,27 @@ router.get('/:lsnId', (req, res) => {
                                     res.json(result)
                                 })
                             }
-                            else {
-                                if (result != 0) {
-                                    let info = {}
-                                    // if(result.timePassed <24){
-                                    //     info.passedLesson = false
-                                    // }
-                                    // else{
-                                    //    info.passedLesson = true
-                                    // }
-                                    // database.updateResult(info , usrId , req.params.lsnId , (result1)=>{
-                                    //     lesson[0].quiz = result.quiz
-                                    //     lesson[0].exam = result.exam
-                                    //     lesson[0].passedLesson = result.passedLesson
-                                    response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
-                                        res.json(result)
+                            else if (result != 0) {
+                                lesson[0].quiz = result.quiz
+                                lesson[0].exam = result.exam
+                                // console.log("lesson)" , lesson[0].type[0].video[0].category)
+                                lesson[0] = circJson.stringify(lesson[0])
+                                response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                    res.json(result)
 
-                                        // })
-                                    })
-
-                                }
-                                else {
-                                    response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
-                                        res.json(result)
-
-                                    })
-                                }
-
-
+                                })
                             }
+                            else {
+                                lesson[0] = circJson.stringify(lesson[0])
+                                response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+
+
                         })
+
                     }
                 })
             }
@@ -2057,8 +2112,8 @@ router.get('/:lsnId', (req, res) => {
             }
         })
     }
-
-});
+})
+;
 
 router.get('/:lsnId/video', (req, res)=> {
     database.getAllVideo((video)=> {
