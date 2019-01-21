@@ -2079,48 +2079,24 @@ router.get('/:lsnId', (req, res) => {
                                     }
                                     else{
                                         let exam = result.exam
-                                        database.getExamQUestion(result.exam._id , (examQs)=>{
-                                            if(examQs == -1 ){
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }else{
-                                                database.getQuestionByLsnId(req.params.lsnId , (quizQs)=>{
-                                                    if(quizQs == -1){
-                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                            res.json(result)
-                                                        })
-                                                    }
-                                                    else{
-                                                        for(var i=0;i<typeList.length ;i++){
-                                                            if(typeList[i].title == "quiz"){
-                                                                if(quizQs == 0){
-                                                                    quizQs = []
-                                                                }
-                                                                typeList[i].quiz = quizQs
-                                                                types.push(typeList[i])
-                                                            }
-                                                            if(typeList[i].title == "exam"){
-                                                                if(examQs == 0){
-                                                                    examQs = []
-                                                                }
-                                                                typeList[i].exam = examQs
-                                                                types.push(typeList[i])
-                                                            }
-                                                        }
-                                                        lesson[0].quiz = result.quiz
-                                                        lesson[0].exam = result.exam
-                                                        // console.log("lesson)" , lesson[0].type[0].video[0].category)
-                                                        lesson[0] = circJson.stringify(lesson[0])
-                                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                                            res.json(result)
-
-                                                        })
-                                                    }
-                                                })
+                                        for(var i=0;i<typeList.length ;i++){
+                                            if(typeList[i].title == "quiz"){
+                                                typeList[i].quizData = result.quiz
+                                                types.push(typeList[i])
                                             }
-                                        })
+                                            if(typeList[i].title == "exam"){
+                                                typeList[i].examData = result.exam
+                                                types.push(typeList[i])
+                                            }
+                                        }
+                                        // lesson[0].quiz = result.quiz
+                                        // lesson[0].exam = result.exam
+                                        // console.log("lesson)" , lesson[0].type[0].video[0].category)
+                                        lesson[0] = circJson.stringify(lesson[0])
+                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                            res.json(result)
 
+                                        })
                                     }
                                 })
 
