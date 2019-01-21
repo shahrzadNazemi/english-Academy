@@ -1180,6 +1180,30 @@ module.exports.getSoundBysndId = (sndId, cb)=> {
     })
 };
 
+module.exports.getTypeById = (typeId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/type/${typeId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            console.log(body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.getTextBytxtId = (txtId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/text/${txtId}`,

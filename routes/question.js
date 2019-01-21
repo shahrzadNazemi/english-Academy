@@ -16,13 +16,13 @@ const question = {
     properties: {
         content: {type: "string"},
         score: {type: "string"},
-        type: {type: "string"},
+        typeId: {type: "string"},
         answers: {type: "array"},
         lesson: {type: "object"},
         exam: {type: "object"},
         trueIndex: {type: "string"}
     },
-    required: [],
+    required: ["typeId"],
     additionalProperties: false
 };
 
@@ -65,56 +65,68 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
-        if (req.body.type == "quiz") {
-            req.body.exam = {}
-        }
-        else if (req.body.type == "exam") {
-            req.body.lesson = {}
-        }
-        if (!req.body.type) {
-            req.body.exam = {}
-            req.body.lesson = {}
-            req.body.type = ""
-        }
-        if (typeof req.body.trueIndex == "string") {
-            req.body.trueIndex = parseInt(req.body.trueIndex)
-        }
-        if (typeof req.body.score == "string") {
-            req.body.score = parseInt(req.body.score)
-        }
-        for (var i = 0; i < req.body.answers.length; i++) {
-            if (i == req.body.trueIndex) {
-                req.body.answers[i].isTrue = true
-            }
-            else {
-                req.body.answers[i].isTrue = false
-            }
-        }
-        database.addQuestion(req.body, (addResult)=> {
-            if (addResult == -1) {
+        database.getTypeById(req.body.typeId , (type)=>{
+            if(type == -1 || 0){
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
             }
-            else if (addResult == -2) {
-                let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
-                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (addResult == -3) {
-                let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
-                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                    res.json(result)
 
+            else{
+                req.body.type = type.title
+                if (req.body.type == "quiz") {
+                    req.body.exam = {}
+                }
+                else if (req.body.type == "exam") {
+                    req.body.lesson = {}
+                }
+                if (!req.body.type) {
+                    req.body.exam = {}
+                    req.body.lesson = {}
+                    req.body.type = ""
+                }
+                if (typeof req.body.trueIndex == "string") {
+                    req.body.trueIndex = parseInt(req.body.trueIndex)
+                }
+                if (typeof req.body.score == "string") {
+                    req.body.score = parseInt(req.body.score)
+                }
+                for (var i = 0; i < req.body.answers.length; i++) {
+                    if (i == req.body.trueIndex) {
+                        req.body.answers[i].isTrue = true
+                    }
+                    else {
+                        req.body.answers[i].isTrue = false
+                    }
+                }
+                database.addQuestion(req.body, (addResult)=> {
+                    if (addResult == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (addResult == -2) {
+                        let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
+                        response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (addResult == -3) {
+                        let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
+                        response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
                 })
             }
         })
+
     }
 });
 
