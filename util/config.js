@@ -6,6 +6,10 @@ module.exports.uploadPathTrick = "/var/fileAccess/site/upload/trick";
 
 module.exports.uploadPathSound = "/var/fileAccess/site/upload/sound";
 
+module.exports.uploadPathQvoice = "/var/fileAccess/site/upload/question";
+
+module.exports.downloadPathQvoice = "http://185.94.99.69:9000/upload/question";
+
 module.exports.downloadPathVideo = "http://185.94.99.69:9000/upload/video";
 
 module.exports.downloadPathSound = "http://185.94.99.69:9000/upload/sound";
