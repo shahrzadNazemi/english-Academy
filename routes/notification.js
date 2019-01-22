@@ -254,6 +254,7 @@ router.put('/:NId/view', (req, res)=> {
                             })
                         }
                         else {
+                            notification.viewed = true
                             response.response('ویرایش با موفقیت انجام شد', notification, (result)=> {
                                 res.json(result)
 
