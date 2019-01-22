@@ -29,7 +29,7 @@ const question = {
 };
 
 router.post('/', (req, res)=> {
-console.log("body in here",req.body)
+    console.log("body in here", req.body)
     let valid = ajv.validate(question, req.body);
     if (!valid) {
         // console.log(ajv.errors)
@@ -82,13 +82,13 @@ console.log("body in here",req.body)
             }
             if (req.files.file != null) {
                 // type file
-                database.getTypeById(req.body.typeId , (type)=>{
-                    if(type == -1 || 0){
+                database.getTypeById(req.body.typeId, (type)=> {
+                    if (type == -1 || 0) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
                     }
-                    else{
+                    else {
                         req.body.type = type.title
                         if (req.body.type == "quiz") {
                             req.body.exam = {}
@@ -190,6 +190,79 @@ console.log("body in here",req.body)
             }
         }
         else {
+            if (req.body.url == undefined) {
+                req.body.url = ""
+            }
+            if (req.body.lesson && typeof req.body.lesson == "string") {
+                req.body.lesson = JSON.parse(req.body.lesson)
+            }
+            if (req.body.exam && typeof req.body.exam == "string") {
+                req.body.exam = JSON.parse(req.body.exam)
+            }
+            if (req.body.answers && typeof req.body.answers == "string") {
+                req.body.answers = JSON.parse(req.body.answers)
+            }
+            database.getTypeById(req.body.typeId, (type)=> {
+                if (type == -1 || 0) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    req.body.type = type.title
+                    if (req.body.type == "quiz") {
+                        req.body.exam = {}
+                    }
+                    else if (req.body.type == "exam") {
+                        req.body.lesson = {}
+                    }
+                    if (!req.body.type) {
+                        req.body.exam = {}
+                        req.body.lesson = {}
+                        req.body.type = ""
+                    }
+                    if (typeof req.body.trueIndex == "string") {
+                        req.body.trueIndex = parseInt(req.body.trueIndex)
+                    }
+                    if (typeof req.body.score == "string") {
+                        req.body.score = parseInt(req.body.score)
+                    }
+                    for (var i = 0; i < req.body.answers.length; i++) {
+                        if (i == req.body.trueIndex) {
+                            req.body.answers[i].isTrue = true
+                        }
+                        else {
+                            req.body.answers[i].isTrue = false
+                        }
+                    }
+                    database.addQuestion(req.body, (addResult)=> {
+                        if (addResult == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (addResult == -2) {
+                            let errData = {"title": "نام سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (addResult == -3) {
+                            let errData = {"order": "ترتیب سطح نمیتواند تکراری باشد"}
+                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            response.response('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+
+                    })
+                }
+            })
 
         }
 
@@ -238,7 +311,7 @@ router.put('/:QId', (req, res)=> {
             if (req.files) {
                 var unlinkPath = result.url.replace(`${config.downloadPathQvoice}`, `${config.uploadPathQvoice}`);
                 fs.unlink(unlinkPath, function (err) {
-                    try{
+                    try {
                         if (req.files.file != null) {
                             req.body._id = req.params.QId
                             var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
@@ -287,7 +360,7 @@ router.put('/:QId', (req, res)=> {
                             })
                         }
                     }
-                    catch(e){
+                    catch (e) {
                         console.log(e)
                     }
 

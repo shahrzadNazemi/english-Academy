@@ -8,6 +8,7 @@ let fs = require('fs');
 let response = require('../util/responseHelper')
 var util = require('util')
 const circJson = require('circular-json')
+let moment = require('moment')
 const ajv = require("ajv")({
     removeAdditional: true,
     $data: true,
@@ -1618,7 +1619,9 @@ router.get('/level/:lvlId', (req, res) => {
                                         else {
                                             console.log("resultInfo",resultInfo.timePassed)
                                             if (resultInfo.timePassed != "") {
-                                                let pass = new Date(new Date(resultInfo.timePassed).getTime() + 60 * 60 * 24 * 1000);
+                                                if(typeof resultInfo.timePassed == 'string')
+                                                    resultInfo.timePassed = parseInt(resultInfo.timePassed)
+                                                let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
                                                 let currentTime = new Date().getTime()
                                                 console.log("pass" , pass)
                                                 console.log("currentTime" , currentTime)
