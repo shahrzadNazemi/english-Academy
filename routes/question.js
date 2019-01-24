@@ -480,7 +480,7 @@ router.get('/quiz/:lsnId', (req, res)=> {
             })
         }
         else if (question == 0) {
-            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
@@ -500,7 +500,7 @@ router.get('/exam/:exId', (req, res)=> {
             })
         }
         else if (question == 0) {
-            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
