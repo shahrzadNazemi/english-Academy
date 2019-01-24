@@ -593,7 +593,10 @@ router.get('/student/best', (req, res) => {
             let temp = []
             let length = getResult.length
             if (length <= 3) {
-                res.json(getResult)
+                response.response('اطلاعات بهترین دانش آموزان', getResult, (result)=> {
+                    res.json(result)
+
+                })
             }
             else {
                 temp[0] = getResult[length - 1]
