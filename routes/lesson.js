@@ -2283,7 +2283,7 @@ router.get('/:lsnId', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if (username != "admin") {
+    if (username != "userAdmin") {
         database.getStudentByUsername(username, (student)=> {
             if (student == 0) {
                 response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {

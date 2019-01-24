@@ -485,7 +485,7 @@ router.get('/quiz/:lsnId', (req, res)=> {
             })
         }
         else {
-            response.response('اطلاعات سوالات', question[0], (result)=> {
+            response.response('اطلاعات سوالات', question, (result)=> {
                 res.json(result)
             })
         }
@@ -505,7 +505,7 @@ router.get('/exam/:exId', (req, res)=> {
             })
         }
         else {
-            response.response('اطلاعات سوالات', question[0], (result)=> {
+            response.response('اطلاعات سوالات', question, (result)=> {
                 res.json(result)
             })
         }
