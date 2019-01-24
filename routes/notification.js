@@ -361,7 +361,7 @@ router.get('/', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if(username != "admin"){
+    if(username != "userAdmin"){
         database.getStudentByUsername(username, (student)=> {
             if (student == 0 || student == -1) {
                 response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
@@ -376,7 +376,7 @@ router.get('/', (req, res)=> {
                         })
                     }
                     else if (notification == 0) {
-                        response.respondNotFound('نوتیفیکیشن مورد نظر یافت نشد.', {}, (result)=> {
+                        response.respondNotFound('نوتیفیکیشن مورد نظر یافت نشد.', [], (result)=> {
                             res.json(result)
                         })
                     }
