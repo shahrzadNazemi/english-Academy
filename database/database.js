@@ -2112,6 +2112,34 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
 
 };
 
+module.exports.answerQuestion = (info,query , cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/result/answerQuestion`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        qs:query,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
 
 
 

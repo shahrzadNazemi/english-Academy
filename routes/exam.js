@@ -66,82 +66,82 @@ router.post('/', (req, res)=> {
             res.json(result)
         })
     } else {
-        if(req.body.preLesson){
+        if (req.body.preLesson) {
             req.body.preLesson = JSON.parse(req.body.preLesson)
         }
-            if (req.files) {
-                if (req.files.file != null) {
-                    // type file
-                    if (typeof req.body.time == "string") {
-                        req.body.time = parseInt(req.body.time)
-                    }
-                    database.addExam(req.body, (addResult)=> {
+        if (req.files) {
+            if (req.files.file != null) {
+                // type file
+                if (typeof req.body.time == "string") {
+                    req.body.time = parseInt(req.body.time)
+                }
+                database.addExam(req.body, (addResult)=> {
                         if (addResult == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
                         else {
-                                req.body._id = addResult
-                                // res.json(req.body)
-                                var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                                var file = req.files.file.name.replace(`.${extension}`, '');
-                                var newFile = new Date().getTime() + '.' + extension;
-                                // path is Upload Directory
-                                var dir = `${config.uploadPathExamImage}/${req.body._id}/`;
-                                console.log("dir", dir)
-                                lesson.addDir(dir, function (newPath) {
-                                    var path = dir + newFile;
-                                    req.files.file.mv(path, function (err) {
-                                        if (err) {
-                                            console.error(err);
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else {
-                                            req.body.avatarUrl = path.replace(`${config.uploadPathExamImage}`, `${config.downloadPathExamImage}`)
-                                            // req.body._id = (req.body._id.replace(/"/g, ''));
-                                            console.log("body", req.body)
+                            req.body._id = addResult
+                            // res.json(req.body)
+                            var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                            var file = req.files.file.name.replace(`.${extension}`, '');
+                            var newFile = new Date().getTime() + '.' + extension;
+                            // path is Upload Directory
+                            var dir = `${config.uploadPathExamImage}/${req.body._id}/`;
+                            console.log("dir", dir)
+                            lesson.addDir(dir, function (newPath) {
+                                var path = dir + newFile;
+                                req.files.file.mv(path, function (err) {
+                                    if (err) {
+                                        console.error(err);
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        req.body.avatarUrl = path.replace(`${config.uploadPathExamImage}`, `${config.downloadPathExamImage}`)
+                                        // req.body._id = (req.body._id.replace(/"/g, ''));
+                                        console.log("body", req.body)
 
-                                            if (req.body.time  &&typeof req.body.time == "string") {
-                                                req.body.time = parseInt(req.body.time)
+                                        if (req.body.time && typeof req.body.time == "string") {
+                                            req.body.time = parseInt(req.body.time)
+                                        }
+                                        database.updateExam(req.body, req.body._id, (result)=> {
+                                            if (result == -1) {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                    res.json(result)
+                                                })
                                             }
-                                            database.updateExam(req.body, req.body._id, (result)=> {
-                                                if (result == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else if (result == 0) {
-                                                    response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else {
-                                                    response.response('اطلاعات با موفقیت ثبت شد.', result , (result)=> {
-                                                        res.json(result)
+                                            else if (result == 0) {
+                                                response.respondNotFound('سوال مورد نظر یافت نشد', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                response.response('اطلاعات با موفقیت ثبت شد.', result, (result)=> {
+                                                    res.json(result)
 
-                                                    })
-                                                }
-                                            })
-                                        }
+                                                })
+                                            }
+                                        })
+                                    }
 
-                                    })
-                                });
-                            }
+                                })
+                            });
+                        }
                     }
-)
-                }
-                else {
-                    let errData = {"file": "فایلی به این نام فرستاده نشده است"}
-                    response.validation('فایلی به این نام فرستاده نشده است', errData, "required", (result)=> {
-                        res.json(result)
-                    })
-                }
+                )
+            }
+            else {
+                let errData = {"file": "فایلی به این نام فرستاده نشده است"}
+                response.validation('فایلی به این نام فرستاده نشده است', errData, "required", (result)=> {
+                    res.json(result)
+                })
+            }
         }
-        else{
-            if (req.body.time !=undefined && typeof req.body.time == "string") {
+        else {
+            if (req.body.time != undefined && typeof req.body.time == "string") {
                 req.body.time = parseInt(req.body.time)
             }
             database.addExam(req.body, (addResult)=> {
@@ -156,7 +156,7 @@ router.post('/', (req, res)=> {
 
                     })
                 }
-            })   
+            })
         }
     }
 });
@@ -192,10 +192,10 @@ router.put('/:exId', (req, res)=> {
         })
     }
     else {
-        if(req.body.preLesson){
+        if (req.body.preLesson) {
             req.body.preLesson = JSON.parse(req.body.preLesson)
         }
-        if (req.body.time  &&typeof req.body.time == "string") {
+        if (req.body.time && typeof req.body.time == "string") {
             req.body.time = parseInt(req.body.time)
         }
         database.getExamById(req.params.exId, (exam)=> {
@@ -299,7 +299,7 @@ router.put('/:exId', (req, res)=> {
                             })
                         }
                         else {
-                            response.response('ویرایش با موفقیت انجام شد', result , (result)=> {
+                            response.response('ویرایش با موفقیت انجام شد', result, (result)=> {
                                 res.json(result)
 
                             })
@@ -330,7 +330,6 @@ router.delete('/:exId', (req, res)=> {
                 res.json(result)
 
             })
-
 
 
         }
@@ -395,25 +394,35 @@ router.get('/', (req, res)=> {
             })
         }
         else if (getREsult == 0) {
-            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('سطح مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
         else {
+            for(var i =0;i<getREsult.length;i++){
+                getREsult[i].lesson = getREsult[i].lesson[0]
+            }
+            if (req.query.page) {
+                response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
+                    let countPages = Math.ceil(getREsult.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
 
-            response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
-                let countPages = Math.ceil(getREsult.length / req.query.limit)
-                result1.totalPage = countPages
-                response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+            }
+            else {
+                console.log(getREsult)
+                response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
                     res.json(result)
                 })
-            })
+
+            }
         }
     })
     // res.json({"status":"success"})
 });
-
-
 
 
 module.exports = router

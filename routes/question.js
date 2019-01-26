@@ -12,6 +12,8 @@ const ajv = require("ajv")({
 let config = require('../util/config')
 let lesson = require('./lesson')
 let fs = require('fs')
+let moment = require('moment')
+let jwt = require('../util/jwtHelper')
 
 const question = {
     type: "object",
@@ -531,5 +533,96 @@ router.get('/lesson/:lsnId', (req, res)=> {
         }
     })
 })
+
+router.post('/answer', (req, res)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    req.body.username = verify.userID
+    database.getStudentByUsername(req.body.username, (student)=> {
+        if (student == 0) {
+            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+
+        }
+        else if (student == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            database.getResultUsrLsn(student[0]._id, req.body.lsnId, (result)=> {
+                if (result == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+
+                }
+                else if (result == 0) {
+                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+
+                }
+                else {
+                    if (result.timePassed) {
+                        let pass = moment(result.timePassed) + 60 * 60 * 1000;
+                        let currentTime = new Date().getTime()
+                        if (pass < currentTime) {
+                            database.answerQuestion(req.body, "round=2", (question)=> {
+                                if (question == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else if (question == 0) {
+                                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+
+                                }
+                                else {
+                                    response.response('اطلاعات سوالات', question, (result)=> {
+                                        res.json(result)
+                                    })
+
+                                }
+                            })
+                        }
+                        else {
+                            response.validation('یک ساعت ', {}, 403, (result)=> {
+                                res.json(result)
+                            })
+
+                        }
+                    }
+                    else {
+                        database.answerQuestion(req.body, "round=1", (question)=> {
+                            if (question == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (question == 0) {
+                                response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+
+                            }
+                            else {
+                                response.response('اطلاعات سوالات', question, (result)=> {
+                                    res.json(result)
+                                })
+
+                            }
+                        })
+
+                    }
+                }
+            })
+
+        }
+    })
+});
 
 module.exports = router
