@@ -317,7 +317,23 @@ router.post('/refreshToken' , function (req , res) {
         var verify = jwt.verify(token);
         if(verify == 1){
             jwt.verifyExpireToken(token , function (newToken) {
-                res.json({access_token:newToken , expires_in:3600 , token_type:'Bearer'})
+                var verify = jwt.verify(newToken);
+                let userID = verify.userID
+                database.getStudentByUsername(userID , (student)=>{
+                    if(student == 0|| student == -1){
+                        res.json({access_token:jwt.signUser(userID) ,expires_in:3600 , token_type:'Bearer'});
+
+                    }
+                    else{
+                        delete student[0].password
+                        let data = student[0]
+                        data.jwt = jwt.signUser(userID)
+                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
             })
         }
         else if(verify == null){

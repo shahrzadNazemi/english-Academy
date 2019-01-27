@@ -5,10 +5,15 @@ module.exports.signUser = function (userID) {
 };
 module.exports.verify = function (token) {
     try {
-        var decoded = jwt.verify(token, secret);
-        return decoded;
+        return jwt.verify(token, secret);
     } catch (err) {
-        return null;
+        if(err.name === 'TokenExpiredError') {
+            return 1
+        }
+        else{
+            return null;
+
+        }
     }
 };
 
