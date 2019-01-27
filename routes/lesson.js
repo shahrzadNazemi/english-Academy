@@ -284,126 +284,126 @@ router.post('/video', (req, res) => {
                                 })
                             }
                             else {
-                                if(videos == 0){
-                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                                        var file = req.files.file.name.replace(`.${extension}`, '');
-                                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                        // path is Upload Directory
-                                        var dir = `${config.uploadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/`;
-                                        console.log("dir", dir)
-                                        module.exports.addDir(dir, function (newPath) {
-                                            var path = dir + newFile;
-                                            req.files.file.mv(path, function (err) {
-                                                if (err) {
-                                                    console.error(err);
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else {
-                                                    if (req.files.srt) {
-                                                        var extension = req.files.srt.name.substring(req.files.srt.name.lastIndexOf('.') + 1).toLowerCase();
-                                                        var file = req.files.srt.name.replace(`.${extension}`, '');
-                                                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                                        // path is Upload Directory
-                                                        var srtDir = `${config.uploadPathVideo}/srt/${req.body.lvlId}/${req.body.lsnId}/`;
-                                                        // console.log("dir", dir)
-                                                        module.exports.addDir(srtDir, function (newPath) {
-                                                            var srtPath = srtDir + newFile;
-                                                            req.files.srt.mv(srtPath, function (err) {
-                                                                if (err) {
-                                                                    console.error(err);
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
-                                                                    req.body.srtUrl = srtPath.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
-
-                                                                    let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
-                                                                    module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
-                                                                        if (thumbResult == -1) {
-                                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
-                                                                                res.json(result1)
-                                                                            })
-                                                                        }
-                                                                        else {
-                                                                            let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
-                                                                            req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                                                            database.addVideo(req.body, (result)=> {
-                                                                                if (result == -1) {
-                                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
-                                                                                        res.json(result1)
-                                                                                    })
-                                                                                }
-                                                                                else {
-                                                                                    let info = {}
-                                                                                    info.video = {
-                                                                                        vdId: result,
-                                                                                        viewed: false
-                                                                                    }
-                                                                                    database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
-                                                                                        response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
-                                                                                            res.json(result1)
-
-                                                                                        })
-                                                                                    })
-                                                                                }
-                                                                            })
-                                                                        }
-                                                                    })
-                                                                }
-                                                            })
-                                                        });
-                                                    }
-                                                    else {
-                                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                                                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                                        req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
-                                                        let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
-                                                        module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
-                                                            if (thumbResult == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
-                                                                    res.json(result1)
+                                if (videos == 0) {
+                                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                    var file = req.files.file.name.replace(`.${extension}`, '');
+                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                    // path is Upload Directory
+                                    var dir = `${config.uploadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/`;
+                                    console.log("dir", dir)
+                                    module.exports.addDir(dir, function (newPath) {
+                                        var path = dir + newFile;
+                                        req.files.file.mv(path, function (err) {
+                                            if (err) {
+                                                console.error(err);
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                if (req.files.srt) {
+                                                    var extension = req.files.srt.name.substring(req.files.srt.name.lastIndexOf('.') + 1).toLowerCase();
+                                                    var file = req.files.srt.name.replace(`.${extension}`, '');
+                                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                                    // path is Upload Directory
+                                                    var srtDir = `${config.uploadPathVideo}/srt/${req.body.lvlId}/${req.body.lsnId}/`;
+                                                    // console.log("dir", dir)
+                                                    module.exports.addDir(srtDir, function (newPath) {
+                                                        var srtPath = srtDir + newFile;
+                                                        req.files.srt.mv(srtPath, function (err) {
+                                                            if (err) {
+                                                                console.error(err);
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                    res.json(result)
                                                                 })
                                                             }
                                                             else {
-                                                                let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
-                                                                req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
-                                                                database.addVideo(req.body, (result)=> {
-                                                                    if (result == -1) {
+                                                                req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                                                req.body.srtUrl = srtPath.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+
+                                                                let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
+                                                                module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
+                                                                    if (thumbResult == -1) {
                                                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
                                                                             res.json(result1)
                                                                         })
                                                                     }
                                                                     else {
-                                                                        let info = {}
-                                                                        info.video = {
-                                                                            vdId: result,
-                                                                            viewed: false
-                                                                        }
-                                                                        database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
-                                                                            response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
-                                                                                res.json(result1)
+                                                                        let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
+                                                                        req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
+                                                                        database.addVideo(req.body, (result)=> {
+                                                                            if (result == -1) {
+                                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                                    res.json(result1)
+                                                                                })
+                                                                            }
+                                                                            else {
+                                                                                let info = {}
+                                                                                info.video = {
+                                                                                    vdId: result,
+                                                                                    viewed: false
+                                                                                }
+                                                                                database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                                    response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                                                        res.json(result1)
 
-                                                                            })
+                                                                                    })
+                                                                                })
+                                                                            }
                                                                         })
                                                                     }
                                                                 })
                                                             }
                                                         })
-                                                    }
+                                                    });
+                                                }
+                                                else {
+                                                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                                    req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
+                                                    let thumbFile = `${newFile.replace(`.${extension}`, '')}_thumb.jpg`
+                                                    module.exports.createVideoThumbnail(path, dir, thumbFile, (thumbResult)=> {
+                                                        if (thumbResult == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                res.json(result1)
+                                                            })
+                                                        }
+                                                        else {
+                                                            let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
+                                                            req.body.thumbUrl = `${config.downloadPathVideo}/${req.body.lvlId}/${req.body.lsnId}/${thumbFileNew}`
+                                                            database.addVideo(req.body, (result)=> {
+                                                                if (result == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                        res.json(result1)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    let info = {}
+                                                                    info.video = {
+                                                                        vdId: result,
+                                                                        viewed: false
+                                                                    }
+                                                                    database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                        response.responseCreated('ویدیو با موفقیت ثبت شد.', result, (result1)=> {
+                                                                            res.json(result1)
 
-
+                                                                        })
+                                                                    })
+                                                                }
+                                                            })
+                                                        }
+                                                    })
                                                 }
 
-                                            })
-                                        });
+
+                                            }
+
+                                        })
+                                    });
 
 
                                 }
-                                else{
+                                else {
                                     let forbidden = false
                                     for (var i = 0; i < videos.length; i++) {
                                         if (((videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).substr(0, (videos[i].url.substring(videos[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
@@ -537,7 +537,6 @@ router.post('/video', (req, res) => {
                                 }
 
 
-
                             }
                         })
                     }
@@ -607,73 +606,73 @@ router.post('/sound', (req, res) => {
                                 })
                             }
                             else {
-                                if(sounds == 0){
-                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                                        var file = req.files.file.name.replace(`.${extension}`, '');
-                                        var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                        // path is Upload Directory
-                                        var dir = `${config.uploadPathSound}/${req.body.lvlId}/${req.body.lsnId}/`;
-                                        console.log("dir", dir)
-                                        module.exports.addDir(dir, function (newPath) {
-                                            var path = dir + newFile;
-                                            req.files.file.mv(path, function (err) {
-                                                if (err) {
-                                                    console.error(err);
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else {
-                                                    var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
-                                                    var file = req.files.pic.name.replace(`.${extension}`, '');
-                                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                                    // path is Upload Directory
-                                                    var CoverDir = `${config.uploadPathSound}/cover/${req.body.lvlId}/${req.body.lsnId}/`;
-                                                    console.log("dir", dir)
-                                                    module.exports.addDir(CoverDir, function (newPath) {
-                                                        var Coverpath = CoverDir + newFile;
-                                                        req.files.pic.mv(Coverpath, function (err) {
-                                                            if (err) {
-                                                                console.error(err);
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else {
-                                                                req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                                                req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                                                database.addSound(req.body, (result)=> {
-                                                                    if (result == -1) {
-                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                if (sounds == 0) {
+                                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                    var file = req.files.file.name.replace(`.${extension}`, '');
+                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                    // path is Upload Directory
+                                    var dir = `${config.uploadPathSound}/${req.body.lvlId}/${req.body.lsnId}/`;
+                                    console.log("dir", dir)
+                                    module.exports.addDir(dir, function (newPath) {
+                                        var path = dir + newFile;
+                                        req.files.file.mv(path, function (err) {
+                                            if (err) {
+                                                console.error(err);
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
+                                                var file = req.files.pic.name.replace(`.${extension}`, '');
+                                                var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                                // path is Upload Directory
+                                                var CoverDir = `${config.uploadPathSound}/cover/${req.body.lvlId}/${req.body.lsnId}/`;
+                                                console.log("dir", dir)
+                                                module.exports.addDir(CoverDir, function (newPath) {
+                                                    var Coverpath = CoverDir + newFile;
+                                                    req.files.pic.mv(Coverpath, function (err) {
+                                                        if (err) {
+                                                            console.error(err);
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else {
+                                                            req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                            req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                            database.addSound(req.body, (result)=> {
+                                                                if (result == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                        res.json(result1)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    let info = {}
+                                                                    info.sound = {
+                                                                        sndId: result,
+                                                                        viewed: false
+                                                                    }
+                                                                    database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                        response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
                                                                             res.json(result1)
+
                                                                         })
-                                                                    }
-                                                                    else {
-                                                                        let info = {}
-                                                                        info.sound = {
-                                                                            sndId: result,
-                                                                            viewed: false
-                                                                        }
-                                                                        database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
-                                                                            response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
-                                                                                res.json(result1)
+                                                                    })
+                                                                }
 
-                                                                            })
-                                                                        })
-                                                                    }
+                                                            })
+                                                        }
 
-                                                                })
-                                                            }
-
-                                                        })
-                                                    });
-                                                }
-                                            })
-                                        });
+                                                    })
+                                                });
+                                            }
+                                        })
+                                    });
 
 
                                 }
-                                else{
+                                else {
                                     let forbidden = false
                                     for (var i = 0; i < sounds.length; i++) {
                                         if (((sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).substr(0, (sounds[i].url.substring(sounds[i].url.lastIndexOf("_") + 1)).indexOf('.'))) == req.body.order) {
@@ -752,7 +751,6 @@ router.post('/sound', (req, res) => {
                                         });
                                     }
                                 }
-
 
 
                             }
@@ -1801,28 +1799,28 @@ router.get('/level/:lvlId', (req, res) => {
                                 }
                                 else {
                                     let usrLsnId = view[0].lsnId
-                                    if(usrLsnId == '0'){
-                                        database.getFirstLesson((firstLesson)=>{
-                                            if(firstLesson == 0|| firstLesson == -1){
-console.log("here")
+                                    if (usrLsnId == '0') {
+                                        database.getFirstLesson((firstLesson)=> {
+                                            if (firstLesson == 0 || firstLesson == -1) {
+                                                console.log("here")
                                             }
-                                            else{
+                                            else {
                                                 let updateInfo = {}
                                                 updateInfo.lsnId = firstLesson._id
-                                                database.updateResult(updateInfo , usrId , 0, (resultInfo)=>{
+                                                database.updateResult(updateInfo, usrId, 0, (resultInfo)=> {
                                                     if (resultInfo == -1 || resultInfo == 0) {
                                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                             res.json(result)
                                                         })
                                                     }
-                                                    else{
+                                                    else {
                                                         if (resultInfo.timePassed != "") {
-                                                            if(typeof resultInfo.timePassed == 'string')
+                                                            if (typeof resultInfo.timePassed == 'string')
                                                                 resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                             let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
                                                             let currentTime = new Date().getTime()
-                                                            console.log("pass" , pass)
-                                                            console.log("currentTime" , currentTime)
+                                                            console.log("pass", pass)
+                                                            console.log("currentTime", currentTime)
                                                             if (currentTime < pass) {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].lock = true
@@ -2009,7 +2007,7 @@ console.log("here")
                                             }
                                         })
                                     }
-                                    else{
+                                    else {
                                         database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
                                             if (resultInfo == -1 || resultInfo == 0) {
                                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2017,14 +2015,14 @@ console.log("here")
                                                 })
                                             }
                                             else {
-                                                console.log("resultInfo",resultInfo.timePassed)
+                                                console.log("resultInfo", resultInfo.timePassed)
                                                 if (resultInfo.timePassed != "") {
-                                                    if(typeof resultInfo.timePassed == 'string')
+                                                    if (typeof resultInfo.timePassed == 'string')
                                                         resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                     let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
                                                     let currentTime = new Date().getTime()
-                                                    console.log("pass" , pass)
-                                                    console.log("currentTime" , currentTime)
+                                                    console.log("pass", pass)
+                                                    console.log("currentTime", currentTime)
                                                     if (currentTime < pass) {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].lock = true
@@ -2540,8 +2538,8 @@ router.get('/:lsnId', (req, res) => {
                             }
                         }
                         for (var i = 0; i < types.length; i++) {
-                            for(var k=0;k<tmp.length;k++){
-                                if(tmp[k] == types[i]._id){
+                            for (var k = 0; k < tmp.length; k++) {
+                                if (tmp[k] == types[i]._id) {
                                     types.splice(i, 1);
                                 }
 
@@ -2588,36 +2586,36 @@ router.get('/:lsnId', (req, res) => {
                                 })
                             }
                             else if (result != 0) {
-                                database.getAllTypes((typeList)=>{
-                                    if(typeList == -1 || typeList == 0){
+                                database.getAllTypes((typeList)=> {
+                                    if (typeList == -1 || typeList == 0) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                             res.json(result)
                                         })
 
                                     }
-                                    else{
+                                    else {
                                         let exam = result.exam
-                                        for(var i=0;i<typeList.length ;i++){
-                                            if(typeList[i].title == "quiz"){
+                                        for (var i = 0; i < typeList.length; i++) {
+                                            if (typeList[i].title == "quiz") {
                                                 typeList[i].quizData = result.quiz
                                                 types.push(typeList[i])
                                             }
-                                            if(typeList[i].title == "exam"){
+                                            if (typeList[i].title == "exam") {
                                                 typeList[i].examData = result.exam
                                                 types.push(typeList[i])
                                             }
                                         }
-                                        database.getViewUser(usrId , (view)=>{
-                                            if(view == -1){
+                                        database.getViewUser(usrId, (view)=> {
+                                            if (view == -1) {
                                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                     res.json(result)
                                                 })
                                             }
-                                            else{
+                                            else {
                                                 lesson[0].viewPermission = view[0].viewPermission
                                                 lesson[0] = circJson.stringify(lesson[0])
 
-                                                console.log("le" , lesson[0])
+                                                console.log("le", lesson[0])
                                                 response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                     res.json(result)
 
@@ -2630,13 +2628,13 @@ router.get('/:lsnId', (req, res) => {
 
                             }
                             else {
-                                database.getViewUser(usrId , (view)=>{
-                                    if(view == -1){
+                                database.getViewUser(usrId, (view)=> {
+                                    if (view == -1) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                             res.json(result)
                                         })
                                     }
-                                    else{
+                                    else {
                                         lesson[0].viewPermission = view[0].viewPermission
                                         console.log(lesson[0])
                                         lesson[0] = circJson.stringify(lesson[0])
@@ -2808,7 +2806,7 @@ router.get('/', (req, res)=> {
                 })
             }
             else {
-                if(req.query.page){
+                if (req.query.page) {
                     response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
                         let countPages = Math.ceil(sound.length / req.query.limit)
                         result1.totalPage = countPages
@@ -2817,7 +2815,7 @@ router.get('/', (req, res)=> {
                         })
                     })
                 }
-                else{
+                else {
                     response.response('اطلاعات همه ی درسها', sound, (result)=> {
                         res.json(result)
                     })

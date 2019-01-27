@@ -338,7 +338,7 @@ router.delete('/:exId', (req, res)=> {
 });
 
 router.get('/selective', (req, res)=> {
-    database.getAllExams((exam)=> {
+    database.getAllExams(0, (exam)=> {
         if (exam == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -392,14 +392,11 @@ router.get('/', (req, res)=> {
     var verify = jwt.verify(token);
     req.body.username = verify.userID
     if (req.body.username != "userAdmin") {
-        // for (var i = 0; i < getREsult.length; i++) {
-        //     getREsult[i].lesson = getREsult[i].lesson[0]
-        // }
         database.getStudentByUsername(req.body.username, (student)=> {
             if (student == 0 || student == -1) {
-                // response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
-                //     res.json(result)
-                // })
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
             }
             else {
                 database.getAllExams(student[0]._id, (getREsult)=> {
@@ -414,36 +411,10 @@ router.get('/', (req, res)=> {
                         })
                     }
                     else {
-
-                        //         else {
-                        //             database.getExamResultUsr(student[0]._id, (getResult)=> {
-                        //                 if (getResult == 0 || getResult == -1) {
-                        //                     response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
-                        //                         res.json(result)
-                        //                     })
-                        //                 }
-                        //                 else {
-                        //                     for (var k = 0; k < getREsult.length; k++) {
-                        //                         for (var i = 0; i < getResult.length; i++) {
-                        //                             if (getResult[i].exam.exId == getREsult[k]._id) {
-                        //                                 getREsult[k].getScore = getResult[i].exam.getScore
-                        //                                 getREsult[k].questionTrue = getResult[i].exam.questionTrue
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                     response.response('اطلاعات همه ی آزمونها', module.exports.getCountScoreQuestionsOfExam(getREsult), (result)=> {
-                        //                         res.json(result)
-                        //                     })
-                        //
-                        //
-                        //                 }
-                        //             })
-                        //         }
-                        //     })
-                        //
-                        //
-                        // }
-                        // else {
+                       for(var i =0;i<getREsult.length;i++){
+                           getREsult[i].result = getREsult[i].result[0].exam
+                           getREsult[i].lesson = getREsult[i].lesson[0]
+                       }
                         if (req.query.page) {
                             response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
                                 let countPages = Math.ceil(getREsult.length / req.query.limit)
@@ -461,15 +432,47 @@ router.get('/', (req, res)=> {
                             })
 
                         }
-                        // }
-
                     }
+
                 })
             }
         })
     }
+
+    else {
+        database.getAllExams(0, (exam)=> {
+            if (exam == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (exam == 0) {
+                response.respondNotFound('آزمون مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                if (req.query.page) {
+                    response.paginationClient(req.query.page, req.query.limit, exam, (result1)=> {
+                        let countPages = Math.ceil(exam.length / req.query.limit)
+                        result1.totalPage = countPages
+                        response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+                            res.json(result)
+                        })
+                    })
+
+                }
+                else {
+                    response.response('اطلاعات همه ی آزمونها', exam, (result)=> {
+                        res.json(result)
+                    })
+
+                }
+
+            }
+        })
+
+    }
 })
+
 module.exports = router
-// module.exports.getCountScoreQuestionsOfExam = (position , exam , ()=> {
-// database.get
-// })
