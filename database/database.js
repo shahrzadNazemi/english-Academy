@@ -1366,9 +1366,9 @@ module.exports.getAllQuestions = (cb)=> {
     })
 };
 
-module.exports.getAllExams = (cb)=> {
+module.exports.getAllExams = (usrId ,cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/exam`,
+        url: `${config.databaseServer}/api/exam/user/${usrId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -1388,6 +1388,30 @@ module.exports.getAllExams = (cb)=> {
         }
     })
 };
+
+module.exports.getFirstLesson = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/first`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.getLessonByLvlId = (lvlId, cb)=> {
     request.get({
