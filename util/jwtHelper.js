@@ -11,3 +11,9 @@ module.exports.verify = function (token) {
         return null;
     }
 };
+
+module.exports.verifyExpireToken = function (token , cb) {
+    const payload = jwt.verify(token, secret, {ignoreExpiration: true} );
+    cb(module.exports.signUser(payload.userID))
+
+};

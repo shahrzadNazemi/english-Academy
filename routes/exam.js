@@ -399,30 +399,74 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            for(var i =0;i<getREsult.length;i++){
-                getREsult[i].lesson = getREsult[i].lesson[0]
-            }
-            if (req.query.page) {
-                response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
-                    let countPages = Math.ceil(getREsult.length / req.query.limit)
-                    result1.totalPage = countPages
-                    response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+            // var token = req.headers.authorization.split(" ")[1];
+            // var verify = jwt.verify(token);
+            // req.body.username = verify.userID
+            // if (req.body.username != "userAdmin") {
+            //     for (var i = 0; i < getREsult.length; i++) {
+            //         getREsult[i].lesson = getREsult[i].lesson[0]
+            //     }
+            //     database.getStudentByUsername(req.body.username, (student)=> {
+            //         if (student == 0 || student == -1) {
+            //             response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
+            //                 res.json(result)
+            //             })
+            //         }
+            //         else {
+            //             database.getExamResultUsr(student[0]._id, (getResult)=> {
+            //                 if (getResult == 0 || getResult == -1) {
+            //                     response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
+            //                         res.json(result)
+            //                     })
+            //                 }
+            //                 else {
+            //                     for (var k = 0; k < getREsult.length; k++) {
+            //                         for (var i = 0; i < getResult.length; i++) {
+            //                             if (getResult[i].exam.exId == getREsult[k]._id) {
+            //                                 getREsult[k].getScore = getResult[i].exam.getScore
+            //                                 getREsult[k].questionTrue = getResult[i].exam.questionTrue
+            //                             }
+            //                         }
+            //                     }
+            //                     response.response('اطلاعات همه ی آزمونها', module.exports.getCountScoreQuestionsOfExam(getREsult), (result)=> {
+            //                         res.json(result)
+            //                     })
+            //
+            //
+            //                 }
+            //             })
+            //         }
+            //     })
+            //
+            //
+            // }
+            // else {
+                if (req.query.page) {
+                    response.paginationClient(req.query.page, req.query.limit, getREsult, (result1)=> {
+                        let countPages = Math.ceil(getREsult.length / req.query.limit)
+                        result1.totalPage = countPages
+                        response.response('اطلاعات همه ی آزمونها', result1, (result)=> {
+                            res.json(result)
+                        })
+                    })
+
+                }
+                else {
+                    console.log(getREsult)
+                    response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
                         res.json(result)
                     })
-                })
 
-            }
-            else {
-                console.log(getREsult)
-                response.response('اطلاعات همه ی آزمونها', getREsult, (result)=> {
-                    res.json(result)
-                })
+                }
+            // }
 
-            }
         }
     })
-    // res.json({"status":"success"})
 });
 
 
 module.exports = router
+
+// module.exports.getCountScoreQuestionsOfExam = (position , exam , ()=> {
+// database.get
+// })

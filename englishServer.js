@@ -30,7 +30,7 @@ app.use(fileupload());
 app.use(trimmer)
 
 app.use(function (req, res, next) {
-    if (req.path.includes('/login') || req.path.includes('/register')) {
+    if (req.path.includes('/login') || req.path.includes('/register') || req.path.includes('/refreshToken')) {
         return next();
     }
     if (!req.headers.authorization) {

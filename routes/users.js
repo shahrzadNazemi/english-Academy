@@ -307,6 +307,47 @@ router.post('/student/login', (req, res) => {
 
 });
 
+router.post('/refreshToken' , function (req , res) {
+    if(!req.headers.authorization){
+        logger.error('there is no token' , 0)
+        res.status(401).end('')
+    }
+    else{
+        var token = req.headers.authorization.split(" ")[1];
+        var verify = jwt.verify(token);
+        if(verify == 1){
+            jwt.verifyExpireToken(token , function (newToken) {
+                res.json({access_token:newToken , expires_in:3600 , token_type:'Bearer'})
+            })
+        }
+        else if(verify == null){
+            logger.error('token is not valid' , verify);
+            res.status(401).end('')
+
+        }
+        else{
+            let userID = verify.userID
+            database.getStudentByUsername(userID , (student)=>{
+                if(student == 0|| student == -1){
+                    res.json({access_token:jwt.signUser(userID) ,expires_in:3600 , token_type:'Bearer'});
+
+                }
+                else{
+                    delete student[0].password
+                    let data = student[0]
+                    data.jwt = jwt.signUser(userID)
+                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+        }
+    }
+
+});
+
+
 router.post('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
