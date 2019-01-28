@@ -569,7 +569,8 @@ router.post('/answer', (req, res)=> {
                         let pass = moment(result.timePassed) + 60 * 60 * 1000;
                         let currentTime = new Date().getTime()
                         if (pass < currentTime) {
-                            database.answerQuestion(req.body, "round=2", (question)=> {
+                            req.body.round = true
+                            database.answerQuestion(req.body, (question)=> {
                                 if (question == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                         res.json(result)
@@ -597,7 +598,7 @@ router.post('/answer', (req, res)=> {
                         }
                     }
                     else {
-                        database.answerQuestion(req.body, "round=1", (question)=> {
+                        database.answerQuestion(req.body, (question)=> {
                             if (question == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)

@@ -2161,12 +2161,11 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
 
 };
 
-module.exports.answerQuestion = (info,query , cb)=> {
+module.exports.answerQuestion = (info , cb)=> {
     request.post({
         url: `${config.databaseServer}/api/result/answerQuestion`,
         headers: {"content-Type": "application/json"},
         body: info,
-        qs:query,
         json: true
     }, function (err, response, body) {
         if (err) {
