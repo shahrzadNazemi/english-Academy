@@ -566,10 +566,9 @@ router.post('/answer', (req, res)=> {
                 }
                 else {
                     if (result.timePassed) {
-                        let pass = moment(result.timePassed) + 60 * 60 * 1000;
+                        let pass = moment(result.timePassed).add(1 , 'h')
                         let currentTime = new Date().getTime()
-                        if (pass < currentTime) {
-                            req.body.round = true
+                        if (currentTime < moment(result.timePassed).add(result.quiz.time , 'm')) {
                             database.answerQuestion(req.body, (question)=> {
                                 if (question == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -591,11 +590,36 @@ router.post('/answer', (req, res)=> {
                             })
                         }
                         else {
-                            response.validation('یک ساعت ', {}, 403, (result)=> {
-                                res.json(result)
-                            })
+                            if (pass < currentTime) {
+                                req.body.round = true
+                                database.answerQuestion(req.body, (question)=> {
+                                    if (question == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (question == 0) {
+                                        response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                            res.json(result)
+                                        })
 
+                                    }
+                                    else {
+                                        response.response('اطلاعات سوالات', question, (result)=> {
+                                            res.json(result)
+                                        })
+
+                                    }
+                                })
+                            }
+                            else {
+                                response.validation('یک ساعت ', {}, 403, (result)=> {
+                                    res.json(result)
+                                })
+                            }
                         }
+
+
                     }
                     else {
                         database.answerQuestion(req.body, (question)=> {
