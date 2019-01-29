@@ -861,7 +861,7 @@ router.post('/text', (req, res)=> {
     }
     else {
         database.addText(req.body, (text)=> {
-            if (type == -1) {
+            if (text == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
                 })
@@ -874,6 +874,22 @@ router.post('/text', (req, res)=> {
             }
         })
     }
+});
+
+router.post('/note', (req, res)=> {
+        database.addNote(req.body, (text)=> {
+            if (text == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
 });
 
 
@@ -1753,6 +1769,22 @@ router.put('/text/:txtId', (req, res)=> {
     }
 });
 
+router.put('/note/:ntId', (req, res)=> {
+        database.updateNote(req.body, req.params.ntId, (text)=> {
+            if (text == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.responseCreated('اطلاعات مورد نظر ویرایش شد.', req.body, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+});
+
 
 router.get('/level/:lvlId', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
@@ -1817,7 +1849,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         if (resultInfo.timePassed != "") {
                                                             if (typeof resultInfo.timePassed == 'string')
                                                                 resultInfo.timePassed = parseInt(resultInfo.timePassed)
-                                                            let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
+                                                            let pass = moment(resultInfo.timePassed).add(24 , 'h')
                                                             let currentTime = new Date().getTime()
                                                             console.log("pass", pass)
                                                             console.log("currentTime", currentTime)
@@ -2733,6 +2765,28 @@ router.get('/:lsnId/sound', (req, res)=> {
 
 });
 
+router.get('/:lsnId/note', (req, res)=> {
+    database.getAllNotes(req.params.lsnId ,(note)=> {
+        if (note == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (note == 0) {
+            response.respondNotFound('وویس مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات مورد نظر یافت شد.', note, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
 router.get('/', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
@@ -2983,6 +3037,28 @@ router.delete('/text/:txtId', (req, res) => {
             })
         }
 
+        else {
+            response.response('متن مورد نظر حذف شد.', result, (result)=> {
+                res.json(result)
+
+            })
+        }
+
+    })
+});
+
+router.delete('/note/:ntId', (req, res) => {
+    database.delNote(req.params.ntId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('متن مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
         else {
             response.response('متن مورد نظر حذف شد.', result, (result)=> {
                 res.json(result)

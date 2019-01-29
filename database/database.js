@@ -241,6 +241,36 @@ module.exports.delLevel = (lvlId, cb)=> {
 
 };
 
+module.exports.delNote = (ntId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/note/${ntId}`,
+        headers: {"content-Type": "application/json"},
+        // body: loginData,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
 module.exports.delTrick = (trckId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/trick/${trckId}`,
@@ -681,6 +711,31 @@ module.exports.addText = (textInfo, cb)=> {
     })
 };
 
+module.exports.addNote = (noteInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/lesson/note`,
+        headers: {"content-Type": "application/json"},
+        body: noteInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/lesson/${lsnId}`,
@@ -742,6 +797,38 @@ module.exports.updateText = (updateInfo, txtId, cb)=> {
         }
     })
 };
+
+module.exports.updateNote = (updateInfo, ntId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/lesson/note/${ntId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.updateQuestion = (updateInfo, QId, cb)=> {
     request.put({
@@ -1296,6 +1383,30 @@ module.exports.getStuOfLevel = (lsnId, cb)=> {
         }
     })
 };
+
+module.exports.getAllNotes = (lsnId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/${lsnId}/note`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.getAllLessons = (cb)=> {
     request.get({
