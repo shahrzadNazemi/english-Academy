@@ -551,6 +551,7 @@ router.post('/answer', (req, res)=> {
             })
         }
         else {
+            req.body.usrId = student[0]._id
             database.getResultUsrLsn(student[0]._id, req.body.lsnId, (result)=> {
                 if (result == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
