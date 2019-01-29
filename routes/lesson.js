@@ -877,19 +877,33 @@ router.post('/text', (req, res)=> {
 });
 
 router.post('/note', (req, res)=> {
-        database.addNote(req.body, (text)=> {
-            if (text == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else {
-                response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
-                    res.json(result)
+                req.body.usrId = student[0]._id
+                database.addNote(req.body, (text)=> {
+                    if (text == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
+                            res.json(result)
 
+                        })
+                    }
                 })
             }
         })
+
 });
 
 
@@ -1770,19 +1784,33 @@ router.put('/text/:txtId', (req, res)=> {
 });
 
 router.put('/note/:ntId', (req, res)=> {
-        database.updateNote(req.body, req.params.ntId, (text)=> {
-            if (text == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                response.responseCreated('اطلاعات مورد نظر ویرایش شد.', req.body, (result)=> {
-                    res.json(result)
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    database.getStudentByUsername(username, (student)=> {
+        if (student == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+           req.body.usrId = student[0]._id
+            database.updateNote(req.body, req.params.ntId, (text)=> {
+                if (text == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.responseCreated('اطلاعات مورد نظر ویرایش شد.', req.body, (result)=> {
+                        res.json(result)
 
-                })
-            }
-        })
+                    })
+                }
+            })
+        }
+    })
+
 });
 
 
@@ -2766,24 +2794,39 @@ router.get('/:lsnId/sound', (req, res)=> {
 });
 
 router.get('/:lsnId/note', (req, res)=> {
-    database.getAllNotes(req.params.lsnId ,(note)=> {
-        if (note == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (note == 0) {
-            response.respondNotFound('وویس مورد نظر یافت نشد.', [], (result)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    database.getStudentByUsername(username, (student)=> {
+        if (student == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.response('اطلاعات مورد نظر یافت شد.', note, (result)=> {
-                res.json(result)
+            let usrId = student[0]._id
+            database.getAllNotes(req.params.lsnId ,usrId ,(note)=> {
+                if (note == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (note == 0) {
+                    response.respondNotFound('وویس مورد نظر یافت نشد.', [], (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.response('اطلاعات مورد نظر یافت شد.', note, (result)=> {
+                        res.json(result)
 
+                    })
+                }
             })
         }
     })
+
+    
 
 });
 

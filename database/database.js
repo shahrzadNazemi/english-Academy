@@ -1384,9 +1384,9 @@ module.exports.getStuOfLevel = (lsnId, cb)=> {
     })
 };
 
-module.exports.getAllNotes = (lsnId, cb)=> {
+module.exports.getAllNotes = (lsnId,usrId , cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/lesson/${lsnId}/note`,
+        url: `${config.databaseServer}/api/lesson/${lsnId}/note/${usrId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
