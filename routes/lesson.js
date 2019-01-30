@@ -895,7 +895,8 @@ router.post('/note', (req, res)=> {
                     })
                 }
                 else {
-                    response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
+                    req.body._id = text
+                    response.responseCreated('اطلاعات مورد نظر ثبت شد.', req.body, (result)=> {
                         res.json(result)
 
                     })

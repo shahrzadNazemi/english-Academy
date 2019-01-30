@@ -19,6 +19,8 @@ let view = require('./routes/view');
 let notification = require('./routes/notification');
 let trick = require('./routes/trick');
 let statistic = require('./routes/statistic')
+let dictionary = require('./routes/dictionary')
+
 
 
 app.use(logger);
@@ -60,6 +62,8 @@ app.use('/api/view', view);
 app.use('/api/notification', notification);
 app.use('/api/trick', trick);
 app.use('/api/statistic', statistic);
+app.use('/api/dictionary', dictionary);
+
 
 
 
