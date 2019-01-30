@@ -18,10 +18,12 @@ router.post('/', (req, res)=> {
             data = JSON.parse(data)
             for(var i = 0; i < data.length; i++) {
                 if(data[i].en == str){
-                    result.push(data[i]['fa']);
+                    result.push(data[i]);
                 }
             }
-            res.json(result)
+            response.response('اطلاعات ', result[0], (resi)=> {
+                res.json(resi)
+            })
         }
 
     });

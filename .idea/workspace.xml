@@ -1391,8 +1391,8 @@
       <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="1804" column="22" selection-start-line="1804" selection-start-column="22" selection-end-line="1804" selection-end-column="22" />
+            <state relative-caret-position="124">
+              <caret line="2306" column="14" selection-start-line="2304" selection-start-column="9" selection-end-line="2306" selection-end-column="14" />
               <folding>
                 <element signature="e#424#511#0" expanded="false" />
                 <element signature="e#700#1037#0" expanded="false" />
@@ -2136,13 +2136,10 @@
                 <element signature="e#148511#148669#0" expanded="false" />
                 <element signature="e#148865#149212#0" expanded="false" />
                 <element signature="e#148997#149149#0" expanded="false" />
-                <element signature="e#149712#150523#0" expanded="false" />
-                <element signature="e#149752#150520#0" expanded="false" />
                 <element signature="e#149780#149945#0" expanded="false" />
                 <element signature="e#149886#149934#0" expanded="false" />
                 <element signature="e#149976#150115#0" expanded="false" />
                 <element signature="e#150056#150104#0" expanded="false" />
-                <element signature="e#150129#150514#0" expanded="false" />
                 <element signature="e#150210#150383#0" expanded="false" />
                 <element signature="e#150454#150502#0" expanded="false" />
                 <element signature="e#150560#151358#0" expanded="false" />
@@ -2482,8 +2479,8 @@
       <file leaf-file-name="dictionary.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state relative-caret-position="200">
+              <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -3256,12 +3253,12 @@
       <workItem from="1548701060500" duration="1362000" />
       <workItem from="1548739885971" duration="16449000" />
       <workItem from="1548825570935" duration="5713000" />
-      <workItem from="1548832759290" duration="11604000" />
+      <workItem from="1548832759290" duration="12000000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="642407000" />
+    <option name="totallyTimeSpent" value="642803000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -8703,8 +8700,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="1804" column="22" selection-start-line="1804" selection-start-column="22" selection-end-line="1804" selection-end-column="22" />
+        <state relative-caret-position="124">
+          <caret line="2306" column="14" selection-start-line="2304" selection-start-column="9" selection-end-line="2306" selection-end-column="14" />
           <folding>
             <element signature="e#424#511#0" expanded="false" />
             <element signature="e#700#1037#0" expanded="false" />
@@ -9448,13 +9445,10 @@
             <element signature="e#148511#148669#0" expanded="false" />
             <element signature="e#148865#149212#0" expanded="false" />
             <element signature="e#148997#149149#0" expanded="false" />
-            <element signature="e#149712#150523#0" expanded="false" />
-            <element signature="e#149752#150520#0" expanded="false" />
             <element signature="e#149780#149945#0" expanded="false" />
             <element signature="e#149886#149934#0" expanded="false" />
             <element signature="e#149976#150115#0" expanded="false" />
             <element signature="e#150056#150104#0" expanded="false" />
-            <element signature="e#150129#150514#0" expanded="false" />
             <element signature="e#150210#150383#0" expanded="false" />
             <element signature="e#150454#150502#0" expanded="false" />
             <element signature="e#150560#151358#0" expanded="false" />
@@ -9792,8 +9786,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state relative-caret-position="200">
+          <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
           <folding />
         </state>
       </provider>
