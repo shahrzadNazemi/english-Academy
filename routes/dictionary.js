@@ -26,9 +26,12 @@ router.post('/', (req, res)=> {
                     res.json(resi)
                 })
             }
-            response.response('اطلاعات ', result[0], (resi)=> {
-                res.json(resi)
-            })
+            else{
+                response.response('اطلاعات ', result[0], (resi)=> {
+                    res.json(resi)
+                })
+            }
+           
         }
 
     });
