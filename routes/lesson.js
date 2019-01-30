@@ -2654,6 +2654,11 @@ router.get('/:lsnId', (req, res) => {
 
                                     }
                                     else {
+                                        database.getAllNotes(lesson[0]._id , usrId , (notes)=>{
+                                            if( notes == 0 || notes == -1){
+                                                notes = []
+                                            }
+
                                         let exam = result.exam
                                         for (var i = 0; i < typeList.length; i++) {
                                             if (typeList[i].title == "quiz") {
@@ -2665,8 +2670,11 @@ router.get('/:lsnId', (req, res) => {
                                             //     types.push(typeList[i])
                                             // }
                                             if (typeList[i].title == "note") {
-                                                typeList[i].noteData = "note"
-                                                types.push(typeList[i])
+                                                // typeList[i].noteData = []
+                                                    typeList[i].noteData = notes
+                                                    types.push(typeList[i])
+
+
                                             }
                                         }
                                         // database.getViewUser(usrId, (view)=> {
@@ -2752,7 +2760,9 @@ router.get('/:lsnId', (req, res) => {
                                                 }
                                             })
                                         }
-                                    }
+                                    })
+
+                            }
                                 })
 
                             }
