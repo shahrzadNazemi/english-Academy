@@ -17,7 +17,7 @@ router.post('/', (req, res)=> {
             var result=[];
             data = JSON.parse(data)
             for(var i = 0; i < data.length; i++) {
-                if (data[i]['en'].indexOf(str)>-1){
+                if(data[i].en == str){
                     result.push(data[i]['fa']);
                 }
             }
