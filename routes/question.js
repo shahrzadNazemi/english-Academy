@@ -566,11 +566,17 @@ router.post('/answer', (req, res)=> {
 
                 }
                 else {
+                    if(typeof result.timePassed == "string"){
+                        result.timePassed = parseInt(result.timePassed)
+                    }
+                    if(typeof result.examTimePassed == "string"){
+                        result.examTimePassed = parseInt(result.examTimePassed)
+                    }
                     if(req.body.type == "exam"){
-                        if (result.timePassed) {
-                            let pass = moment(result.timePassed).add(1 , 'h')
+                        if (result.examTimePassed) {
+                            let pass = moment(result.examTimePassed).add(1 , 'h')
                             let currentTime = new Date().getTime()
-                            if (currentTime < moment(result.timePassed).add(result.exam.time , 'm')) {
+                            if (currentTime < moment(result.examTimePassed).add(result.exam.time , 'm')) {
                                 database.answerQuestion(req.body, (question)=> {
                                     if (question == -1) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

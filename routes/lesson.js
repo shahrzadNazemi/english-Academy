@@ -880,29 +880,29 @@ router.post('/note', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-        database.getStudentByUsername(username, (student)=> {
-            if (student == 0) {
-                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                req.body.usrId = student[0]._id
-                database.addNote(req.body, (text)=> {
-                    if (text == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
-                            res.json(result)
+    database.getStudentByUsername(username, (student)=> {
+        if (student == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            req.body.usrId = student[0]._id
+            database.addNote(req.body, (text)=> {
+                if (text == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.responseCreated('اطلاعات مورد نظر ثبت شد.', text, (result)=> {
+                        res.json(result)
 
-                        })
-                    }
-                })
-            }
-        })
+                    })
+                }
+            })
+        }
+    })
 
 });
 
@@ -1794,7 +1794,7 @@ router.put('/note/:ntId', (req, res)=> {
             })
         }
         else {
-           req.body.usrId = student[0]._id
+            req.body.usrId = student[0]._id
             database.updateNote(req.body, req.params.ntId, (text)=> {
                 if (text == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1877,7 +1877,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         if (resultInfo.timePassed != "") {
                                                             if (typeof resultInfo.timePassed == 'string')
                                                                 resultInfo.timePassed = parseInt(resultInfo.timePassed)
-                                                            let pass = moment(resultInfo.timePassed).add(24 , 'h')
+                                                            let pass = moment(resultInfo.timePassed).add(24, 'h')
                                                             let currentTime = new Date().getTime()
                                                             console.log("pass", pass)
                                                             console.log("currentTime", currentTime)
@@ -2660,34 +2660,100 @@ router.get('/:lsnId', (req, res) => {
                                                 typeList[i].quizData = result.quiz
                                                 types.push(typeList[i])
                                             }
-                                            if (typeList[i].title == "exam") {
-                                                typeList[i].examData = result.exam
-                                                types.push(typeList[i])
-                                            }
+                                            // if (typeList[i].title == "exam") {
+                                            //     typeList[i].examData = result.exam
+                                            //     types.push(typeList[i])
+                                            // }
                                         }
-                                        database.getViewUser(usrId, (view)=> {
-                                            if (view == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
+                                        // database.getViewUser(usrId, (view)=> {
+                                        //     if (view == -1) {
+                                        //         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        //             res.json(result)
+                                        //         })
+                                        //     }
+                                        //     else {
+                                        //         lesson[0].viewPermission = view[0].viewPermission
+                                        //         lesson[0] = circJson.stringify(lesson[0])
+                                        //
+                                        //         console.log("le", lesson[0])
+                                        //         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                        //             res.json(result)
+                                        //
+                                        //         })
+                                        //     }
+                                        // })
+                                        if (result.timePassed) {
+                                            let pass = moment(result.timePassed).add(1, 'h')
+                                            let timeStamp = new Date(pass).getTime()
+                                            let currentTime = new Date().getTime()
+                                            console.log("pass", timeStamp)
+                                            console.log("result.timePased", currentTime)
+
+                                            console.log(moment(result.timePassed).format("HH:mm:ss"))
+
+                                            // let now = moment(currentTime).format("HH:mm:ss")
+                                            console.log(timeStamp > currentTime)
+                                            if (pass > currentTime) {
+                                                database.getViewUser(usrId, (view)=> {
+                                                    if (view == -1) {
+                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                    else {
+                                                        lesson[0].viewPermission = false
+                                                        console.log(lesson[0])
+                                                        lesson[0] = circJson.stringify(lesson[0])
+                                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                                            res.json(result)
+
+                                                        })
+                                                    }
                                                 })
                                             }
                                             else {
-                                                lesson[0].viewPermission = view[0].viewPermission
-                                                lesson[0] = circJson.stringify(lesson[0])
+                                                database.getViewUser(usrId, (view)=> {
+                                                    if (view == -1) {
+                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                    else {
+                                                        lesson[0].viewPermission = view[0].viewPermission
+                                                        console.log(lesson[0])
+                                                        lesson[0] = circJson.stringify(lesson[0])
+                                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                                            res.json(result)
 
-                                                console.log("le", lesson[0])
-                                                response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                                    res.json(result)
-
+                                                        })
+                                                    }
                                                 })
                                             }
-                                        })
+                                        }
+                                        else {
+                                            database.getViewUser(usrId, (view)=> {
+                                                if (view == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    lesson[0].viewPermission = view[0].viewPermission
+                                                    console.log(lesson[0])
+                                                    lesson[0] = circJson.stringify(lesson[0])
+                                                    response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                                        res.json(result)
 
+                                                    })
+                                                }
+                                            })
+                                        }
                                     }
                                 })
 
                             }
                             else {
+
                                 database.getViewUser(usrId, (view)=> {
                                     if (view == -1) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2704,6 +2770,7 @@ router.get('/:lsnId', (req, res) => {
                                         })
                                     }
                                 })
+
                             }
                         })
 
@@ -2805,7 +2872,7 @@ router.get('/:lsnId/note', (req, res)=> {
         }
         else {
             let usrId = student[0]._id
-            database.getAllNotes(req.params.lsnId ,usrId ,(note)=> {
+            database.getAllNotes(req.params.lsnId, usrId, (note)=> {
                 if (note == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -2826,7 +2893,6 @@ router.get('/:lsnId/note', (req, res)=> {
         }
     })
 
-    
 
 });
 

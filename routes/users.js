@@ -294,13 +294,21 @@ router.post('/student/login', (req, res) => {
                 })
             }
             else {
-                delete loginResult.password
-                let data = loginResult
-                data.jwt = jwt.signUser(loginResult.username)
-                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                    res.json(result)
+                database.getLessonById(loginResult.lastPassedLesson , (lesson)=>{
 
+                    delete loginResult.password
+                    let data = loginResult
+                    delete lesson[0].video
+                    delete lesson[0].sound
+                    delete lesson[0].text
+                    data.lesson = lesson[0]
+                    data.jwt = jwt.signUser(loginResult.username)
+                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                        res.json(result)
+
+                    })
                 })
+
             }
         })
     }
@@ -325,13 +333,20 @@ router.post('/refreshToken' , function (req , res) {
 
                     }
                     else{
-                        delete student[0].password
-                        let data = student[0]
-                        data.jwt = jwt.signUser(userID)
-                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                            res.json(result)
+                        database.getLessonById(student.lastPassedLesson , (lesson)=>{
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            delete student[0].password
+                            let data = student[0]
+                            data.lesson = lesson[0]
+                            data.jwt = jwt.signUser(userID)
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
 
+                            })
                         })
+
                     }
                 })
             })
