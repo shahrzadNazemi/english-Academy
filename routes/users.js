@@ -124,7 +124,6 @@ router.post('/admin', (req, res)=> {
     })
 });
 
-
 router.post('/student/register', (req, res)=> {
     console.log("body:", req.body)
     if (req.files)
@@ -294,7 +293,7 @@ router.post('/student/login', (req, res) => {
                 })
             }
             else {
-                database.getLessonById(loginResult.lastPassedLesson , (lesson)=>{
+                database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
 
                     delete loginResult.password
                     let data = loginResult
@@ -315,25 +314,25 @@ router.post('/student/login', (req, res) => {
 
 });
 
-router.post('/refreshToken' , function (req , res) {
-    if(!req.headers.authorization){
-        logger.error('there is no token' , 0)
+router.post('/refreshToken', function (req, res) {
+    if (!req.headers.authorization) {
+        logger.error('there is no token', 0)
         res.status(401).end('')
     }
-    else{
+    else {
         var token = req.headers.authorization.split(" ")[1];
         var verify = jwt.verify(token);
-        if(verify == 1){
-            jwt.verifyExpireToken(token , function (newToken) {
+        if (verify == 1) {
+            jwt.verifyExpireToken(token, function (newToken) {
                 var verify = jwt.verify(newToken);
                 let userID = verify.userID
-                database.getStudentByUsername(userID , (student)=>{
-                    if(student == 0|| student == -1){
-                        res.json({access_token:jwt.signUser(userID) ,expires_in:3600 , token_type:'Bearer'});
+                database.getStudentByUsername(userID, (student)=> {
+                    if (student == 0 || student == -1) {
+                        res.json({access_token: jwt.signUser(userID), expires_in: 3600, token_type: 'Bearer'});
 
                     }
-                    else{
-                        database.getLessonById(student.lastPassedLesson , (lesson)=>{
+                    else {
+                        database.getLessonById(student.lastPassedLesson, (lesson)=> {
                             delete lesson[0].video
                             delete lesson[0].sound
                             delete lesson[0].text
@@ -351,19 +350,19 @@ router.post('/refreshToken' , function (req , res) {
                 })
             })
         }
-        else if(verify == null){
-            logger.error('token is not valid' , verify);
+        else if (verify == null) {
+            logger.error('token is not valid', verify);
             res.status(401).end('')
 
         }
-        else{
+        else {
             let userID = verify.userID
-            database.getStudentByUsername(userID , (student)=>{
-                if(student == 0|| student == -1){
-                    res.json({access_token:jwt.signUser(userID) ,expires_in:3600 , token_type:'Bearer'});
+            database.getStudentByUsername(userID, (student)=> {
+                if (student == 0 || student == -1) {
+                    res.json({access_token: jwt.signUser(userID), expires_in: 3600, token_type: 'Bearer'});
 
                 }
-                else{
+                else {
                     delete student[0].password
                     let data = student[0]
                     data.jwt = jwt.signUser(userID)
@@ -377,7 +376,6 @@ router.post('/refreshToken' , function (req , res) {
     }
 
 });
-
 
 router.post('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
@@ -683,34 +681,47 @@ router.get('/student/best', (req, res) => {
     })
 });
 
-router.get('/student/bestOfLevel/:lsnId', (req, res) => {
-    database.getStuOfLevel(req.params.lsnId, (student)=> {
-        if (student == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (student == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            let temp = []
-            if (student.length < 3 || student.length == 3) {
-                response.response('اطلاعات بهترین دانش آموزان یک سطح', student, (result)=> {
+router.get('/student/bestOfLevel', (req, res) => {
+
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "userAdmin") {
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0) {
+                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
             }
             else {
-                temp[0] = student[length - 1]
-                temp[1] = student[length - 2]
-                temp[3] = student[length - 3]
-            }
+                let lsnId = student[0].lastPassedLesson
+                database.getLessonById(lsnId , (lesson)=>{
+                    if(lesson == 0 || lesson == 0){
+                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else{
+                        database.getStudentOfLevel(lesson[0].level._id , (stus)=>{
+                            if(stus == -1 || stus ==0){
+                                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else{
+                                response.response('اطلاعات بهترین دانش آموزان', stus, (result)=> {
+                                    res.json(result)
 
-        }
-    })
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
 });
+
 
 router.get('/student/:stdId', (req, res) => {
     database.getStudentById(req.params.stdId, (getResult)=> {

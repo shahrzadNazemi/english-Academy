@@ -1803,7 +1803,7 @@ router.put('/note/:ntId', (req, res)=> {
                     })
                 }
                 else {
-                    response.responseCreated('اطلاعات مورد نظر ویرایش شد.', req.body, (result)=> {
+                    response.responseCreated('اطلاعات مورد نظر ویرایش شد.', text, (result)=> {
                         res.json(result)
 
                     })
@@ -2679,8 +2679,8 @@ router.get('/:lsnId', (req, res) => {
 
                                                 if (typeList[i].title == "note") {
 
-                                                        typeList[i].category.value =  typeList[i].category._id
-                                                        typeList[i].category.label =  typeList[i].category.title
+                                                    typeList[i].category.value = typeList[i].category._id
+                                                    typeList[i].category.label = typeList[i].category.title
                                                     delete  typeList[i].category._id
                                                     delete  typeList[i].category.title
                                                     typeList[i].noteData = notes

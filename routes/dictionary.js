@@ -6,6 +6,7 @@ let response = require('../util/responseHelper');
 let fs = require('fs')
 
 
+
 router.post('/', (req, res)=> {
     let str = req.body.search
     fs.readFile('./util/tbl_content.json', 'utf8',   (err, data)=> {
@@ -14,10 +15,10 @@ router.post('/', (req, res)=> {
         }
         else{
             var result=[];
+            data = JSON.parse(data)
             for(var i = 0; i < data.length; i++) {
-                console.log(data[0])
-                if (data[i]['name'].indexOf(str)>-1){
-                    result.push(data[i]['name']);
+                if (data[i]['en'].indexOf(str)>-1){
+                    result.push(data[i]['fa']);
                 }
             }
             res.json(result)
