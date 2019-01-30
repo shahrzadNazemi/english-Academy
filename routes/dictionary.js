@@ -21,6 +21,11 @@ router.post('/', (req, res)=> {
                     result.push(data[i]);
                 }
             }
+            if(data.length == 0){
+                response.response('اطلاعات ', result, (resi)=> {
+                    res.json(resi)
+                })
+            }
             response.response('اطلاعات ', result[0], (resi)=> {
                 res.json(resi)
             })
