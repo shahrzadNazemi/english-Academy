@@ -332,10 +332,15 @@ router.post('/refreshToken', function (req, res) {
 
                     }
                     else {
-                        database.getLessonById(student.lastPassedLesson, (lesson)=> {
-                            delete lesson[0].video
-                            delete lesson[0].sound
-                            delete lesson[0].text
+                        database.getLessonById(student[0].lastPassedLesson, (lesson)=> {
+                            if (lesson[0].video)
+                                delete lesson[0].video
+                            if (lesson[0].sound)
+
+                                delete lesson[0].sound
+                            if (lesson[0].text)
+
+                                delete lesson[0].text
                             delete student[0].password
                             let data = student[0]
                             data.lesson = lesson[0]
@@ -363,13 +368,20 @@ router.post('/refreshToken', function (req, res) {
 
                 }
                 else {
-                    delete student[0].password
-                    let data = student[0]
-                    data.jwt = jwt.signUser(userID)
-                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                        res.json(result)
+                    database.getLessonById(student[0].lastPassedLesson, (lesson)=> {
+                        delete lesson[0].video
+                        delete lesson[0].sound
+                        delete lesson[0].text
+                        delete student[0].password
+                        let data = student[0]
+                        data.lesson = lesson[0]
+                        data.jwt = jwt.signUser(userID)
+                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                            res.json(result)
 
+                        })
                     })
+
                 }
             })
         }
@@ -695,20 +707,20 @@ router.get('/student/bestOfLevel', (req, res) => {
             }
             else {
                 let lsnId = student[0].lastPassedLesson
-                database.getLessonById(lsnId , (lesson)=>{
-                    if(lesson == 0 || lesson == 0){
+                database.getLessonById(lsnId, (lesson)=> {
+                    if (lesson == 0 || lesson == 0) {
                         response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }
-                    else{
-                        database.getStudentOfLevel(lesson[0].level._id , (stus)=>{
-                            if(stus == -1 || stus ==0){
+                    else {
+                        database.getStudentOfLevel(lesson[0].level._id, (stus)=> {
+                            if (stus == -1 || stus == 0) {
                                 response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
-                            else{
+                            else {
                                 response.response('اطلاعات بهترین دانش آموزان', stus, (result)=> {
                                     res.json(result)
 

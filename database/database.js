@@ -1269,7 +1269,7 @@ module.exports.getSoundBysndId = (sndId, cb)=> {
 
 module.exports.getStudentOfLevel = (lvlId, cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/users/level/${lvlId}`,
+        url: `${config.databaseServer}/api/users/student/level/${lvlId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
