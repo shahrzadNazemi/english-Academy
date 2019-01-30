@@ -2664,6 +2664,10 @@ router.get('/:lsnId', (req, res) => {
                                             //     typeList[i].examData = result.exam
                                             //     types.push(typeList[i])
                                             // }
+                                            if (typeList[i].title == "note") {
+                                                typeList[i].noteData = "note"
+                                                types.push(typeList[i])
+                                            }
                                         }
                                         // database.getViewUser(usrId, (view)=> {
                                         //     if (view == -1) {
