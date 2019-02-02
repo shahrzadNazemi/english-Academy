@@ -8,6 +8,7 @@ let hashHelper = require('../util/hashHelper');
 let config = require('../util/config');
 let lesson = require('./lesson')
 let fs = require('fs')
+let statistic = require('./statistic')
 
 
 router.post('/admin/login', (req, res) => {
@@ -137,7 +138,7 @@ router.put('/supporter/:supId', (req, res) => {
                 res.json(result)
             })
         }
-        else if(Putresult == -2) {
+        else if (Putresult == -2) {
             response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
                 res.json(result)
             })
@@ -165,7 +166,7 @@ router.get('/supporter', (req, res) => {
             })
         }
         else {
-            for(var i=0;i<getResult.length;i++){
+            for (var i = 0; i < getResult.length; i++) {
                 delete getResult[i].password
             }
             response.response('اطلاعات همه ی پشتیبان ها', getResult, (result)=> {
@@ -395,18 +396,36 @@ router.post('/student/login', (req, res) => {
             }
             else {
                 database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
+                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                        if ( progress != -1) {
+                            delete loginResult.password
+                            let data = loginResult
+                            data.progress = progress
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            data.lesson = lesson[0]
+                            data.jwt = jwt.signUser(loginResult.username)
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
 
-                    delete loginResult.password
-                    let data = loginResult
-                    delete lesson[0].video
-                    delete lesson[0].sound
-                    delete lesson[0].text
-                    data.lesson = lesson[0]
-                    data.jwt = jwt.signUser(loginResult.username)
-                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                        res.json(result)
+                            })
+                        }
+                        else {
+                            delete loginResult.password
+                            let data = loginResult
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            data.lesson = lesson[0]
+                            data.jwt = jwt.signUser(loginResult.username)
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
 
+                            })
+                        }
                     })
+
                 })
 
             }
@@ -827,10 +846,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                             }
                             else {
                                 let levelStu = []
-                               let lvlId = lesson[0].lvlId
-                                for(var i=0;i<allStudents.length;i++){
-                                    if(allStudents[i].lesson[0]){
-                                        if(allStudents[i].lesson[0].lvlId == lvlId){
+                                let lvlId = lesson[0].lvlId
+                                for (var i = 0; i < allStudents.length; i++) {
+                                    if (allStudents[i].lesson[0]) {
+                                        if (allStudents[i].lesson[0].lvlId == lvlId) {
                                             levelStu.push(allStudents[i])
                                         }
                                     }
@@ -845,9 +864,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     })
                                 }
                                 else {
-                                    let i=0
-                                    for(var k =0;k<levelStu.length;k++){
-                                        if(levelStu[k]._id ==student[0]._id ){
+                                    let i = 0
+                                    for (var k = 0; k < levelStu.length; k++) {
+                                        levelStu[k].lesson =lesson[0]
+                                        if (levelStu[k]._id == student[0]._id) {
                                             i = k
                                         }
                                     }
@@ -857,10 +877,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     temp[1].rank = i
                                     temp[2] = levelStu[0]
                                     temp[2].rank = levelStu.length
-                                   if(temp[0] == temp[1]){
-                                       temp.splice(0, 1);
-                                   }
-                                    if(temp[2] == temp[1]){
+                                    if (temp[0] == temp[1]) {
+                                        temp.splice(0, 1);
+                                    }
+                                    if (temp[2] == temp[1]) {
                                         temp.splice(2, 1);
                                     }
                                     response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {

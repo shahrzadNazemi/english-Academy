@@ -91,7 +91,8 @@ module.exports.calculateProgress=(lsnId , cb)=>{
                     k = i
                 }
             }
-            let progress = k/lessons.length
+            let progress = (k+1)/lessons.length
+            console.log("progresssssss",progress)
             cb(progress)
         }
     })
