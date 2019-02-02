@@ -852,8 +852,11 @@ router.get('/student/bestOfLevel', (req, res) => {
                                         }
                                     }
                                     temp[0] = levelStu[length - 1]
+                                    temp[0].rank = 1
                                     temp[1] = levelStu[i]
+                                    temp[1].rank = i
                                     temp[2] = levelStu[0]
+                                    temp[2].rank = levelStu.length
                                    if(temp[0] == temp[1]){
                                        temp.splice(0, 1);
                                    }
