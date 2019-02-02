@@ -75,3 +75,24 @@ router.get('/', (req, res)=> {
 })
 
 module.exports = router
+
+module.exports.calculateProgress=(lsnId , cb)=>{
+    database.getAllLessons((lessons)=>{
+        if(lessons == 0){
+            cb(0)
+        }
+        else if(lessons == -1){
+            cb(-1)
+        }
+        else{
+            let k= 0
+            for(var i=0;i<lessons.length;i++){
+                if(lessons[i]._id == lsnId){
+                    k = i
+                }
+            }
+            let progress = k/lessons.length
+            cb(progress)
+        }
+    })
+}

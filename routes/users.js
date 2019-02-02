@@ -893,11 +893,20 @@ router.get('/student/:stdId', (req, res) => {
             })
         }
         else {
-            delete getResult.password
-            response.response('اطلاعات کاربر مورد نظر', getResult, (result)=> {
-                res.json(result)
+            database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
 
+                delete getResult.password
+                let data = getResult
+                delete lesson[0].video
+                delete lesson[0].sound
+                delete lesson[0].text
+                data.lesson = lesson[0]
+                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                    res.json(result)
+
+                })
             })
+
         }
     })
 });
@@ -1015,3 +1024,4 @@ router.delete('/student/:stdId', (req, res) => {
 
 
 module.exports = router
+
