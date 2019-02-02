@@ -1091,6 +1091,31 @@ module.exports.delAdmin = (admId, cb)=> {
     })
 };
 
+module.exports.delSupporter = (supId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/users/supporter/${supId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.delQuestion = (QId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/question/${QId}`,

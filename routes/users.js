@@ -885,6 +885,28 @@ router.delete('/admin/:admId', (req, res) => {
         }
     })
 });
+router.delete('/supporter/:supId', (req, res) => {
+    console.log("supDelete")
+    database.delSupporter(req.params.supId, (deleteResult)=> {
+        if (deleteResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (deleteResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.respondDeleted('اطلاعات مورد نظر حذف شد', deleteResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 router.delete('/student/:stdId', (req, res) => {
     database.getStudentById(req, params.stdId, (getResult)=> {
