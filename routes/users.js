@@ -80,7 +80,6 @@ router.get('/admin', (req, res) => {
     })
 });
 
-
 router.get('/admin/:admId', (req, res)=> {
     database.getAdminById(req.params.admId, (admin)=> {
 
@@ -123,6 +122,108 @@ router.post('/admin', (req, res)=> {
         }
     })
 });
+
+
+router.put('/supporter/:supId', (req, res) => {
+    req.body.password = hashHelper.hash(req.body.password)
+    database.updateSupporter(req.body, req.params.supId, (Putresult)=> {
+        if (Putresult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (Putresult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if(Putresult == -2) {
+            response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  Putresult.password
+            response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/supporter', (req, res) => {
+    database.getSupporters((getResult)=> {
+        if (getResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (getResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            for(var i=0;i<getResult.length;i++){
+                delete getResult[i].password
+            }
+            response.response('اطلاعات همه ی پشتیبان ها', getResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/supporter/:supId', (req, res)=> {
+    database.getSupporterById(req.params.supId, (sup)=> {
+
+        if (sup == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sup == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  sup.password
+            response.responseUpdated('اطلاعات کاربر مورد نظر', sup, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.post('/supporter', (req, res)=> {
+    req.body.password = hashHelper.hash(req.body.password)
+
+    database.addSupporer(req.body, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else if (addedAdmin == -2) {
+            response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  addedAdmin.password
+
+            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addedAdmin, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 router.post('/student/register', (req, res)=> {
     console.log("body:", req.body)

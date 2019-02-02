@@ -374,6 +374,32 @@ module.exports.addAdmin = (adminData, cb)=> {
     })
 };
 
+module.exports.addSupporer = (data, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/supporter`,
+        headers: {"content-Type": "application/json"},
+        body: data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.getAdmins = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin`,
@@ -397,6 +423,31 @@ module.exports.getAdmins = (cb)=> {
         }
     })
 };
+
+module.exports.getSupporters = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/supporter`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.getAllTypes = (cb)=> {
     request.get({
@@ -470,6 +521,32 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
         }
     })
 };
+
+module.exports.updateSupporter = (updateInfo, supId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/supporter/${supId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.delStudent = (stuId, cb)=> {
     console.log(stuId)
@@ -2069,6 +2146,32 @@ module.exports.getAdminById = (admId, cb)=> {
     })
 
 };
+
+module.exports.getSupporterById = (supId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/supporter/${supId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 
 module.exports.getResultUsrLsn = (usrId, lsnId, cb)=> {
     request.get({
