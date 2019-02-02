@@ -205,7 +205,7 @@ router.post('/', (req, res)=> {
                 req.body.answers = JSON.parse(req.body.answers)
             }
             database.getTypeById(req.body.typeId, (type)=> {
-                if (type == -1 || 0) {
+                if (type == -1 ||type == 0) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })

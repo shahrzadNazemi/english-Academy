@@ -795,44 +795,85 @@ router.get('/student/best', (req, res) => {
 });
 
 router.get('/student/bestOfLevel', (req, res) => {
-
-    var token = req.headers.authorization.split(" ")[1];
-    var verify = jwt.verify(token);
-    let username = verify.userID
-    if (username != "userAdmin") {
-        database.getStudentByUsername(username, (student)=> {
-            if (student == 0) {
-                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                let lsnId = student[0].lastPassedLesson
-                database.getLessonById(lsnId, (lesson)=> {
-                    if (lesson == 0 || lesson == 0) {
+    database.getAllStu((allStudents)=> {
+        if (allStudents == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (allStudents == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            var token = req.headers.authorization.split(" ")[1];
+            var verify = jwt.verify(token);
+            let username = verify.userID
+            if (username != "userAdmin") {
+                database.getStudentByUsername(username, (student)=> {
+                    if (student == 0) {
                         response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }
                     else {
-                        database.getStudentOfLevel(lesson[0].level._id, (stus)=> {
-                            if (stus == -1 || stus == 0) {
+                        let lsnId = student[0].lastPassedLesson
+                        database.getLessonById(lsnId, (lesson)=> {
+                            if (lesson == 0 || lesson == 0) {
                                 response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
                                     res.json(result)
                                 })
                             }
                             else {
-                                response.response('اطلاعات بهترین دانش آموزان', stus, (result)=> {
-                                    res.json(result)
+                                let levelStu = []
+                               let lvlId = lesson[0].lvlId
+                                for(var i=0;i<allStudents.length;i++){
+                                    if(allStudents[i].lesson[0]){
+                                        if(allStudents[i].lesson[0].lvlId == lvlId){
+                                            levelStu.push(allStudents[i])
+                                        }
+                                    }
 
-                                })
+                                }
+                                let temp = []
+                                let length = levelStu.length
+                                if (length <= 3) {
+                                    response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
+                                        res.json(result)
+
+                                    })
+                                }
+                                else {
+                                    let i=0
+                                    for(var k =0;k<levelStu.length;k++){
+                                        if(levelStu[k]._id ==student[0]._id ){
+                                            i = k
+                                        }
+                                    }
+                                    temp[0] = levelStu[length - 1]
+                                    temp[1] = levelStu[i]
+                                    temp[2] = levelStu[0]
+                                   if(temp[0] == temp[1]){
+                                       temp.splice(0, 1);
+                                   }
+                                    if(temp[2] == temp[1]){
+                                        temp.splice(2, 1);
+                                    }
+                                    response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
+                                        res.json(result)
+
+                                    })
+                                }
                             }
                         })
                     }
                 })
             }
-        })
-    }
+        }
+    })
+
+
 });
 
 
@@ -885,6 +926,7 @@ router.delete('/admin/:admId', (req, res) => {
         }
     })
 });
+
 router.delete('/supporter/:supId', (req, res) => {
     console.log("supDelete")
     database.delSupporter(req.params.supId, (deleteResult)=> {
@@ -906,7 +948,6 @@ router.delete('/supporter/:supId', (req, res) => {
         }
     })
 });
-
 
 router.delete('/student/:stdId', (req, res) => {
     database.getStudentById(req, params.stdId, (getResult)=> {
