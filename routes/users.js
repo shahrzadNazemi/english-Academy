@@ -914,17 +914,35 @@ router.get('/student/:stdId', (req, res) => {
         }
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
+                statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                    if ( progress != -1) {
+                        let data = getResult
+                        data.progress = progress
+                        delete getResult.password
+                        delete lesson[0].video
+                        delete lesson[0].sound
+                        delete lesson[0].text
+                        data.lesson = lesson[0]
+                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                            res.json(result)
 
-                delete getResult.password
-                let data = getResult
-                delete lesson[0].video
-                delete lesson[0].sound
-                delete lesson[0].text
-                data.lesson = lesson[0]
-                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                    res.json(result)
+                        })
+                    }
+                    else {
+                        delete getResult.password
+                        let data = getResult
+                        delete lesson[0].video
+                        delete lesson[0].sound
+                        delete lesson[0].text
+                        data.lesson = lesson[0]
+                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                            res.json(result)
 
+                        })
+                    }
                 })
+
+
             })
 
         }
