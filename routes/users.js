@@ -794,8 +794,6 @@ router.get('/student/best', (req, res) => {
         else {
             for (var i = 0; i < getResult.length; i++) {
                 getResult[i].lesson = getResult[i].lesson[0]
-                   
-
             }
             let temp = []
             let length = getResult.length

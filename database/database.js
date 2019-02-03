@@ -1725,6 +1725,34 @@ module.exports.addStu = (stuInfo, cb)=> {
     })
 };
 
+module.exports.addCertificate = (certInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/certificate`,
+        headers: {"content-Type": "application/json"},
+        body: certInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.addView = (viewInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/view`,
@@ -1802,6 +1830,32 @@ module.exports.getStudentByUsername = (username, cb)=> {
     })
 
 };
+
+module.exports.getCertificateById = (certId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/certificate/${certId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 
 module.exports.getAllStu = (cb)=> {
     request.get({
@@ -2032,6 +2086,36 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
+module.exports.updateCertificate = (updateInfo, certId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/certificate/${certId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.updateResult = (updateInfo, stdId, lsnId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/result/${stdId}/${lsnId}`,
@@ -2171,6 +2255,31 @@ module.exports.getAdminById = (admId, cb)=> {
     })
 
 };
+module.exports.getAllCertifications = ( cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/certificate`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 
 module.exports.getSupporterById = (supId, cb)=> {
     request.get({
