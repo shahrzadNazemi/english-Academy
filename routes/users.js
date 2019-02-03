@@ -397,7 +397,7 @@ router.post('/student/login', (req, res) => {
             else {
                 database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
                     statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                        if ( progress != -1) {
+                        if (progress != -1) {
                             delete loginResult.password
                             let data = loginResult
                             data.progress = progress
@@ -873,7 +873,7 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     let i = 0
                                     for (var k = 0; k < levelStu.length; k++) {
                                         levelStu[k].lesson = lesson[0]
-                                        
+
                                         if (levelStu[k]._id == student[0]._id) {
                                             i = k
                                         }
@@ -906,7 +906,6 @@ router.get('/student/bestOfLevel', (req, res) => {
 
 });
 
-
 router.get('/student/:stdId', (req, res) => {
     database.getStudentById(req.params.stdId, (getResult)=> {
         if (getResult == -1) {
@@ -922,7 +921,7 @@ router.get('/student/:stdId', (req, res) => {
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
                 statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                    if ( progress != -1) {
+                    if (progress != -1) {
                         let data = getResult
                         data.progress = progress
                         delete getResult.password
@@ -954,6 +953,59 @@ router.get('/student/:stdId', (req, res) => {
 
         }
     })
+});
+
+router.get('/student/prCrNxtLesson', (req, res) => {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "userAdmin") {
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0) {
+                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                let lsnId = student[0].lastPassedLesson
+                database.getLessonById(lsnId, (lesson)=> {
+                    if (lesson == 0 || lesson == 0) {
+                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        let prCrNextLesson = []
+                        prCrNextLesson[1] = lesson[0]
+                        database.getPreviouseLesson(lsnId, (prLesson)=> {
+                            if (prLesson == 0 || prLesson == 0) {
+                                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                prCrNextLesson[0] = prLesson
+                                database.getNextLesson(lsnId, (nxtLesson)=> {
+                                    if (nxtLesson == 0 || nxtLesson == 0) {
+                                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        prCrNextLesson[2] =nxtLesson
+                                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                            res.json(result)
+
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
 });
 
 

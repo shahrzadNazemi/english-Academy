@@ -356,56 +356,43 @@ router.put('/:certId', (req, res)=> {
     }
 });
 
-router.delete('/:exId', (req, res)=> {
-    database.delExam(req.params.exId, (exam)=> {
-        if (exam == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (exam == 0) {
-            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            response.respondDeleted('اطلاعات با موفقیت حذف شد.', exam, (result)=> {
-                res.json(result)
-
-            })
-
-
-        }
-    })
-});
-
-router.get('/selective', (req, res)=> {
-    database.getAllExams(0, (exam)=> {
-        if (exam == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (exam == 0) {
-            response.respondNotFound('آزمون مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            let temp = []
-
-            for (var i = 0; i < exam.length; i++) {
-                temp[i] = {}
-                temp[i].label = exam[i].title;
-                temp[i].value = exam[i]._id
-                console.log(temp)
+router.get('/student', (req, res)=> {
+    req.body.time = new Date().getTime()
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "userAdmin") {
+        database.getStudentByUsername(username, (student)=> {
+            if (student == 0) {
+                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
             }
-            response.response('اطلاعات همه ی آزمونها', temp, (result)=> {
-                res.json(result)
-            })
+            else {
+                let usrId = student[0]._id
+                database.getCertificateByUsr(usrId, (addResult)=> {
+                    if (addResult == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                  else   if (addResult == 0) {
+                        response.respondNotFound('گواهی مورد نظر یافت نشد.', [], (result)=> {
+                            res.json(result)
+                        })
+                    }
 
-        }
-    })
+                    else {
+                        response.responseCreated('اطلاعات گواهی دانشجو.', addResult, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
+
+            }
+        })
+    }
 });
 
 router.get('/:certId', (req, res)=> {
@@ -428,6 +415,8 @@ router.get('/:certId', (req, res)=> {
         }
     })
 });
+
+
 
 router.get('/', (req, res)=> {
         database.getAllCertifications((exam)=> {
