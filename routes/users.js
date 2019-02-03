@@ -864,9 +864,13 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     })
                                 }
                                 else {
+                                    delete lesson[0].video
+                                    delete lesson[0].sound
+                                    delete lesson[0].text
                                     let i = 0
                                     for (var k = 0; k < levelStu.length; k++) {
-                                        levelStu[k].lesson =lesson[0]
+                                        levelStu[k].lesson = lesson[0]
+                                        
                                         if (levelStu[k]._id == student[0]._id) {
                                             i = k
                                         }

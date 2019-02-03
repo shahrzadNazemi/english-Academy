@@ -35,3 +35,11 @@ module.exports.downloadPathLessonImage = "http://185.94.99.69:9000/upload/lesson
 module.exports.downloadPathExamImage = "http://185.94.99.69:9000/upload/exam/avatar";
 
 module.exports.uploadPathExamImage = "/var/fileAccess/site/upload/exam/avatar";
+
+module.exports.uploadPathIDCard = "/var/fileAccess/site/upload/student/IDCard";
+
+module.exports.downloadPathPathIDCard = "http://185.94.99.69:9000/upload/student/IDCard";
+
+module.exports.downloadPathPersonalImg= "http://185.94.99.69:9000/upload/student/personalImg";
+
+module.exports.uploadPathPersonalImg = "/var/fileAccess/site/upload/student/personalImg";
