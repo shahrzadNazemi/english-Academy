@@ -396,7 +396,14 @@ router.post('/student/login', (req, res) => {
             }
             else {
                 database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
-                    if(loginResult.score == 0){
+                    database.getExamPassedCount(loginResult._id , (exam)=>{
+                        if(exam == -1|| exam ==0){
+                            loginResult.examPassed = 0
+                        }
+                        else {
+                            loginResult.examPassed = exam.length
+                        }
+                        if(loginResult.score == 0){
                             delete loginResult.password
                             let data = loginResult
                             data.progress = 0
@@ -410,39 +417,41 @@ router.post('/student/login', (req, res) => {
 
                             })
 
-                    }
-                    else{
-                        statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                            if (progress != -1) {
-                                delete loginResult.password
-                                let data = loginResult
-                                data.progress = progress
-                                delete lesson[0].video
-                                delete lesson[0].sound
-                                delete lesson[0].text
-                                data.lesson = lesson[0]
-                                data.jwt = jwt.signUser(loginResult.username)
-                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                    res.json(result)
+                        }
+                        else{
+                            statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                                if (progress != -1) {
+                                    delete loginResult.password
+                                    let data = loginResult
+                                    data.progress = progress
+                                    delete lesson[0].video
+                                    delete lesson[0].sound
+                                    delete lesson[0].text
+                                    data.lesson = lesson[0]
+                                    data.jwt = jwt.signUser(loginResult.username)
+                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                        res.json(result)
 
-                                })
-                            }
-                            else {
-                                delete loginResult.password
-                                let data = loginResult
-                                delete lesson[0].video
-                                delete lesson[0].sound
-                                delete lesson[0].text
-                                data.lesson = lesson[0]
-                                data.jwt = jwt.signUser(loginResult.username)
-                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                    res.json(result)
+                                    })
+                                }
+                                else {
+                                    delete loginResult.password
+                                    let data = loginResult
+                                    delete lesson[0].video
+                                    delete lesson[0].sound
+                                    delete lesson[0].text
+                                    data.lesson = lesson[0]
+                                    data.jwt = jwt.signUser(loginResult.username)
+                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                        res.json(result)
 
-                                })
-                            }
-                        })
+                                    })
+                                }
+                            })
 
-                    }
+                        }
+                    })
+
 
                 })
 
@@ -1072,50 +1081,61 @@ router.get('/student/:stdId', (req, res) => {
         }
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
-                if (getResult.score == 0) {
+                database.getExamPassedCount(getResult._id , (exam)=>{
+                    console.log("dsfsgfdfgldhkgjhdkgh",exam)
+                    if(exam == -1 || exam ==0){
+                        getResult.examPassed = 0
+                    }
+                    else {
+                        getResult.examPassed = exam.length
+                    }
+                    if (getResult.score == 0) {
 
-                    delete getResult.password
-                    let data = getResult
-                    data.progress = 0
-                    delete lesson[0].video
-                    delete lesson[0].sound
-                    delete lesson[0].text
-                    data.lesson = lesson[0]
-                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                        res.json(result)
+                        delete getResult.password
+                        let data = getResult
+                        data.progress = 0
+                        delete lesson[0].video
+                        delete lesson[0].sound
+                        delete lesson[0].text
+                        data.lesson = lesson[0]
+                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                            res.json(result)
 
-                    })
+                        })
 
-                }
-                else {
-                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                        if (progress != -1) {
-                            let data = getResult
-                            data.progress = progress
-                            delete getResult.password
-                            delete lesson[0].video
-                            delete lesson[0].sound
-                            delete lesson[0].text
-                            data.lesson = lesson[0]
-                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                res.json(result)
+                    }
+                    else {
+                        statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                            if (progress != -1) {
+                                let data = getResult
+                                data.progress = progress
+                                delete getResult.password
+                                delete lesson[0].video
+                                delete lesson[0].sound
+                                delete lesson[0].text
+                                data.lesson = lesson[0]
+                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                    res.json(result)
 
-                            })
-                        }
-                        else {
-                            delete getResult.password
-                            let data = getResult
-                            delete lesson[0].video
-                            delete lesson[0].sound
-                            delete lesson[0].text
-                            data.lesson = lesson[0]
-                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                res.json(result)
+                                })
+                            }
+                            else {
+                                delete getResult.password
+                                let data = getResult
+                                delete lesson[0].video
+                                delete lesson[0].sound
+                                delete lesson[0].text
+                                data.lesson = lesson[0]
+                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                    res.json(result)
 
-                            })
-                        }
-                    })
-                }
+                                })
+                            }
+                        })
+                    }
+                })
+
+
 
             })
 
