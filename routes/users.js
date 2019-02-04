@@ -798,7 +798,7 @@ router.get('/student/best', (req, res) => {
             let temp = []
             let length = getResult.length
             if (length <= 3) {
-                for(var i=0;i<getResult.length;i++){
+                for (var i = 0; i < getResult.length; i++) {
                     getResult[i].lesson.level = getResult[i].level[0]
                     delete getResult[i].level
                 }
@@ -812,9 +812,9 @@ router.get('/student/best', (req, res) => {
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
-                for(var i=0;i<temp.length;i++){
+                for (var i = 0; i < temp.length; i++) {
                     temp[i].lesson.level = temp[i].level[0]
-                        delete temp[i].level
+                    delete temp[i].level
                 }
                 response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
                     res.json(result)
@@ -870,6 +870,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 let temp = []
                                 let length = levelStu.length
                                 if (length <= 3) {
+                                    for (var k = 0; k < levelStu.length; k++) {
+                                        levelStu[k].lesson = lesson[0]
+                                        delete levelStu[k].level
+                                    }
                                     response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
                                         res.json(result)
 
@@ -882,7 +886,7 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     let i = 0
                                     for (var k = 0; k < levelStu.length; k++) {
                                         levelStu[k].lesson = lesson[0]
-
+                                        delete levelStu[k].level
                                         if (levelStu[k]._id == student[0]._id) {
                                             i = k
                                         }
@@ -898,6 +902,17 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     }
                                     if (temp[2] == temp[1]) {
                                         temp.splice(2, 1);
+                                    }
+                                    for (var k = 0; k < temp.length; k++) {
+                                        if (temp[k].score == 0) {
+                                            temp[k].progress = 0
+                                        }
+                                        // else {
+                                        //     statistic.calculateProgress(temp[k].lesson._id, (progress)=> {
+                                        //         temp[k].progress = progress
+                                        //     })
+                                        // }
+
                                     }
                                     response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
                                         res.json(result)
@@ -930,7 +945,7 @@ router.get('/student/prCrNxtLesson', (req, res) => {
             }
             else {
                 let lsnId = student[0].lastPassedLesson
-                database.getPrCrNxtLesson(lsnId , (getResult)=>{
+                database.getPrCrNxtLesson(lsnId, (getResult)=> {
                     if (getResult == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
@@ -995,14 +1010,11 @@ router.get('/student/:stdId', (req, res) => {
                         })
                     }
                 })
-
-
             })
 
         }
     })
 });
-
 
 
 router.delete('/admin/:admId', (req, res) => {
