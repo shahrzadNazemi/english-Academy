@@ -798,15 +798,24 @@ router.get('/student/best', (req, res) => {
             let temp = []
             let length = getResult.length
             if (length <= 3) {
+                for(var i=0;i<getResult.length;i++){
+                    getResult[i].lesson.level = getResult[i].level[0]
+                    delete getResult[i].level
+                }
                 response.response('اطلاعات بهترین دانش آموزان', getResult, (result)=> {
                     res.json(result)
 
                 })
             }
             else {
+
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
+                for(var i=0;i<temp.length;i++){
+                    temp[i].lesson.level = temp[i].level[0]
+                        delete temp[i].level
+                }
                 response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
                     res.json(result)
 
