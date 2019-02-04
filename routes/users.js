@@ -396,11 +396,10 @@ router.post('/student/login', (req, res) => {
             }
             else {
                 database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
-                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                        if (progress != -1) {
+                    if(loginResult.score == 0){
                             delete loginResult.password
                             let data = loginResult
-                            data.progress = progress
+                            data.progress = 0
                             delete lesson[0].video
                             delete lesson[0].sound
                             delete lesson[0].text
@@ -410,21 +409,40 @@ router.post('/student/login', (req, res) => {
                                 res.json(result)
 
                             })
-                        }
-                        else {
-                            delete loginResult.password
-                            let data = loginResult
-                            delete lesson[0].video
-                            delete lesson[0].sound
-                            delete lesson[0].text
-                            data.lesson = lesson[0]
-                            data.jwt = jwt.signUser(loginResult.username)
-                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                res.json(result)
 
-                            })
-                        }
-                    })
+                    }
+                    else{
+                        statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                            if (progress != -1) {
+                                delete loginResult.password
+                                let data = loginResult
+                                data.progress = progress
+                                delete lesson[0].video
+                                delete lesson[0].sound
+                                delete lesson[0].text
+                                data.lesson = lesson[0]
+                                data.jwt = jwt.signUser(loginResult.username)
+                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                            else {
+                                delete loginResult.password
+                                let data = loginResult
+                                delete lesson[0].video
+                                delete lesson[0].sound
+                                delete lesson[0].text
+                                data.lesson = lesson[0]
+                                data.jwt = jwt.signUser(loginResult.username)
+                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                        })
+
+                    }
 
                 })
 
@@ -798,26 +816,65 @@ router.get('/student/best', (req, res) => {
             let temp = []
             let length = getResult.length
             if (length <= 3) {
-                for (var i = 0; i < getResult.length; i++) {
-                    getResult[i].lesson.level = getResult[i].level[0]
-                    delete getResult[i].level
-                }
-                response.response('اطلاعات بهترین دانش آموزان', getResult, (result)=> {
-                    res.json(result)
+                database.getAllLessons((lessons)=> {
+                    for (var p = 0; p < getResult.length; p++) {
+                        let k = 0
+                        getResult[p].lesson.level = getResult[p].level[0]
+                        delete getResult[p].level
+                        if (getResult[p].score == 0) {
+                            getResult[p].progress = 0
+                        }
+                        else {
+                            for (var i = 0; i < lessons.length; i++) {
+                                if (lessons[i]._id == getResult[p].lesson._id) {
+                                    k = i
+                                }
+                            }
+                            let progress = (k + 1) / lessons.length
+
+                            getResult[p].progress = progress
+                        }
+
+                    }
+
+                    response.response('اطلاعات بهترین دانش آموزان', getResult, (result)=> {
+                        res.json(result)
+
+                    })
 
                 })
+
             }
             else {
 
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
-                for (var i = 0; i < temp.length; i++) {
-                    temp[i].lesson.level = temp[i].level[0]
-                    delete temp[i].level
-                }
-                response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
-                    res.json(result)
+                database.getAllLessons((lessons)=> {
+                    for (var p = 0; p < temp.length; p++) {
+                        let k = 0
+                        temp[p].lesson.level = temp[p].level[0]
+                        delete temp[p].level
+                        if (temp[p].score == 0) {
+                            temp[p].progress = 0
+                        }
+                        else {
+                            for (var i = 0; i < lessons.length; i++) {
+                                if (lessons[i]._id == temp[p].lesson._id) {
+                                    k = i
+                                }
+                            }
+                            let progress = (k + 1) / lessons.length
+
+                            temp[p].progress = progress
+                        }
+
+                    }
+
+                    response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
+                        res.json(result)
+
+                    })
 
                 })
             }
@@ -870,14 +927,35 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 let temp = []
                                 let length = levelStu.length
                                 if (length <= 3) {
-                                    for (var k = 0; k < levelStu.length; k++) {
-                                        levelStu[k].lesson = lesson[0]
-                                        delete levelStu[k].level
-                                    }
-                                    response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
-                                        res.json(result)
+                                    database.getAllLessons((lessons)=> {
+                                        for (var p = 0; p < levelStu.length; p++) {
+                                            levelStu[p].lesson = lesson[0]
+                                            delete levelStu[p].level
+                                            let k = 0
+                                            if (levelStu[p].score == 0) {
+                                                levelStu[p].progress = 0
+                                            }
+                                            else {
+                                                for (var i = 0; i < lessons.length; i++) {
+                                                    if (lessons[i]._id == temp[p].lesson._id) {
+                                                        k = i
+                                                    }
+                                                }
+                                                let progress = (k + 1) / lessons.length
+
+                                                levelStu[p].progress = progress
+                                            }
+
+                                        }
+
+                                        response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
+                                            res.json(result)
+
+                                        })
 
                                     })
+
+
                                 }
                                 else {
                                     delete lesson[0].video
@@ -903,21 +981,32 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     if (temp[2] == temp[1]) {
                                         temp.splice(2, 1);
                                     }
-                                    for (var k = 0; k < temp.length; k++) {
-                                        if (temp[k].score == 0) {
-                                            temp[k].progress = 0
-                                        }
-                                        // else {
-                                        //     statistic.calculateProgress(temp[k].lesson._id, (progress)=> {
-                                        //         temp[k].progress = progress
-                                        //     })
-                                        // }
+                                    database.getAllLessons((lessons)=> {
+                                        for (var p = 0; p < temp.length; p++) {
+                                            let k = 0
+                                            if (temp[p].score == 0) {
+                                                temp[p].progress = 0
+                                            }
+                                            else {
+                                                for (var i = 0; i < lessons.length; i++) {
+                                                    if (lessons[i]._id == temp[p].lesson._id) {
+                                                        k = i
+                                                    }
+                                                }
+                                                let progress = (k + 1) / lessons.length
 
-                                    }
-                                    response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
-                                        res.json(result)
+                                                temp[p].progress = progress
+                                            }
+
+                                        }
+
+                                        response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
+                                            res.json(result)
+
+                                        })
 
                                     })
+
                                 }
                             }
                         })
@@ -983,33 +1072,51 @@ router.get('/student/:stdId', (req, res) => {
         }
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
-                statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                    if (progress != -1) {
-                        let data = getResult
-                        data.progress = progress
-                        delete getResult.password
-                        delete lesson[0].video
-                        delete lesson[0].sound
-                        delete lesson[0].text
-                        data.lesson = lesson[0]
-                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                            res.json(result)
+                if (getResult.score == 0) {
 
-                        })
-                    }
-                    else {
-                        delete getResult.password
-                        let data = getResult
-                        delete lesson[0].video
-                        delete lesson[0].sound
-                        delete lesson[0].text
-                        data.lesson = lesson[0]
-                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                            res.json(result)
+                    delete getResult.password
+                    let data = getResult
+                    data.progress = 0
+                    delete lesson[0].video
+                    delete lesson[0].sound
+                    delete lesson[0].text
+                    data.lesson = lesson[0]
+                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                        res.json(result)
 
-                        })
-                    }
-                })
+                    })
+
+                }
+                else {
+                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                        if (progress != -1) {
+                            let data = getResult
+                            data.progress = progress
+                            delete getResult.password
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            data.lesson = lesson[0]
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                        else {
+                            delete getResult.password
+                            let data = getResult
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            data.lesson = lesson[0]
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    })
+                }
+
             })
 
         }
