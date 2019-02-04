@@ -383,7 +383,7 @@ router.get('/student', (req, res)=> {
                     }
 
                     else {
-                        response.responseCreated('اطلاعات گواهی دانشجو.', addResult, (result)=> {
+                        response.responseCreated('اطلاعات گواهی دانشجو.', addResult[0], (result)=> {
                             res.json(result)
 
                         })
