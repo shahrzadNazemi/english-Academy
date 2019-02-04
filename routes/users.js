@@ -906,6 +906,45 @@ router.get('/student/bestOfLevel', (req, res) => {
 
 });
 
+router.get('/student/prCrNxtLesson', (req, res) => {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    let username = verify.userID
+    if (username != "userAdmin") {
+        console.log(username)
+        database.getStudentByUsername(username, (student)=> {
+            console.log(student)
+            if (student == 0) {
+                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                let lsnId = student[0].lastPassedLesson
+                database.getPrCrNxtLesson(lsnId , (getResult)=>{
+                    if (getResult == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (getResult == 0) {
+                        response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
+            }
+        })
+    }
+});
+
+
 router.get('/student/:stdId', (req, res) => {
     database.getStudentById(req.params.stdId, (getResult)=> {
         if (getResult == -1) {
@@ -955,58 +994,6 @@ router.get('/student/:stdId', (req, res) => {
     })
 });
 
-router.get('/student/prCrNxtLesson', (req, res) => {
-    var token = req.headers.authorization.split(" ")[1];
-    var verify = jwt.verify(token);
-    let username = verify.userID
-    if (username != "userAdmin") {
-        database.getStudentByUsername(username, (student)=> {
-            if (student == 0) {
-                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                let lsnId = student[0].lastPassedLesson
-                database.getLessonById(lsnId, (lesson)=> {
-                    if (lesson == 0 || lesson == 0) {
-                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        let prCrNextLesson = []
-                        prCrNextLesson[1] = lesson[0]
-                        database.getPreviouseLesson(lsnId, (prLesson)=> {
-                            if (prLesson == 0 || prLesson == 0) {
-                                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else {
-                                prCrNextLesson[0] = prLesson
-                                database.getNextLesson(lsnId, (nxtLesson)=> {
-                                    if (nxtLesson == 0 || nxtLesson == 0) {
-                                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else {
-                                        prCrNextLesson[2] =nxtLesson
-                                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                            res.json(result)
-
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-        })
-    }
-});
 
 
 router.delete('/admin/:admId', (req, res) => {
