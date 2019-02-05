@@ -859,9 +859,10 @@ router.get('/student/best', (req, res) => {
             })
         }
         else {
+            console.log("getResssssssss", getResult)
             for (var i = 0; i < getResult.length; i++) {
-                if(getResult[i].lesson.length ==0){
-                    getResult.splice(i,1)
+                if (getResult[i].lesson.length == 0) {
+                    getResult.splice(i, 1)
                 }
                 else[
                     getResult[i].lesson = getResult[i].lesson[0]
@@ -909,7 +910,7 @@ router.get('/student/best', (req, res) => {
                 database.getAllLessons((lessons)=> {
                     for (var p = 0; p < temp.length; p++) {
                         let k = 0
-                            temp[p].lesson.level = temp[p].level[0]
+                        temp[p].lesson.level = temp[p].level[0]
                         delete temp[p].level
                         if (temp[p].score == 0) {
                             temp[p].progress = 0
