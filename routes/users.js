@@ -549,7 +549,8 @@ router.post('/student/placement', (req, res)=> {
         })
     }
     else {
-        if (req.body.lsnId == 0) {
+        if (req.body.lsnId == "0") {
+            req.body.lsnId = parseInt(req.body.lsnId)
             database.stuPlacement(req.body, (lesson)=> {
                 if (lesson == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
