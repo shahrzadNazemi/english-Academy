@@ -591,6 +591,45 @@ router.post('/student/placement', (req, res)=> {
     }
 });
 
+router.get('/student/placement', (req, res)=> {
+    var token = req.headers.authorization.split(" ")[1];
+    var verify = jwt.verify(token);
+    console.log(req.body)
+    req.body.lsnId = req.body._id
+    req.body.username = verify.userID
+
+        database.getStudentByUsername(req.body.username , (stu)=>{
+            if(stu == -1 ){
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                database.getStuPlacement(stu[0]._id, (place)=> {
+                    if (place == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                   
+                    else {
+                        let result = {}
+                        if(place == 0){
+                            result.placement = false
+                        }
+                        else{
+                            result.placement = true
+                        }
+                        response.response('اطلاعات مربوط به درس :', result, (result1)=> {
+                            res.json(result1)
+                        })
+                    }
+                })
+            }
+
+        })
+});
+
 
 router.put('/student/:stdId', (req, res) => {
     console.log(req.body, "body before done")
