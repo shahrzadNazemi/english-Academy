@@ -860,6 +860,9 @@ router.get('/student/best', (req, res) => {
         }
         else {
             for (var i = 0; i < getResult.length; i++) {
+                if(!getResult[i].lesson){
+                    delete getResult[i]
+                }
                 getResult[i].lesson = getResult[i].lesson[0]
             }
             let temp = []
