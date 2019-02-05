@@ -396,14 +396,14 @@ router.post('/student/login', (req, res) => {
             }
             else {
                 database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
-                    database.getExamPassedCount(loginResult._id , (exam)=>{
-                        if(exam == -1|| exam ==0){
+                    database.getExamPassedCount(loginResult._id, (exam)=> {
+                        if (exam == -1 || exam == 0) {
                             loginResult.examPassed = 0
                         }
                         else {
                             loginResult.examPassed = exam.length
                         }
-                        if(loginResult.score == 0){
+                        if (loginResult.score == 0) {
                             delete loginResult.password
                             let data = loginResult
                             data.progress = 0
@@ -418,7 +418,7 @@ router.post('/student/login', (req, res) => {
                             })
 
                         }
-                        else{
+                        else {
                             statistic.calculateProgress(lesson[0]._id, (progress)=> {
                                 if (progress != -1) {
                                     delete loginResult.password
@@ -599,36 +599,36 @@ router.get('/student/placement', (req, res)=> {
     req.body.lsnId = req.body._id
     req.body.username = verify.userID
 
-        database.getStudentByUsername(req.body.username , (stu)=>{
-            if(stu == -1 ){
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                database.getStuPlacement(stu[0]._id, (place)=> {
-                    if (place == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                   
-                    else {
-                        let result = {}
-                        if(place == 0){
-                            result.placement = false
-                        }
-                        else{
-                            result.placement = true
-                        }
-                        response.response('اطلاعات مربوط به درس :', result, (result1)=> {
-                            res.json(result1)
-                        })
-                    }
-                })
-            }
+    database.getStudentByUsername(req.body.username, (stu)=> {
+        if (stu == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            database.getStuPlacement(stu[0]._id, (place)=> {
+                if (place == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
 
-        })
+                else {
+                    let result = {}
+                    if (place == 0) {
+                        result.placement = false
+                    }
+                    else {
+                        result.placement = true
+                    }
+                    response.response('اطلاعات مربوط به درس :', result, (result1)=> {
+                        res.json(result1)
+                    })
+                }
+            })
+        }
+
+    })
 });
 
 
@@ -899,11 +899,12 @@ router.get('/student/best', (req, res) => {
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
-                console.log("tempppppppp" , temp)
+                console.log("tempppppppp", temp)
                 database.getAllLessons((lessons)=> {
                     for (var p = 0; p < temp.length; p++) {
                         let k = 0
-                        temp[p].lesson.level = temp[p].level[0]
+                        if (temp[p].lesson)
+                            temp[p].lesson.level = temp[p].level[0]
                         delete temp[p].level
                         if (temp[p].score == 0) {
                             temp[p].progress = 0
@@ -1122,9 +1123,9 @@ router.get('/student/:stdId', (req, res) => {
         }
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
-                database.getExamPassedCount(getResult._id , (exam)=>{
-                    console.log("dsfsgfdfgldhkgjhdkgh",exam)
-                    if(exam == -1 || exam ==0){
+                database.getExamPassedCount(getResult._id, (exam)=> {
+                    console.log("dsfsgfdfgldhkgjhdkgh", exam)
+                    if (exam == -1 || exam == 0) {
                         getResult.examPassed = 0
                     }
                     else {
@@ -1175,7 +1176,6 @@ router.get('/student/:stdId', (req, res) => {
                         })
                     }
                 })
-
 
 
             })
