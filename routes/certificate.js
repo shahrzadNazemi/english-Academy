@@ -377,7 +377,7 @@ router.get('/student', (req, res)=> {
                         })
                     }
                   else   if (addResult == 0) {
-                        response.respondNotFound('گواهی مورد نظر یافت نشد.', [], (result)=> {
+                        response.respondNotFound('گواهی مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }

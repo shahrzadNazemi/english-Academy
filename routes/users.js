@@ -899,6 +899,7 @@ router.get('/student/best', (req, res) => {
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
+                console.log("tempppppppp" , temp)
                 database.getAllLessons((lessons)=> {
                     for (var p = 0; p < temp.length; p++) {
                         let k = 0
