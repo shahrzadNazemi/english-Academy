@@ -1978,7 +1978,7 @@ module.exports.getAllStu = (cb)=> {
             cb(0)
         }
         else {
-            logger.info("response body", body)
+            // logger.info("response body", body)
             cb(body)
         }
     })
