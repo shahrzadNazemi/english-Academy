@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/users.js" afterPath="$PROJECT_DIR$/routes/users.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util/jwtHelper.js" afterPath="$PROJECT_DIR$/util/jwtHelper.js" />
     </list>
     <ignored path="englishAcademi.iws" />
@@ -904,11 +903,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jwtHelper.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="jwtHelper.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/util/jwtHelper.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="3" column="62" selection-start-line="3" selection-start-column="62" selection-end-line="3" selection-end-column="62" />
+              <caret line="3" column="60" selection-start-line="3" selection-start-column="60" selection-end-line="3" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -1881,10 +1880,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
+            <state relative-caret-position="244">
               <caret line="1904" column="21" selection-start-line="1904" selection-start-column="21" selection-end-line="1904" selection-end-column="21" />
               <folding>
                 <element signature="e#424#511#0" expanded="false" />
@@ -3608,12 +3607,12 @@
       <workItem from="1549084591166" duration="15926000" />
       <workItem from="1549171363181" duration="18290000" />
       <workItem from="1549257420858" duration="14923000" />
-      <workItem from="1549345560501" duration="12761000" />
+      <workItem from="1549345560501" duration="13926000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="707849000" />
+    <option name="totallyTimeSpent" value="709014000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -9354,17 +9353,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/util/jwtHelper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="62" selection-start-line="3" selection-start-column="62" selection-end-line="3" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
+        <state relative-caret-position="244">
           <caret line="1904" column="21" selection-start-line="1904" selection-start-column="21" selection-end-line="1904" selection-end-column="21" />
           <folding>
             <element signature="e#424#511#0" expanded="false" />
@@ -10486,6 +10477,14 @@
             <element signature="e#197483#197555#0" expanded="false" />
             <element signature="e#197574#197654#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/jwtHelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="3" column="60" selection-start-line="3" selection-start-column="60" selection-end-line="3" selection-end-column="60" />
+          <folding />
         </state>
       </provider>
     </entry>
