@@ -859,7 +859,7 @@ router.get('/student/best', (req, res) => {
             })
         }
         else {
-            let index =[]
+            let index = []
             for (var i = 0; i < getResult.length; i++) {
                 if (getResult[i].lesson[0] == undefined) {
                     index.push(i)
@@ -873,11 +873,11 @@ router.get('/student/best', (req, res) => {
                 }
             }
             console.log(index)
-for(var k=0;k<getResult.length;k++){
-    for(var p=0;p<index.length;p++){
-        getResult.splice(index[p] , 1)
-    }
-}
+            for (var k = 0; k < getResult.length; k++) {
+                for (var p = 0; p < index.length; p++) {
+                    getResult.splice(index[p], 1)
+                }
+            }
             let temp = []
             let length = getResult.length
             if (length <= 3) {

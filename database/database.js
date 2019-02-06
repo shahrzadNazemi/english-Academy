@@ -1824,7 +1824,7 @@ module.exports.getStudentByUsername = (username, cb)=> {
             cb(0)
         }
         else {
-            logger.info("response body", body)
+            // logger.info("response body", body)
             cb(body)
         }
     })
@@ -2478,7 +2478,7 @@ module.exports.getLessonById = (lsnId, cb)=> {
             cb(0)
         }
         else {
-            logger.info("response body", body)
+            // logger.info("response body", body)
             cb(body)
         }
     })

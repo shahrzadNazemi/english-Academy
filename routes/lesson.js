@@ -97,7 +97,6 @@ router.post('/', (req, res) => {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            console.log(Data)
             if (Data == lvlId) {
                 errorData = {"lvlId": ["وارد کردن شناسه ی سطح ضروری است."]}
             } else if (Data == "order") {
@@ -137,7 +136,6 @@ router.post('/', (req, res) => {
                         })
                     }
                     else {
-                        console.log(lesson)
                         req.body._id = lesson
                         // res.json(req.body)
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
@@ -145,7 +143,6 @@ router.post('/', (req, res) => {
                         var newFile = new Date().getTime() + '.' + extension;
                         // path is Upload Directory
                         var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
-                        console.log("dir", dir)
                         module.exports.addDir(dir, function (newPath) {
                             var path = dir + newFile;
                             req.files.file.mv(path, function (err) {
@@ -158,7 +155,6 @@ router.post('/', (req, res) => {
                                 else {
                                     req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
                                     // req.body._id = (req.body._id.replace(/"/g, ''));
-                                    console.log("body", req.body)
                                     // let newLesson = Object.assign({} , lesson, req.body)
                                     database.updateLesson(req.body, req.body._id, (lesson)=> {
 
@@ -242,7 +238,6 @@ router.post('/video', (req, res) => {
         let errorData
         if (ajv.errors[0].keyword == 'required') {
             Data = ajv.errors[0].params.missingProperty
-            console.log(Data)
             if (Data == "lsnId") {
                 errorData = {"lsnId": ["وارد کردن شناسه ی درس ضروری است."]}
             }
@@ -960,79 +955,80 @@ router.put('/:lsnId', (req, res) => {
                             })
                         }
                         else {
-                            if (lessons.avatarUrl != null){
+                            if (lessons.avatarUrl != null) {
                                 var unlinkPath = lessons.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
-                            fs.unlink(unlinkPath, function (err) {
-                                try {
-                                    if (req.files.file != null) {
-                                        req.body._id = lessons._id
-                                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                                        var file = req.files.file.name.replace(`.${extension}`, '');
-                                        var newFile = new Date().getTime() + '.' + extension;
-                                        // path is Upload Directory
-                                        var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
-                                        console.log("dir", dir)
-                                        module.exports.addDir(dir, function (newPath) {
-                                            var path = dir + newFile;
-                                            req.files.file.mv(path, function (err) {
-                                                if (err) {
-                                                    console.error(err);
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else {
-                                                    req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
-                                                    var newLesson = Object.assign({}, lesson, req.body)
-                                                    database.updateLesson(newLesson, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
-                                                        if (result == -1) {
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else if (result == 0) {
-                                                            response.respondNotFound('درس مورد نظر یافت نشد', {}, (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else if (result == -2) {
-                                                            let errData = {"title": "نام درس نمیتواند تکراری باشد"}
-                                                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else if (result == -3) {
-                                                            let errData = {"order": "ترتیب درس نمیتواند تکراری باشد"}
-                                                            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else {
-                                                            response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
-                                                                res.json(result)
+                                fs.unlink(unlinkPath, function (err) {
+                                    try {
+                                        if (req.files.file != null) {
+                                            req.body._id = lessons._id
+                                            var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                            var file = req.files.file.name.replace(`.${extension}`, '');
+                                            var newFile = new Date().getTime() + '.' + extension;
+                                            // path is Upload Directory
+                                            var dir = `${config.uploadPathLessonImage}/${req.body._id}/`;
+                                            console.log("dir", dir)
+                                            module.exports.addDir(dir, function (newPath) {
+                                                var path = dir + newFile;
+                                                req.files.file.mv(path, function (err) {
+                                                    if (err) {
+                                                        console.error(err);
+                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                    else {
+                                                        req.body.avatarUrl = path.replace(`${config.uploadPathLessonImage}`, `${config.downloadPathLessonImage}`)
+                                                        var newLesson = Object.assign({}, lesson, req.body)
+                                                        database.updateLesson(newLesson, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                                            if (result == -1) {
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else if (result == 0) {
+                                                                response.respondNotFound('درس مورد نظر یافت نشد', {}, (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else if (result == -2) {
+                                                                let errData = {"title": "نام درس نمیتواند تکراری باشد"}
+                                                                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else if (result == -3) {
+                                                                let errData = {"order": "ترتیب درس نمیتواند تکراری باشد"}
+                                                                response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else {
+                                                                response.response('ویرایش با موفقیت انجام شد', req.body, (result)=> {
+                                                                    res.json(result)
 
-                                                            })
-                                                        }
-                                                    })
-                                                }
+                                                                })
+                                                            }
+                                                        })
+                                                    }
 
+                                                })
+                                            });
+
+                                        }
+                                        else {
+                                            response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                                res.json(result)
                                             })
-                                        });
-
+                                        }
                                     }
-                                    else {
-                                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                                            res.json(result)
-                                        })
+                                    catch (e) {
+                                        console.log(e)
                                     }
-                                }
-                                catch (e) {
-                                    console.log(e)
-                                }
 
 
-                            })}
-                            else{
+                                })
+                            }
+                            else {
                                 if (req.files.file != null) {
                                     req.body._id = lessons._id
                                     var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
@@ -1904,7 +1900,6 @@ router.get('/level/:lvlId', (req, res) => {
                 }
                 else {
                     database.getLessonByLvlId(req.params.lvlId, (lessons)=> {
-                        console.log("lessons", lessons)
                         if (lessons == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
@@ -1927,7 +1922,6 @@ router.get('/level/:lvlId', (req, res) => {
                                     if (usrLsnId == '0') {
                                         database.getFirstLesson((firstLesson)=> {
                                             if (firstLesson == 0 || firstLesson == -1) {
-                                                console.log("here")
                                             }
                                             else {
                                                 let updateInfo = {}
@@ -1944,8 +1938,6 @@ router.get('/level/:lvlId', (req, res) => {
                                                                 resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                             let pass = moment(resultInfo.timePassed).add(24, 'h')
                                                             let currentTime = new Date().getTime()
-                                                            console.log("pass", pass)
-                                                            console.log("currentTime", currentTime)
                                                             if (currentTime < pass) {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].lock = true
@@ -2140,14 +2132,11 @@ router.get('/level/:lvlId', (req, res) => {
                                                 })
                                             }
                                             else {
-                                                console.log("resultInfo", resultInfo.timePassed)
                                                 if (resultInfo.timePassed != "") {
                                                     if (typeof resultInfo.timePassed == 'string')
                                                         resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                     let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
                                                     let currentTime = new Date().getTime()
-                                                    console.log("pass", pass)
-                                                    console.log("currentTime", currentTime)
                                                     if (currentTime < pass) {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].lock = true
@@ -2364,7 +2353,6 @@ router.get('/selective', (req, res)=> {
                 temp[i] = {}
                 temp[i].label = lesson[i].title;
                 temp[i].value = lesson[i]._id
-                console.log(temp)
             }
             response.response('اطلاعات همه ی درسها', temp, (result)=> {
                 res.json(result)
@@ -2393,7 +2381,6 @@ router.get('/type', (req, res)=> {
                 temp[i] = {}
                 temp[i].label = type[i].title;
                 temp[i].value = type[i]._id
-                console.log(temp)
             }
             response.response('اطلاعات انواع فایل', temp, (result1)=> {
                 res.json(result1)
@@ -2470,13 +2457,10 @@ router.get('/video', (req, res)=> {
             if (req.query.lsnId) {
                 let temp = []
                 let k = 0
-                console.log(video[4].lsnId == req.query.lsnId)
                 for (var i = 0; i < video.length; i++) {
                     if (video[i].lsnId == req.query.lsnId) {
-                        console.log("k", k)
                         temp[k] = video[i]
                         k++
-                        console.log("here")
                     }
                 }
                 video = temp
@@ -2493,7 +2477,6 @@ router.get('/video', (req, res)=> {
 });
 
 router.get('/text', (req, res)=> {
-    console.log("text")
     database.getAllText((text)=> {
         if (text == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2676,8 +2659,9 @@ router.get('/:lsnId', (req, res) => {
                         max.push(lesson[0].sound.length)
                         max.push(lesson[0].text.length)
                         max.sort()
-                        for (var i = 0; i < max[max.length - 1]; i++) {
-                            for (var k = 0; k < types.length; k++) {
+
+                        for (var k = 0; k < types.length; k++) {
+                            for (var i = 0; i < max[max.length - 1]; i++) {
                                 if (lesson[0].video[i] != undefined) {
                                     types[k].video = []
                                     if (lesson[0].video[i].typeId == types[k]._id) {
@@ -2742,7 +2726,7 @@ router.get('/:lsnId', (req, res) => {
                                                 // }
 
                                                 if (typeList[i].title == "note") {
-
+                                                    logger.info("typeList[i].category",typeList[i].category)
                                                     typeList[i].category.value = typeList[i].category._id
                                                     typeList[i].category.label = typeList[i].category.title
                                                     delete  typeList[i].category._id
@@ -2772,13 +2756,6 @@ router.get('/:lsnId', (req, res) => {
                                                 let pass = moment(result.timePassed).add(1, 'h')
                                                 let timeStamp = new Date(pass).getTime()
                                                 let currentTime = new Date().getTime()
-                                                console.log("pass", timeStamp)
-                                                console.log("result.timePased", currentTime)
-
-                                                console.log(moment(result.timePassed).format("HH:mm:ss"))
-
-                                                // let now = moment(currentTime).format("HH:mm:ss")
-                                                console.log(timeStamp > currentTime)
                                                 if (pass > currentTime) {
                                                     database.getViewUser(usrId, (view)=> {
                                                         if (view == -1) {
@@ -2788,7 +2765,6 @@ router.get('/:lsnId', (req, res) => {
                                                         }
                                                         else {
                                                             lesson[0].viewPermission = false
-                                                            console.log(lesson[0])
                                                             lesson[0] = circJson.stringify(lesson[0])
                                                             response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                                 res.json(result)
@@ -2806,7 +2782,6 @@ router.get('/:lsnId', (req, res) => {
                                                         }
                                                         else {
                                                             lesson[0].viewPermission = view[0].viewPermission
-                                                            console.log(lesson[0])
                                                             lesson[0] = circJson.stringify(lesson[0])
                                                             response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                                 res.json(result)
@@ -2825,7 +2800,6 @@ router.get('/:lsnId', (req, res) => {
                                                     }
                                                     else {
                                                         lesson[0].viewPermission = view[0].viewPermission
-                                                        console.log(lesson[0])
                                                         lesson[0] = circJson.stringify(lesson[0])
                                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                             res.json(result)
@@ -2850,7 +2824,6 @@ router.get('/:lsnId', (req, res) => {
                                     }
                                     else {
                                         lesson[0].viewPermission = view[0].viewPermission
-                                        console.log(lesson[0])
                                         lesson[0] = circJson.stringify(lesson[0])
                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                             res.json(result)
@@ -3010,7 +2983,6 @@ router.get('/', (req, res)=> {
                     }
                     else {
                         database.getAllLessons((lessons)=> {
-                            console.log("lessons", lessons)
                             if (lessons == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                     res.json(result)
@@ -3045,7 +3017,6 @@ router.get('/', (req, res)=> {
     }
     else {
         database.getAllLessons((sound)=> {
-            console.log(sound)
             if (sound == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
