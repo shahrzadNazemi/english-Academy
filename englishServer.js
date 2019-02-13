@@ -6,8 +6,7 @@ var logger = require('./util/customMorgan');
 var app = express();
 const fileupload = require('express-fileupload');
 let jwt = require('./util/jwtHelper')
-const trimmer = require('express-trimmer');
-
+let trimmer = require('express-trimmer')
 
 
 let user = require('./routes/users');
@@ -44,8 +43,6 @@ app.use(function (req, res, next) {
         return res.status(401).json({error: "authorization required"});
     }
     var verify = jwt.verify(token);
-    // console.log(verify.userID)
-
     if (!verify || verify == 1)  {
 
         return res.status(401).json({error: "authorization failed"});
