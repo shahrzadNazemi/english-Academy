@@ -126,31 +126,179 @@ router.post('/admin', (req, res)=> {
 
 
 router.put('/supporter/:supId', (req, res) => {
-    req.body.password = hashHelper.hash(req.body.password)
-    database.updateSupporter(req.body, req.params.supId, (Putresult)=> {
-        if (Putresult == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (Putresult == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (Putresult == -2) {
-            response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            delete  Putresult.password
-            response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
-                res.json(result)
+    if (req.body.password) {
+        req.body.password = hashHelper.hash(req.body.password)
 
-            })
-        }
-    })
+    }
+    if (req.files || req.files == "") {
+
+        database.getSupporterById(req.params.supId, (student)=> {
+            if (student == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (student == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                if(student.avatarUrl){
+                    var unlinkPath = student.avatarUrl.replace(`${config.downloadPathSupporterImage}`, `${config.uploadPathSupporterImage}`);
+                    fs.unlink(unlinkPath, function (err) {
+                        try {
+                            if (req.files.file != null) {
+                                var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                var file = req.files.file.name.replace(`.${extension}`, '');
+                                var newFile = new Date().getTime() + '.' + extension;
+                                // path is Upload Directory
+                                var dir = `${config.uploadPathSupporterImage}/${req.params.supId}/`;
+                                console.log("dir", dir)
+                                lesson.addDir(dir, function (newPath) {
+                                    var path = dir + newFile;
+                                    req.files.file.mv(path, function (err) {
+                                        if (err) {
+                                            console.error(err);
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            req.body.avatarUrl = path.replace(`${config.uploadPathSupporterImage}`, `${config.downloadPathSupporterImage}`)
+                                            database.updateSupporter(req.body, req.params.supId, (Putresult)=> {
+                                                if (Putresult == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (Putresult == 0) {
+                                                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (Putresult == -2) {
+                                                    errData = {"username": ["نام کاربری نمیتواند تکراری باشد"]}
+                                                    response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated", (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    delete Putresult.password
+                                                    response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                                        res.json(result)
+
+                                                    })
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                });
+
+                            }
+                            else {
+                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                        }
+                        catch (e) {
+                            console.log(e)
+                        }
+
+
+                    })
+                }
+                else{
+                    if (req.files.file != null) {
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathSupporterImage}/${req.params.supId}/`;
+                        console.log("dir", dir)
+                        lesson.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathSupporterImage}`, `${config.downloadPathSupporterImage}`)
+                                    database.updateSupporter(req.body, req.params.supId, (Putresult)=> {
+                                        if (Putresult == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (Putresult == 0) {
+                                            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (Putresult == -2) {
+                                            errData = {"username": ["نام کاربری نمیتواند تکراری باشد"]}
+                                            response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated", (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+
+                                        else {
+                                            delete Putresult.password
+                                            response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                    })
+                                }
+
+                            })
+                        });
+
+                    }
+                    else {
+                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+
+            }
+        })
+
+    }
+    else {
+        database.updateSupporter(req.body, req.params.supId, (Putresult)=> {
+            if (Putresult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (Putresult == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (Putresult == -2) {
+                response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                delete  Putresult.password
+                response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+
 });
 
 router.get('/supporter', (req, res) => {
@@ -219,59 +367,59 @@ router.post('/supporter', (req, res)=> {
                 }
                 else {
 
-                        delete student.password
-                        req.body._id = student
-                        // res.json(req.body)
-                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
-                        var file = req.files.file.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '.' + extension;
-                        // path is Upload Directory
-                        var dir = `${config.uploadPathSupporterImage}/${req.body._id}/`;
-                        console.log("dir", dir)
-                        lesson.addDir(dir, function (newPath) {
-                            var path = dir + newFile;
-                            req.files.file.mv(path, function (err) {
-                                if (err) {
-                                    console.error(err);
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    req.body.avatarUrl = path.replace(`${config.uploadPathSupporterImage}`, `${config.downloadPathSupporterImage}`)
-                                    req.body._id = (req.body._id.replace(/"/g, ''));
-                                    req.body.setAvatar = true
-                                    database.updateSupporter(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
-                                        if (result == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (result == 0) {
-                                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else {
-                                            delete  req.body.setAvatar
-                                            delete req.body.password
-                                            response.response('ورود با موفقیت انجام شد', result, (result1)=> {
-                                                res.json(result1)
+                    delete student.password
+                    req.body._id = student
+                    // res.json(req.body)
+                    var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                    var file = req.files.file.name.replace(`.${extension}`, '');
+                    var newFile = new Date().getTime() + '.' + extension;
+                    // path is Upload Directory
+                    var dir = `${config.uploadPathSupporterImage}/${req.body._id}/`;
+                    console.log("dir", dir)
+                    lesson.addDir(dir, function (newPath) {
+                        var path = dir + newFile;
+                        req.files.file.mv(path, function (err) {
+                            if (err) {
+                                console.error(err);
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                req.body.avatarUrl = path.replace(`${config.uploadPathSupporterImage}`, `${config.downloadPathSupporterImage}`)
+                                req.body._id = (req.body._id.replace(/"/g, ''));
+                                req.body.setAvatar = true
+                                database.updateSupporter(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                    if (result == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (result == 0) {
+                                        response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        delete  req.body.setAvatar
+                                        delete req.body.password
+                                        response.response('ورود با موفقیت انجام شد', result, (result1)=> {
+                                            res.json(result1)
 
-                                            })
-                                        }
-                                    })
-                                }
+                                        })
+                                    }
+                                })
+                            }
 
-                            })
-                        });
+                        })
+                    });
 
 
                 }
             })
         }
     }
-    else{
+    else {
         database.addSupporer(req.body, (addedAdmin)=> {
             if (addedAdmin == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
@@ -744,7 +892,7 @@ router.put('/student/:stdId', (req, res) => {
                 })
             }
             else {
-                var unlinkPath = student.avatarUrl.replace(`${config.downloadPathLessonImage}`, `${config.uploadPathLessonImage}`);
+                var unlinkPath = student.avatarUrl.replace(`${config.downloadPathStuImage}`, `${config.uploadPathStuImage}`);
                 fs.unlink(unlinkPath, function (err) {
                     try {
                         if (req.files.file != null) {
@@ -1168,7 +1316,7 @@ router.get('/student/prCrNxtLesson', (req, res) => {
             }
             else {
                 // let lsnId = student[0].lastPassedLesson
-let usrId = student[0]._id
+                let usrId = student[0]._id
                 database.getViewUser(usrId, (view)=> {
                     if (view == 0 || view == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1230,7 +1378,6 @@ let usrId = student[0]._id
                     }
                 })
 
-                
 
             }
         })
