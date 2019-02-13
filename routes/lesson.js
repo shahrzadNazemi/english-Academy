@@ -3313,7 +3313,7 @@ router.delete('/video/:vdId', (req, res) => {
             if(video.url == undefined){
                 video.url == ""
             }
-            if(video.video.thumbUrl == undefined){
+            if(video.thumbUrl == undefined){
                 video.thumbUrl == ""
             }
             var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
