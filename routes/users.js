@@ -404,7 +404,7 @@ router.post('/supporter', (req, res)=> {
                                     else {
                                         delete  req.body.setAvatar
                                         delete req.body.password
-                                        response.response('ورود با موفقیت انجام شد', result, (result1)=> {
+                                        response.response('اطلاعات با موفقیت ثبت شد', result, (result1)=> {
                                             res.json(result1)
 
                                         })
