@@ -12,7 +12,6 @@ let statistic = require('./statistic')
 const trim = require('../util/trimmer')
 
 
-
 router.post('/admin/login', (req, res) => {
     req.body.password = hashHelper.hash(req.body.password)
     database.adminLogin(req.body, function (loginResult) {
@@ -146,7 +145,7 @@ router.put('/supporter/:supId', (req, res) => {
                 })
             }
             else {
-                if(student.avatarUrl){
+                if (student.avatarUrl) {
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathSupporterImage}`, `${config.uploadPathSupporterImage}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {
@@ -212,7 +211,7 @@ router.put('/supporter/:supId', (req, res) => {
 
                     })
                 }
-                else{
+                else {
                     if (req.files.file != null) {
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.file.name.replace(`.${extension}`, '');
@@ -880,7 +879,7 @@ router.put('/student/:stdId', (req, res) => {
         delete req.body.passedLessonScore
     }
     if (req.files || req.files == "") {
-        trim.expressTrimmer(req , (req)=>{
+        trim.expressTrimmer(req, (req)=> {
             console.log(req.body, "body after done")
 
             database.getStudentById(req.params.stdId, (student)=> {
@@ -1083,22 +1082,19 @@ router.get('/student/best', (req, res) => {
         else {
             let index = []
             for (var i = 0; i < getResult.length; i++) {
+
+
                 if (getResult[i].lesson[0] == undefined) {
                     index.push(i)
-                    // console.log(index)
-
-
                 }
                 else {
                     getResult[i].lesson = getResult[i].lesson[0]
 
                 }
             }
-            console.log(index)
-            for (var k = 0; k < getResult.length; k++) {
-                for (var p = 0; p < index.length; p++) {
-                    getResult.splice(index[p], 1)
-                }
+            for (var p = 0; p < index.length; p++) {
+                getResult.splice(index[p], 1)
+
             }
             let temp = []
             let length = getResult.length
