@@ -1881,7 +1881,7 @@ router.get('/level/:lvlId', (req, res) => {
     let username = verify.userID
     database.getStudentByUsername(username, (student)=> {
         if (student == 0 || student == -1) {
-            response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
@@ -1894,7 +1894,7 @@ router.get('/level/:lvlId', (req, res) => {
                     })
                 }
                 else if (view == 0) {
-                    response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+                    response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
                         res.json(result)
                     })
                 }
@@ -1906,7 +1906,7 @@ router.get('/level/:lvlId', (req, res) => {
                             })
                         }
                         else if (lessons == 0) {
-                            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                            response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
                                 res.json(result)
                             })
                         }

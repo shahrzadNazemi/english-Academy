@@ -127,7 +127,7 @@ router.post('/', (req, res)=> {
                                     }
                                     else {
                                         let thumbFileNew = `${newFile.replace(`.${extension}`, '')}_thumb_1.jpg`
-                                        req.body.thumbUrl = `${config.downloadPathVideo}/${thumbFileNew}`
+                                        req.body.thumbUrl = `${config.downloadPathTrick}/${thumbFileNew}`
                                         database.addTrick(req.body, (result)=> {
                                             if (result == -1) {
                                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
@@ -481,7 +481,7 @@ router.get('/:trckId', (req, res)=> {
             })
         }
         else if (trick == 0) {
-            response.respondNotFound('نکته مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('نکته مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
@@ -502,7 +502,7 @@ router.get('/', (req, res)=> {
             })
         }
         else if (trick == 0) {
-            response.respondNotFound('نکته مورد نظر یافت نشد.', {}, (result)=> {
+            response.respondNotFound('نکته مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
         }
