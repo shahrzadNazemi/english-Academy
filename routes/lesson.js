@@ -618,49 +618,77 @@ router.post('/sound', (req, res) => {
                                                 })
                                             }
                                             else {
-                                                var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
-                                                var file = req.files.pic.name.replace(`.${extension}`, '');
-                                                var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
-                                                // path is Upload Directory
-                                                var CoverDir = `${config.uploadPathSound}/cover/${req.body.lvlId}/${req.body.lsnId}/`;
-                                                console.log("dir", dir)
-                                                module.exports.addDir(CoverDir, function (newPath) {
-                                                    var Coverpath = CoverDir + newFile;
-                                                    req.files.pic.mv(Coverpath, function (err) {
-                                                        if (err) {
-                                                            console.error(err);
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                res.json(result)
+                                                if(req.files.pic){
+                                                    var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
+                                                    var file = req.files.pic.name.replace(`.${extension}`, '');
+                                                    var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
+                                                    // path is Upload Directory
+                                                    var CoverDir = `${config.uploadPathSound}/cover/${req.body.lvlId}/${req.body.lsnId}/`;
+                                                    console.log("dir", dir)
+                                                    module.exports.addDir(CoverDir, function (newPath) {
+                                                        var Coverpath = CoverDir + newFile;
+                                                        req.files.pic.mv(Coverpath, function (err) {
+                                                            if (err) {
+                                                                console.error(err);
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else {
+                                                                req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                                req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                                database.addSound(req.body, (result)=> {
+                                                                    if (result == -1) {
+                                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                            res.json(result1)
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        let info = {}
+                                                                        info.sound = {
+                                                                            sndId: result,
+                                                                            viewed: false
+                                                                        }
+                                                                        database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                            response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
+                                                                                res.json(result1)
+
+                                                                            })
+                                                                        })
+                                                                    }
+
+                                                                })
+                                                            }
+
+                                                        })
+                                                    });
+                                                }
+                                                else{
+                                                    req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
+                                                    req.body.coverUrl =""
+                                                    database.addSound(req.body, (result)=> {
+                                                        if (result == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
+                                                                res.json(result1)
                                                             })
                                                         }
                                                         else {
-                                                            req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                                            req.body.coverUrl = Coverpath.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                                            database.addSound(req.body, (result)=> {
-                                                                if (result == -1) {
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
-                                                                        res.json(result1)
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    let info = {}
-                                                                    info.sound = {
-                                                                        sndId: result,
-                                                                        viewed: false
-                                                                    }
-                                                                    database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
-                                                                        response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
-                                                                            res.json(result1)
+                                                            let info = {}
+                                                            info.sound = {
+                                                                sndId: result,
+                                                                viewed: false
+                                                            }
+                                                            database.updateViewToInsert(info, req.body.lsnId, (UpdateViewResult)=> {
+                                                                response.responseCreated('صدا با موفقیت ثبت شد.', result, (result1)=> {
+                                                                    res.json(result1)
 
-                                                                        })
-                                                                    })
-                                                                }
-
+                                                                })
                                                             })
                                                         }
 
                                                     })
-                                                });
+                                                }
+
                                             }
                                         })
                                     });
