@@ -202,27 +202,97 @@ router.get('/supporter/:supId', (req, res)=> {
 
 router.post('/supporter', (req, res)=> {
     req.body.password = hashHelper.hash(req.body.password)
+    if (req.files) {
+        if (req.files.file != null) {
+            // type file
+            database.addSupporer(req.body, (student)=> {
+                if (student == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (student == -2) {
+                    let errData = {"username": "نام کاربری نمیتواند تکراری باشد"}
+                    response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
 
-    database.addSupporer(req.body, (addedAdmin)=> {
-        if (addedAdmin == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                res.json(result)
+                        delete student.password
+                        req.body._id = student
+                        // res.json(req.body)
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathSupporterImage}/${req.body._id}/`;
+                        console.log("dir", dir)
+                        lesson.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathSupporterImage}`, `${config.downloadPathSupporterImage}`)
+                                    req.body._id = (req.body._id.replace(/"/g, ''));
+                                    req.body.setAvatar = true
+                                    database.updateSupporter(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                        if (result == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (result == 0) {
+                                            response.respondNotFound('کاربر مورد نظر یافت نشد', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            delete  req.body.setAvatar
+                                            delete req.body.password
+                                            response.response('ورود با موفقیت انجام شد', result, (result1)=> {
+                                                res.json(result1)
+
+                                            })
+                                        }
+                                    })
+                                }
+
+                            })
+                        });
+
+
+                }
             })
         }
-        else if (addedAdmin == -2) {
-            response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            delete  addedAdmin.password
+    }
+    else{
+        database.addSupporer(req.body, (addedAdmin)=> {
+            if (addedAdmin == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (addedAdmin == -2) {
+                response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                delete  addedAdmin.password
 
-            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addedAdmin, (result)=> {
-                res.json(result)
+                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addedAdmin, (result)=> {
+                    res.json(result)
 
-            })
-        }
-    })
+                })
+            }
+        })
+    }
 });
 
 
@@ -1166,7 +1236,6 @@ let usrId = student[0]._id
         })
     }
 });
-
 
 router.get('/student/:stdId', (req, res) => {
     database.getStudentById(req.params.stdId, (getResult)=> {

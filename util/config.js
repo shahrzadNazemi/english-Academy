@@ -12,6 +12,10 @@ module.exports.downloadPathQvoice = "http://185.94.99.69:9000/upload/question";
 
 module.exports.downloadPathVideo = "http://185.94.99.69:9000/upload/video";
 
+module.exports.uploadPathSupporterImage = "/var/fileAccess/site/upload/supporter/avatar"
+
+module.exports.downloadPathSupporterImage = "http://185.94.99.69:9000/upload/supporter/avatar";
+
 module.exports.downloadPathSound = "http://185.94.99.69:9000/upload/sound";
 
 module.exports.downloadPathTrick = "http://185.94.99.69:9000/upload/trick";
