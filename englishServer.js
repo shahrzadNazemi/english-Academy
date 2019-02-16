@@ -20,6 +20,8 @@ let trick = require('./routes/trick');
 let statistic = require('./routes/statistic')
 let dictionary = require('./routes/dictionary')
 let certificate = require('./routes/certificate')
+let ticket = require('./routes/ticket')
+
 
 
 
@@ -62,6 +64,9 @@ app.use('/api/trick', trick);
 app.use('/api/statistic', statistic);
 app.use('/api/dictionary', dictionary);
 app.use('/api/certificate', certificate);
+app.use('/api/ticket', ticket);
+
+
 
 
 

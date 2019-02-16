@@ -151,6 +151,36 @@ module.exports.addType = (typeInfo, cb)=> {
     })
 };
 
+module.exports.addTypeOfTicket = (typeInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/ticket/type`,
+        headers: {"content-Type": "application/json"},
+        body: typeInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.addCategory = (categoryInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/lesson/category`,
@@ -472,6 +502,31 @@ module.exports.getAllTypes = (cb)=> {
         }
     })
 };
+
+module.exports.getTypeOfTicket = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket/type`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.getAllCategories = (cb)=> {
     request.get({
@@ -1725,6 +1780,35 @@ module.exports.addStu = (stuInfo, cb)=> {
     })
 };
 
+module.exports.addTicket = (ticketInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/ticket`,
+        headers: {"content-Type": "application/json"},
+        body: ticketInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.addCertificate = (certInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/certificate`,
@@ -2085,6 +2169,109 @@ module.exports.getQuestionByLsnId = (lsnId, cb)=> {
 
 };
 
+module.exports.getTicketById = (tktId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket/${tktId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getTicketBySupId = (supId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket/supporter/${supId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getAllTickets = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
+module.exports.getTicketByStuId = (stuId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket/student/${stuId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
+
 module.exports.getAllQuestionOfLesson = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/question/lesson/${lsnId}`,
@@ -2189,6 +2376,36 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
+module.exports.updateTicket = (updateInfo, tktId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/ticket/${tktId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+    
+
 module.exports.updateCertificate = (updateInfo, certId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/certificate/${certId}`,
@@ -2217,7 +2434,6 @@ module.exports.updateCertificate = (updateInfo, certId, cb)=> {
         }
     })
 };
-
 
 module.exports.updateResult = (updateInfo, stdId, lsnId, cb)=> {
     request.put({
