@@ -340,6 +340,11 @@ router.get('/student/:stdId', (req, res)=> {
             })
         }
         else {
+            for(var i=0;i<ticket.length;i++){
+                ticket[i].supporter = ticket[i].supporter[0]
+                ticket[i].department = ticket[i].department[0]
+
+            }
             response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
                 res.json(result)
 
