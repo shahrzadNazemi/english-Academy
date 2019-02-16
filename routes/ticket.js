@@ -90,7 +90,8 @@ router.post('/', (req, res)=> {
                 })
             }
             else {
-                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                req.body._id = addResult
+                response.responseCreated('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
                     res.json(result)
 
                 })
@@ -398,10 +399,17 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
-                res.json(result)
+            if (req.query.offset && req.query.limit) {
+                response.pagination(req.query.offset, req.query.limit, ticket, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
+                    res.json(result)
 
-            })
+                })
+            }
         }
     })
 
