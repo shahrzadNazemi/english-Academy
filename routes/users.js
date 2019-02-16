@@ -1082,21 +1082,25 @@ router.get('/student/best', (req, res) => {
         }
         else {
             let index = []
+
             for (var i = 0; i < getResult.length; i++) {
-
-
                 if (getResult[i].lesson[0] == undefined) {
-                    index.push(i)
+                    index.push(getResult[i]._id)
+
                 }
                 else {
                     getResult[i].lesson = getResult[i].lesson[0]
 
                 }
             }
-            for (var p = 0; p < index.length; p++) {
-                getResult.splice(index[p], 1)
-
+            for (var k = 0; k < getResult.length; k++) {
+                for (var p = 0; p < index.length; p++) {
+                    if (getResult[k]._id == index[p]) {
+                        getResult.splice(k, 1)
+                    }
+                }
             }
+
             let temp = []
             let length = getResult.length
             if (length <= 3) {
@@ -1134,7 +1138,6 @@ router.get('/student/best', (req, res) => {
                 temp[0] = getResult[length - 1]
                 temp[1] = getResult[length - 2]
                 temp[2] = getResult[length - 3]
-                console.log("tempppppppp", temp)
                 database.getAllLessons((lessons)=> {
                     for (var p = 0; p < temp.length; p++) {
                         let k = 0
