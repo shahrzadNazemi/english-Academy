@@ -2219,9 +2219,9 @@ module.exports.getTicketBySupId = (supId, cb)=> {
 
 };
 
-module.exports.getAllTickets = (cb)=> {
+module.exports.getAllTickets = (supId ,cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/ticket`,
+        url: `${config.databaseServer}/api/ticket/all/${supId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {

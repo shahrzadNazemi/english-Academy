@@ -100,7 +100,7 @@ router.post('/', (req, res)=> {
     }
 });
 
-router.post('/type', (req, res)=> {
+router.post('/department', (req, res)=> {
 
         database.addTypeOfTicket(req.body, (addResult)=> {
             if (addResult == -1) {
@@ -118,18 +118,24 @@ router.post('/type', (req, res)=> {
 
 });
 
-router.get('/type', (req, res)=> {
+router.get('/department', (req, res)=> {
 
-    database.getTypeOfTicket(req.body, (addResult)=> {
+    database.getTypeOfTicket( (addResult)=> {
         if (addResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
             })
         }
         else {
-            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                res.json(result)
+            let temp = []
 
+            for (var i = 0; i < addResult.length; i++) {
+                temp[i] = {}
+                temp[i].label = addResult[i].title;
+                temp[i].value = addResult[i]._id
+            }
+            response.response('اطلاعات همه ی دپارتمانها', temp, (result)=> {
+                res.json(result)
             })
         }
     })
@@ -387,7 +393,7 @@ router.get('/:tktId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getAllTickets((ticket)=> {
+    database.getAllTickets(req.query.supId ,(ticket)=> {
         if (ticket == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
