@@ -317,6 +317,7 @@ router.get('/supporter', (req, res) => {
         else {
             for (var i = 0; i < getResult.length; i++) {
                 delete getResult[i].password
+                getResult[i].department = getResult[i].department[0]
             }
             response.response('اطلاعات همه ی پشتیبان ها', getResult, (result)=> {
                 res.json(result)
