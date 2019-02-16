@@ -410,9 +410,13 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            if (req.query.offset && req.query.limit) {
-                response.pagination(req.query.offset, req.query.limit, ticket, (result)=> {
-                    res.json(result)
+            if (req.query.page) {
+                response.paginationClient(req.query.page, req.query.limit, ticket, (result1)=> {
+                    let countPages = Math.ceil(ticket.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی تیکتها', result1, (result)=> {
+                        res.json(result)
+                    })
                 })
             }
             else {
