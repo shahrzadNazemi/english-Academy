@@ -384,10 +384,22 @@ router.get('/supporter/:supId', (req, res)=> {
             })
         }
         else {
-            response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
-                res.json(result)
+            if (req.query.page) {
+                response.paginationClient(req.query.page, req.query.limit, ticket, (result1)=> {
+                    let countPages = Math.ceil(ticket.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی تیکتها', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
+            }
+            else {
+                response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
+                    res.json(result)
 
-            })
+                })
+            }
+            
         }
     })
 
@@ -427,6 +439,11 @@ router.get('/', (req, res)=> {
             })
         }
         else {
+            for(var i=0;i<ticket.length;i++){
+                if(ticket[i].supId == req.query.supId ){
+                    ticket[i].choosed = true
+                }
+            }
             if (req.query.page) {
                 response.paginationClient(req.query.page, req.query.limit, ticket, (result1)=> {
                     let countPages = Math.ceil(ticket.length / req.query.limit)
