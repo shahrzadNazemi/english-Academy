@@ -97,7 +97,8 @@ router.post('/', (req, res)=> {
                 }
                 else {
                     req.body._id = addResult
-                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
+                    addResult.msg = [addResult.msg]
+                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
                         res.json(result)
 
                     })
