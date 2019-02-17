@@ -360,7 +360,10 @@ router.get('/student/:stdId', (req, res)=> {
             for(var i=0;i<ticket.length;i++){
                 ticket[i].supporter = ticket[i].supporter[0]
                 ticket[i].department = ticket[i].department[0]
-
+                ticket[i].department.value = ticket[i].department._id
+                delete ticket[i].department._id
+                ticket[i].department.label = ticket[i].department.title
+                delete ticket[i].department.title
             }
             response.response('تیکت مورد نظر یافت شد.', ticket, (result)=> {
                 res.json(result)
