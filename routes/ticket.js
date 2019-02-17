@@ -13,94 +13,98 @@ let config = require('../util/config')
 let lesson = require('../routes/lesson')
 let fs = require('fs');
 let jwt = require('../util/jwtHelper')
+const trim = require('../util/trimmer')
 
 
 router.post('/', (req, res)=> {
-    req.body.time = new Date().getTime()
-    if(typeof req.body.msg == "string"){
-        req.body.msg = JSON.parse(req.body.msg)
-    }
-    req.body.msg.time = new Date().getTime()
+    logger.info("body" , req.body)
+    trim.expressTrimmer(req, (req)=> {
+        req.body.time = new Date().getTime()
+        if (typeof req.body.msg == "string") {
+            req.body.msg = JSON.parse(req.body.msg)
+        }
+        req.body.msg.time = new Date().getTime()
 
-    if (req.files) {
-        if (req.files.img != null) {
-            database.addTicket(req.body, (addResult)=> {
-                    if (addResult == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        req.body._id = addResult._id
-                        // res.json(req.body)
-                        var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
-                        var file = req.files.img.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '.' + extension;
-                        // path is Upload Directory
-                        var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
-                        console.log("dir", dir)
-                        lesson.addDir(dir, function (newPath) {
-                            var path = dir + newFile;
-                            req.files.img.mv(path, function (err) {
-                                if (err) {
-                                    console.error(err);
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    req.body.msg._id = addResult.msg._id
-                                    req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
-                                    // req.body._id = (req.body._id.replace(/"/g, ''));
-                                    database.updateTicket(req.body, req.body._id, (result)=> {
-                                        if (result == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (result == 0) {
-                                            response.respondNotFound(' مورد نظر یافت نشد', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else {
-                                            response.response('اطلاعات با موفقیت ثبت شد.', result, (result)=> {
-                                                res.json(result)
-
-                                            })
-                                        }
-                                    })
-                                }
-
+        if (req.files) {
+            if (req.files.img != null) {
+                database.addTicket(req.body, (addResult)=> {
+                        if (addResult == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
                             })
-                        });
+                        }
+                        else {
+                            req.body._id = addResult._id
+                            // res.json(req.body)
+                            var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
+                            var file = req.files.img.name.replace(`.${extension}`, '');
+                            var newFile = new Date().getTime() + '.' + extension;
+                            // path is Upload Directory
+                            var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
+                            console.log("dir", dir)
+                            lesson.addDir(dir, function (newPath) {
+                                var path = dir + newFile;
+                                req.files.img.mv(path, function (err) {
+                                    if (err) {
+                                        console.error(err);
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        req.body.msg._id = addResult.msg._id
+                                        req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
+                                        // req.body._id = (req.body._id.replace(/"/g, ''));
+                                        database.updateTicket(req.body, req.body._id, (result)=> {
+                                            if (result == -1) {
+                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else if (result == 0) {
+                                                response.respondNotFound(' مورد نظر یافت نشد', {}, (result)=> {
+                                                    res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                response.response('اطلاعات با موفقیت ثبت شد.', result, (result)=> {
+                                                    res.json(result)
+
+                                                })
+                                            }
+                                        })
+                                    }
+
+                                })
+                            });
+                        }
                     }
-                }
-            )
-        }
-        else {
-            let errData = {"file": "فایلی به این نام فرستاده نشده است"}
-            response.validation('فایلی به این نام فرستاده نشده است', errData, "required", (result)=> {
-                res.json(result)
-            })
-        }
-    }
-    else {
-        database.addTicket(req.body, (addResult)=> {
-            if (addResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
+                )
             }
             else {
-                req.body._id = addResult
-                response.responseCreated('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
+                let errData = {"file": "فایلی به این نام فرستاده نشده است"}
+                response.validation('فایلی به این نام فرستاده نشده است', errData, "required", (result)=> {
                     res.json(result)
-
                 })
             }
-        })
-    }
+        }
+        else {
+            database.addTicket(req.body, (addResult)=> {
+                if (addResult == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    req.body._id = addResult
+                    response.responseCreated('اطلاعات با موفقیت ثبت شد.', req.body, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+        }
+    })
 });
 
 router.post('/department', (req, res)=> {
