@@ -17,7 +17,7 @@ const trim = require('../util/trimmer')
 
 
 router.post('/', (req, res)=> {
-    logger.info("body" , req.body)
+    logger.info("body", req.body)
     trim.expressTrimmer(req, (req)=> {
         req.body.time = new Date().getTime()
         if (typeof req.body.msg == "string") {
@@ -110,25 +110,25 @@ router.post('/', (req, res)=> {
 
 router.post('/department', (req, res)=> {
 
-        database.addTypeOfTicket(req.body, (addResult)=> {
-            if (addResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
-                    res.json(result)
+    database.addTypeOfTicket(req.body, (addResult)=> {
+        if (addResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
+                res.json(result)
 
-                })
-            }
-        })
+            })
+        }
+    })
 
 });
 
 router.get('/department', (req, res)=> {
 
-    database.getTypeOfTicket( (addResult)=> {
+    database.getTypeOfTicket((addResult)=> {
         if (addResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -152,11 +152,11 @@ router.get('/department', (req, res)=> {
 
 
 router.put('/:tktId', (req, res)=> {
-    if(typeof req.body.msg == "string"){
+    if (typeof req.body.msg == "string") {
         req.body.msg = JSON.parse(req.body.msg)
     }
     if (req.files) {
-        if(req.body.msg){
+        if (req.body.msg) {
             database.getTicketById(req.params.tktId, (result)=> {
                 if (result == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -171,14 +171,14 @@ router.put('/:tktId', (req, res)=> {
                 else {
                     let update = false
 
-                    for(var i=0 ;i<result.msg.length;i++){
-                        if(result.msg[i]._id == req.body.msg._id){
-                            if(result.msg[i].img != undefined){
+                    for (var i = 0; i < result.msg.length; i++) {
+                        if (result.msg[i]._id == req.body.msg._id) {
+                            if (result.msg[i].img != undefined) {
                                 update = i
                             }
                         }
                     }
-                    if(update){
+                    if (update) {
                         var unlinkPath = result.msg[i].image.replace(`${config.downloadPathTicketImg}`, `${config.uploadPathTicketImg}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
@@ -238,7 +238,7 @@ router.put('/:tktId', (req, res)=> {
 
                         })
                     }
-                    else{
+                    else {
                         if (req.files.img != null) {
                             req.body._id = result._id
                             var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
@@ -292,7 +292,7 @@ router.put('/:tktId', (req, res)=> {
                 }
             });
         }
-        else{
+        else {
             response.validation('مسیجی برای آپلود وجود ندارد.', {file: ["مسیجی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
                 res.json(result)
             })
@@ -357,7 +357,7 @@ router.get('/student/:stdId', (req, res)=> {
             })
         }
         else {
-            for(var i=0;i<ticket.length;i++){
+            for (var i = 0; i < ticket.length; i++) {
                 ticket[i].supporter = ticket[i].supporter[0]
                 ticket[i].department = ticket[i].department[0]
                 ticket[i].department.value = ticket[i].department._id
@@ -387,6 +387,20 @@ router.get('/supporter/:supId', (req, res)=> {
             })
         }
         else {
+            if (req.query.status) {
+                let temp = []
+                for (var i = 0; i < ticket.length; i++) {
+                    if (ticket[i].supId == req.params.supId) {
+                        ticket[i].choosed = true
+                    }
+                    if (ticket[i].status == req.query.status) {
+                        temp.push(ticket[i])
+
+                    }
+                }
+                ticket = temp
+
+            }
             if (req.query.page) {
                 response.paginationClient(req.query.page, req.query.limit, ticket, (result1)=> {
                     let countPages = Math.ceil(ticket.length / req.query.limit)
@@ -402,7 +416,7 @@ router.get('/supporter/:supId', (req, res)=> {
 
                 })
             }
-            
+
         }
     })
 
@@ -430,7 +444,7 @@ router.get('/:tktId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getAllTickets(req.query.supId ,(ticket)=> {
+    database.getAllTickets(req.query.supId, (ticket)=> {
         if (ticket == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -442,11 +456,28 @@ router.get('/', (req, res)=> {
             })
         }
         else {
-            for(var i=0;i<ticket.length;i++){
-                if(ticket[i].supId == req.query.supId ){
-                    ticket[i].choosed = true
+            if (req.query.status) {
+                let temp = []
+                for (var i = 0; i < ticket.length; i++) {
+                    if (ticket[i].supId == req.query.supId) {
+                        ticket[i].choosed = true
+                    }
+                    if (ticket[i].status == req.query.status) {
+                        temp.push(ticket[i])
+
+                    }
+                }
+                ticket = temp
+
+            }
+            else {
+                for (var i = 0; i < ticket.length; i++) {
+                    if (ticket[i].supId == req.query.supId) {
+                        ticket[i].choosed = true
+                    }
                 }
             }
+
             if (req.query.page) {
                 response.paginationClient(req.query.page, req.query.limit, ticket, (result1)=> {
                     let countPages = Math.ceil(ticket.length / req.query.limit)
