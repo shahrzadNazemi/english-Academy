@@ -20,6 +20,8 @@ router.post('/', (req, res)=> {
     if(typeof req.body.msg == "string"){
         req.body.msg = JSON.parse(req.body.msg)
     }
+    req.body.msg.time = new Date().getTime()
+
     if (req.files) {
         if (req.files.img != null) {
             database.addTicket(req.body, (addResult)=> {
@@ -29,7 +31,7 @@ router.post('/', (req, res)=> {
                         })
                     }
                     else {
-                        req.body._id = addResult
+                        req.body._id = addResult._id
                         // res.json(req.body)
                         var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.img.name.replace(`.${extension}`, '');
@@ -47,6 +49,7 @@ router.post('/', (req, res)=> {
                                     })
                                 }
                                 else {
+                                    req.body.msg._id = addResult.msg._id
                                     req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
                                     // req.body._id = (req.body._id.replace(/"/g, ''));
                                     database.updateTicket(req.body, req.body._id, (result)=> {
