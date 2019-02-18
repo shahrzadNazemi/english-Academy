@@ -2430,6 +2430,36 @@ module.exports.updateTicket = (updateInfo, tktId, cb)=> {
         }
     })
 };
+
+module.exports.updateTicketView = (tktId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/ticket/${tktId}/view`,
+        headers: {"content-Type": "application/json"},
+        body: {},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
     
 
 module.exports.updateCertificate = (updateInfo, certId, cb)=> {
