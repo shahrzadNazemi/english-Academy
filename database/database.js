@@ -2219,6 +2219,32 @@ module.exports.getTicketBySupId = (supId, cb)=> {
 
 };
 
+module.exports.getStudentByLessonId = (lsnId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/student/lesson/${lsnId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
 module.exports.getAllTickets = (supId ,cb)=> {
     request.get({
         url: `${config.databaseServer}/api/ticket/all/${supId}`,

@@ -7,7 +7,7 @@ var app = express();
 const fileupload = require('express-fileupload');
 let jwt = require('./util/jwtHelper')
 let trimmer = require('express-trimmer')
-
+var debug = require('debug')('gokibitz');
 
 let user = require('./routes/users');
 let level = require('./routes/level');
@@ -21,6 +21,7 @@ let statistic = require('./routes/statistic')
 let dictionary = require('./routes/dictionary')
 let certificate = require('./routes/certificate')
 let ticket = require('./routes/ticket')
+var io = require('./routes/socket')
 
 
 
@@ -78,8 +79,19 @@ app.use(function (req, res, next) {
     err.status = 404;
 });
 
-app.listen(8080, ()=> {
-    console.log("English server is listening on 8080 ")
-})
+// app.listen(8080, ()=> {
+//     console.log("English server is listening on 8080 ")
+// })
+
+app.set('port', process.env.PORT || 8080);
+
+var server = app.listen(app.get('port'), function() {
+    debug('Express server listening on port ' + server.address().port);
+    console.log("server listen on port 8080");
+});
+
+
+
+io.attach(server)
 
 module.exports = app;

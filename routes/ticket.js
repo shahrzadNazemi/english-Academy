@@ -152,12 +152,156 @@ router.get('/department', (req, res)=> {
 
 
 router.put('/:tktId', (req, res)=> {
-    if (typeof req.body.msg == "string") {
-        req.body.msg = JSON.parse(req.body.msg)
-    }
-    if (req.files) {
-        if (req.body.msg) {
-            database.getTicketById(req.params.tktId, (result)=> {
+    trim.expressTrimmer(req, (req)=>{
+        if (typeof req.body.msg == "string") {
+            req.body.msg = JSON.parse(req.body.msg)
+        }
+        if (req.files) {
+            if (req.body.msg) {
+                database.getTicketById(req.params.tktId, (result)=> {
+                    if (result == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (result == 0) {
+                        response.respondNotFound('تیکت مورد نظر یافت نشد', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        let update = false
+
+                        for (var i = 0; i < result.msg.length; i++) {
+                            if (result.msg[i]._id == req.body.msg._id) {
+                                if (result.msg[i].img != undefined) {
+                                    update = i
+                                }
+                            }
+                        }
+                        if (update) {
+                            var unlinkPath = result.msg[i].image.replace(`${config.downloadPathTicketImg}`, `${config.uploadPathTicketImg}`);
+                            fs.unlink(unlinkPath, function (err) {
+                                try {
+                                    if (req.files.img != null) {
+                                        req.body._id = result._id
+                                        var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
+                                        var file = req.files.img.name.replace(`.${extension}`, '');
+                                        var newFile = new Date().getTime() + '.' + extension;
+                                        // path is Upload Directory
+                                        var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
+                                        console.log("dir", dir)
+                                        lesson.addDir(dir, function (newPath) {
+                                            var path = dir + newFile;
+                                            req.files.img.mv(path, function (err) {
+                                                if (err) {
+                                                    console.error(err);
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
+                                                    database.updateTicket(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                                        if (result == -1) {
+                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else if (result == 0) {
+                                                            response.respondNotFound('آزمون مورد نظر یافت نشد', {}, (result)=> {
+                                                                res.json(result)
+                                                            })
+                                                        }
+                                                        else {
+                                                            response.response('عملیات با موفقیت انجام شد', result, (result1)=> {
+                                                                res.json(result1)
+
+                                                            })
+                                                        }
+                                                    })
+                                                }
+
+                                            })
+                                        });
+
+                                    }
+                                    else {
+                                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                }
+                                catch (e) {
+                                    console.log(e)
+                                }
+
+
+                            })
+                        }
+                        else {
+                            if (req.files.img != null) {
+                                req.body._id = result._id
+                                var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
+                                var file = req.files.img.name.replace(`.${extension}`, '');
+                                var newFile = new Date().getTime() + '.' + extension;
+                                // path is Upload Directory
+                                var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
+                                console.log("dir", dir)
+                                lesson.addDir(dir, function (newPath) {
+                                    var path = dir + newFile;
+                                    req.files.img.mv(path, function (err) {
+                                        if (err) {
+                                            console.error(err);
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
+                                            database.updateTicket(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
+                                                if (result == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (result == 0) {
+                                                    response.respondNotFound('آزمون مورد نظر یافت نشد', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    response.response('عملیات با موفقیت انجام شد', result, (result1)=> {
+                                                        res.json(result1)
+
+                                                    })
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                });
+
+                            }
+                            else {
+                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                        }
+
+                    }
+                });
+            }
+            else {
+                response.validation('مسیجی برای آپلود وجود ندارد.', {file: ["مسیجی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                    res.json(result)
+                })
+
+            }
+
+        } else {
+            database.updateTicket(req.body, req.params.tktId, (result)=> {
                 if (result == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -169,156 +313,15 @@ router.put('/:tktId', (req, res)=> {
                     })
                 }
                 else {
-                    let update = false
+                    response.response('عملیات با موفقیت انجام شد', result, (result)=> {
+                        res.json(result)
 
-                    for (var i = 0; i < result.msg.length; i++) {
-                        if (result.msg[i]._id == req.body.msg._id) {
-                            if (result.msg[i].img != undefined) {
-                                update = i
-                            }
-                        }
-                    }
-                    if (update) {
-                        var unlinkPath = result.msg[i].image.replace(`${config.downloadPathTicketImg}`, `${config.uploadPathTicketImg}`);
-                        fs.unlink(unlinkPath, function (err) {
-                            try {
-                                if (req.files.img != null) {
-                                    req.body._id = result._id
-                                    var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
-                                    var file = req.files.img.name.replace(`.${extension}`, '');
-                                    var newFile = new Date().getTime() + '.' + extension;
-                                    // path is Upload Directory
-                                    var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
-                                    console.log("dir", dir)
-                                    lesson.addDir(dir, function (newPath) {
-                                        var path = dir + newFile;
-                                        req.files.img.mv(path, function (err) {
-                                            if (err) {
-                                                console.error(err);
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else {
-                                                req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
-                                                database.updateTicket(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
-                                                    if (result == -1) {
-                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                            res.json(result)
-                                                        })
-                                                    }
-                                                    else if (result == 0) {
-                                                        response.respondNotFound('آزمون مورد نظر یافت نشد', {}, (result)=> {
-                                                            res.json(result)
-                                                        })
-                                                    }
-                                                    else {
-                                                        response.response('ویرایش با موفقیت انجام شد', result, (result1)=> {
-                                                            res.json(result1)
-
-                                                        })
-                                                    }
-                                                })
-                                            }
-
-                                        })
-                                    });
-
-                                }
-                                else {
-                                    response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                            }
-                            catch (e) {
-                                console.log(e)
-                            }
-
-
-                        })
-                    }
-                    else {
-                        if (req.files.img != null) {
-                            req.body._id = result._id
-                            var extension = req.files.img.name.substring(req.files.img.name.lastIndexOf('.') + 1).toLowerCase();
-                            var file = req.files.img.name.replace(`.${extension}`, '');
-                            var newFile = new Date().getTime() + '.' + extension;
-                            // path is Upload Directory
-                            var dir = `${config.uploadPathTicketImg}/${req.body._id}/`;
-                            console.log("dir", dir)
-                            lesson.addDir(dir, function (newPath) {
-                                var path = dir + newFile;
-                                req.files.img.mv(path, function (err) {
-                                    if (err) {
-                                        console.error(err);
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else {
-                                        req.body.msg.image = path.replace(`${config.uploadPathTicketImg}`, `${config.downloadPathTicketImg}`)
-                                        database.updateTicket(req.body, JSON.parse(JSON.stringify(req.body._id)), (result)=> {
-                                            if (result == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else if (result == 0) {
-                                                response.respondNotFound('آزمون مورد نظر یافت نشد', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else {
-                                                response.response('ویرایش با موفقیت انجام شد', result, (result1)=> {
-                                                    res.json(result1)
-
-                                                })
-                                            }
-                                        })
-                                    }
-
-                                })
-                            });
-
-                        }
-                        else {
-                            response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                                res.json(result)
-                            })
-                        }
-                    }
-
+                    })
                 }
-            });
-        }
-        else {
-            response.validation('مسیجی برای آپلود وجود ندارد.', {file: ["مسیجی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
-                res.json(result)
             })
-
         }
-
-    } else {
-        database.updateTicket(req.body, req.params.tktId, (result)=> {
-            if (result == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (result == 0) {
-                response.respondNotFound('تیکت مورد نظر یافت نشد', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                response.response('ویرایش با موفقیت انجام شد', result, (result)=> {
-                    res.json(result)
-
-                })
-            }
-        })
-    }
+    })
+    
 });
 
 router.delete('/:tktId', (req, res)=> {
