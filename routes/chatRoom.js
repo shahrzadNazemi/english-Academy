@@ -1,5 +1,5 @@
 let database = require('../database/database')
-const members = database.getStudentByLessonId(lsnId)
+// const members = database.getStudentByLessonId(lsnId)
 let chatHistory = []
 
 module.exports.broadcastMessage= (message) =>{
