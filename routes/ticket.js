@@ -126,6 +126,52 @@ router.post('/department', (req, res)=> {
 
 });
 
+router.put('/department/:depId', (req, res)=> {
+    database.updateTypeOfTicket(req.body, req.params.depId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('اطلاعات مورد نظر یافت نشد', {}, (result)=> {
+                res.json(result)
+            })
+
+        }
+        else {
+            response.responseCreated('ویرایش با موفقیت انجام شد.', result, (result2)=> {
+                res.json(result2)
+
+            })
+        }
+    })
+
+});
+
+router.delete('/department/:depId', (req, res)=> {
+    database.delTypeOfTicket(req.params.depId, (result)=> {
+        if (result == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (result == 0) {
+            response.respondNotFound('اطلاعات مورد نظر یافت نشد', {}, (result)=> {
+                res.json(result)
+            })
+
+        }
+        else {
+            response.responseCreated('حذف با موفقیت انجام شد.', result, (result2)=> {
+                res.json(result2)
+
+            })
+        }
+    })
+
+});
+
 router.get('/department', (req, res)=> {
 
     database.getTypeOfTicket((addResult)=> {
@@ -152,9 +198,9 @@ router.get('/department', (req, res)=> {
 
 
 router.put('/:tktId', (req, res)=> {
-    trim.expressTrimmer(req, (req)=>{
-        if(req.body.viewed){
-            database.updateTicketView(req.params.tktId , (result)=>{
+    trim.expressTrimmer(req, (req)=> {
+        if (req.body.viewed) {
+            database.updateTicketView(req.params.tktId, (result)=> {
                 if (result == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -173,7 +219,7 @@ router.put('/:tktId', (req, res)=> {
                 }
             })
         }
-        else{
+        else {
             if (typeof req.body.msg == "string") {
                 req.body.msg = JSON.parse(req.body.msg)
             }
@@ -342,9 +388,9 @@ router.put('/:tktId', (req, res)=> {
                 })
             }
         }
-       
+
     })
-    
+
 });
 
 router.delete('/:tktId', (req, res)=> {

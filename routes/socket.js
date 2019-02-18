@@ -51,7 +51,6 @@ function handleJoin(chatroomName, callback) {
     handleEvent(chatroomName, createEntry)
         .then(function (chatroom) {
             // add member to chatroom
-            // chatroom.members(chatroomName)
             chatroom.addUser(client)
 
             // send chat history to client
