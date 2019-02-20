@@ -517,7 +517,7 @@ router.post('/chatAdmin', (req, res)=> {
         }
     }
     else {
-        database.addSupporer(req.body, (addedAdmin)=> {
+        database.addChatAdmin(req.body, (addedAdmin)=> {
             if (addedAdmin == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
                     res.json(result)
@@ -539,6 +539,230 @@ router.post('/chatAdmin', (req, res)=> {
         })
     }
 });
+
+router.put('/chatAdmin/:caId', (req, res) => {
+    if (req.body.password) {
+        req.body.password = hashHelper.hash(req.body.password)
+
+    }
+    if (req.files || req.files == "") {
+        database.getChatAdminById(req.params.caId, (student)=> {
+            if (student == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (student == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                if (student.avatarUrl) {
+                    var unlinkPath = student.avatarUrl.replace(`${config.downloadPathChatAdminImage}`, `${config.uploadPathChatAdminImage}`);
+                    fs.unlink(unlinkPath, function (err) {
+                        try {
+                            if (req.files.file != null) {
+                                var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                                var file = req.files.file.name.replace(`.${extension}`, '');
+                                var newFile = new Date().getTime() + '.' + extension;
+                                // path is Upload Directory
+                                var dir = `${config.uploadPathChatAdminImage}/${req.params.caId}/`;
+                                console.log("dir", dir)
+                                lesson.addDir(dir, function (newPath) {
+                                    var path = dir + newFile;
+                                    req.files.file.mv(path, function (err) {
+                                        if (err) {
+                                            console.error(err);
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            req.body.avatarUrl = path.replace(`${config.uploadPathChatAdminImage}`, `${config.downloadPathChatAdminImage}`)
+                                            database.updateChatAdmin(req.body, req.params.caId, (Putresult)=> {
+                                                if (Putresult == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (Putresult == 0) {
+                                                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (Putresult == -2) {
+                                                    errData = {"username": ["نام کاربری نمیتواند تکراری باشد"]}
+                                                    response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated", (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    delete Putresult.password
+                                                    response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                                        res.json(result)
+
+                                                    })
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                });
+
+                            }
+                            else {
+                                response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                        }
+                        catch (e) {
+                            console.log(e)
+                        }
+
+
+                    })
+                }
+                else {
+                    if (req.files.file != null) {
+                        var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
+                        var file = req.files.file.name.replace(`.${extension}`, '');
+                        var newFile = new Date().getTime() + '.' + extension;
+                        // path is Upload Directory
+                        var dir = `${config.uploadPathChatAdminImage}/${req.params.caId}/`;
+                        console.log("dir", dir)
+                        lesson.addDir(dir, function (newPath) {
+                            var path = dir + newFile;
+                            req.files.file.mv(path, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    req.body.avatarUrl = path.replace(`${config.uploadPathChatAdminImage}`, `${config.downloadPathChatAdminImage}`)
+                                    database.updateChatAdmin(req.body, req.params.caId, (Putresult)=> {
+                                        if (Putresult == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (Putresult == 0) {
+                                            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (Putresult == -2) {
+                                            errData = {"username": ["نام کاربری نمیتواند تکراری باشد"]}
+                                            response.validation('کاربر مورد نظر یافت نشد.', errData, "duplicated", (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+
+                                        else {
+                                            delete Putresult.password
+                                            response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                    })
+                                }
+
+                            })
+                        });
+
+                    }
+                    else {
+                        response.validation('فایلی برای آپلود وجود ندارد.', {file: ["فایلی برای آپلود وجود ندارد."]}, 'emptyFile', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+
+            }
+        })
+
+    }
+    else {
+        database.updateChatAdmin(req.body, req.params.caId, (Putresult)=> {
+            if (Putresult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (Putresult == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (Putresult == -2) {
+                response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                delete  Putresult.password
+                response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
+                    res.json(result)
+
+                })
+            }
+        })
+    }
+
+});
+
+router.get('/chatAdmin', (req, res) => {
+    database.getSupporters((getResult)=> {
+        if (getResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (getResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            for (var i = 0; i < getResult.length; i++) {
+                delete getResult[i].password
+                getResult[i].department = getResult[i].department[0]
+            }
+            response.response('اطلاعات همه ی پشتیبان ها', getResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/chatAdmin/:caId', (req, res)=> {
+    database.getSupporterById(req.params.supId, (sup)=> {
+
+        if (sup == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sup == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  sup.password
+            response.responseUpdated('اطلاعات کاربر مورد نظر', sup, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 
 
@@ -1608,6 +1832,28 @@ router.delete('/supporter/:supId', (req, res) => {
         }
     })
 });
+
+router.delete('/chatAdmin/:caId', (req, res) => {
+    database.delChatAdmin(req.params.caId, (deleteResult)=> {
+        if (deleteResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (deleteResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.respondDeleted('اطلاعات مورد نظر حذف شد', deleteResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 router.delete('/student/:stdId', (req, res) => {
     database.getStudentById(req, params.stdId, (getResult)=> {

@@ -7,14 +7,14 @@ var usernames = [];
 
 // })
 
-    io.sockets.on('connection', function (socket) {
-        database.getAllLessons((lessons)=> {
-            let rooms =[]
-            if(lessons[0] != undefined){
-                for(var i=0;i<lessons.length;i++){
-                    rooms.push(lessons[i].title)
-                }
+io.sockets.on('connection', function (socket) {
+    database.getAllLessons((lessons)=> {
+        let rooms = []
+        if (lessons[0] != undefined) {
+            for (var i = 0; i < lessons.length; i++) {
+                rooms.push(lessons[i].title)
             }
+        }
         // when the client emits 'getChatInfo', this listens and executes
         socket.on('getChatInfo', function (user) {
             if (typeof user == "string") {
@@ -23,9 +23,9 @@ var usernames = [];
             // store the username in the socket session for this client
             database.getStudentOfOneLesson(user._id, (result)=> {
                 // usernames[username] = username;
-                for(var k=0;k<result.length;k++){
-                    if(result[k].student[0]!= undefined){
-                        if(result[k].student[0]._id == user._id ){
+                for (var k = 0; k < result.length; k++) {
+                    if (result[k].student[0] != undefined) {
+                        if (result[k].student[0]._id == user._id) {
                             socket.username = result[k].student[0].username
                             socket.userData = result[k].student[0]
                             // delete socket.userData.password

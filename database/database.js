@@ -456,6 +456,32 @@ module.exports.addSupporer = (data, cb)=> {
     })
 };
 
+module.exports.addChatAdmin = (data, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/chatAdmin`,
+        headers: {"content-Type": "application/json"},
+        body: data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.getAdmins = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin`,
@@ -626,6 +652,32 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
     })
 };
 
+module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/chatAdmin/${caId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.delStudent = (stuId, cb)=> {
     console.log(stuId)
     request.delete({
@@ -655,6 +707,36 @@ module.exports.delStudent = (stuId, cb)=> {
         }
     })
 };
+
+module.exports.delChatAdmin = (caId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/users/chatAdmin/${caId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 403) {
+            console.log('last admin can not be deleted')
+            cb(-4)
+        }
+
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.delCategory = (catId, cb)=> {
     request.delete({
