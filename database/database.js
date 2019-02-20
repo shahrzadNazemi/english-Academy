@@ -1527,6 +1527,31 @@ module.exports.getSoundBysndId = (sndId, cb)=> {
     })
 };
 
+module.exports.getTypeOfTicketById = (depId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/ticket/type/${depId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            console.log(body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.getStudentOfLevel = (lvlId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/student/level/${lvlId}`,
@@ -1668,7 +1693,7 @@ module.exports.getStuOfLevel = (lsnId, cb)=> {
     })
 };
 
-module.exports.getAllNotes = (lsnId,usrId , cb)=> {
+module.exports.getAllNotes = (lsnId, usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/${lsnId}/note/${usrId}`,
         headers: {"content-Type": "application/json"},
@@ -1760,7 +1785,7 @@ module.exports.getAllQuestions = (cb)=> {
     })
 };
 
-module.exports.getAllExams = (usrId ,cb)=> {
+module.exports.getAllExams = (usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/exam/user/${usrId}`,
         headers: {"content-Type": "application/json"},
@@ -2340,7 +2365,7 @@ module.exports.getStudentOfOneLesson = (userId, cb)=> {
 
 };
 
-module.exports.getAllTickets = (supId ,cb)=> {
+module.exports.getAllTickets = (supId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/ticket/all/${supId}`,
         headers: {"content-Type": "application/json"},
@@ -2552,7 +2577,7 @@ module.exports.updateTicketView = (tktId, cb)=> {
     })
 };
 
-module.exports.updateTypeOfTicket = (updateInfo , depId , cb)=> {
+module.exports.updateTypeOfTicket = (updateInfo, depId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/ticket/type/${depId}`,
         headers: {"content-Type": "application/json"},
@@ -2750,7 +2775,7 @@ module.exports.getAdminById = (admId, cb)=> {
 
 };
 
-module.exports.getAllCertifications = ( cb)=> {
+module.exports.getAllCertifications = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/certificate`,
         headers: {"content-Type": "application/json"},
@@ -3051,7 +3076,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
 
 };
 
-module.exports.answerQuestion = (info , cb)=> {
+module.exports.answerQuestion = (info, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/result/answerQuestion`,
         headers: {"content-Type": "application/json"},

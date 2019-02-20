@@ -162,9 +162,9 @@ router.delete('/department/:depId', (req, res)=> {
             })
 
         }
-            else if(result ==-3){
+        else if (result == -3) {
             let errData = {}
-            response.validation('دپارتمان قابل حذف شدن نیست.',errData , "hasTicket", (result)=> {
+            response.validation('دپارتمان قابل حذف شدن نیست.', errData, "hasTicket", (result)=> {
                 res.json(result)
             })
 
@@ -196,6 +196,23 @@ router.get('/department', (req, res)=> {
                 temp[i].value = addResult[i]._id
             }
             response.response('اطلاعات همه ی دپارتمانها', temp, (result)=> {
+                res.json(result)
+            })
+        }
+    })
+
+});
+
+router.get('/department/:depId', (req, res)=> {
+    database.getTypeOfTicketById(req.params.depId, (addResult)=> {
+        if (addResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+
+            response.response('اطلاعات دپارتمان', addResult, (result)=> {
                 res.json(result)
             })
         }
