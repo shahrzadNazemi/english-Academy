@@ -163,7 +163,7 @@ router.delete('/department/:depId', (req, res)=> {
 
         }
         else if (result == -3) {
-            let errData = {}
+            let errData = {"department": ["دپارتمان قابل حذف شدن نیست."]}
             response.validation('دپارتمان قابل حذف شدن نیست.', errData, "hasTicket", (result)=> {
                 res.json(result)
             })
