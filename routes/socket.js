@@ -41,7 +41,7 @@ io.sockets.on('connection', function (socket) {
                 data.userCount = usernames.length
                 // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                 // echo to room 1 that a person has connected to their room
-                io.to(result[0].lesson[0].title).emit('updateChat', data);
+                io.to(result[0].lesson[0].title).emit('updateInfo', data);
                 // socket.emit('updateRooms', rooms, socket.room);
 
             })
