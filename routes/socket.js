@@ -34,7 +34,6 @@ var usernames = [];
                         usernames.push(result[k].student[0].username)
                     }
                 }
-                // console.log("usernames" , usernames)
                 socket.room = result[0].lesson[0].title;
                 socket.join(result[0].lesson[0].title);
                 let data = {}
@@ -51,7 +50,9 @@ var usernames = [];
         // when the client emits 'sendchat', this listens and executes
         socket.on('sendChat', function (data) {
             // we tell the client to execute 'updatechat' with 2 parameters
-            io.to(socket.room).emit('updateChat', socket.userData, data);
+            data.user = socket.userData
+            data.time = new Date().getTime()
+            io.to(socket.room).emit('updateChat', data);
         });
 
         socket.on('switchRoom', function (newroom) {
