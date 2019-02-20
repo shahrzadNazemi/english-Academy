@@ -51,3 +51,5 @@ module.exports.downloadPathPathIDCard = "http://185.94.99.69:9000/upload/student
 module.exports.downloadPathPersonalImg= "http://185.94.99.69:9000/upload/student/personalImg";
 
 module.exports.uploadPathPersonalImg = "/var/fileAccess/site/upload/student/personalImg";
+
+module.exports.uploadPathChatAdminImage = "/var/fileAccess/site/upload/chatAdmin/personalImg"

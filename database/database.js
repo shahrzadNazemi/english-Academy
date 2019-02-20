@@ -180,7 +180,6 @@ module.exports.addTypeOfTicket = (typeInfo, cb)=> {
     })
 };
 
-
 module.exports.addCategory = (categoryInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/lesson/category`,
@@ -300,7 +299,6 @@ module.exports.delTypeOfTicket = (depId, cb)=> {
 
 };
 
-
 module.exports.delNote = (ntId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/lesson/note/${ntId}`,
@@ -329,7 +327,6 @@ module.exports.delNote = (ntId, cb)=> {
     })
 
 };
-
 
 module.exports.delTrick = (trckId, cb)=> {
     request.delete({
@@ -459,7 +456,6 @@ module.exports.addSupporer = (data, cb)=> {
     })
 };
 
-
 module.exports.getAdmins = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin`,
@@ -508,7 +504,6 @@ module.exports.getSupporters = (cb)=> {
     })
 };
 
-
 module.exports.getAllTypes = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/type`,
@@ -556,7 +551,6 @@ module.exports.getTypeOfTicket = (cb)=> {
         }
     })
 };
-
 
 module.exports.getAllCategories = (cb)=> {
     request.get({
@@ -631,7 +625,6 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
         }
     })
 };
-
 
 module.exports.delStudent = (stuId, cb)=> {
     console.log(stuId)
@@ -991,7 +984,6 @@ module.exports.updateNote = (updateInfo, ntId, cb)=> {
     })
 };
 
-
 module.exports.updateQuestion = (updateInfo, QId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/question/${QId}`,
@@ -1199,7 +1191,6 @@ module.exports.delSupporter = (supId, cb)=> {
         }
     })
 };
-
 
 module.exports.delQuestion = (QId, cb)=> {
     request.delete({
@@ -1618,7 +1609,6 @@ module.exports.getAllNotes = (lsnId,usrId , cb)=> {
     })
 };
 
-
 module.exports.getAllLessons = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson`,
@@ -1734,7 +1724,6 @@ module.exports.getFirstLesson = (cb)=> {
     })
 };
 
-
 module.exports.getLessonByLvlId = (lvlId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/level/${lvlId}`,
@@ -1837,7 +1826,6 @@ module.exports.addTicket = (ticketInfo, cb)=> {
         }
     })
 };
-
 
 module.exports.addCertificate = (certInfo, cb)=> {
     request.post({
@@ -1994,6 +1982,7 @@ module.exports.getCertificateByUsr = (usrId, cb)=> {
     })
 
 };
+
 module.exports.getExamPassedCount = (usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/result/student/${usrId}`,
@@ -2044,8 +2033,6 @@ module.exports.getStuPlacement = (usrId, cb)=> {
 
 };
 
-
-
 module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/student/prCrNxt/lesson/${lsnId}`,
@@ -2070,9 +2057,6 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
     })
 
 };
-
-
-
 
 module.exports.getAllStu = (cb)=> {
     request.get({
@@ -2249,9 +2233,9 @@ module.exports.getTicketBySupId = (supId, cb)=> {
 
 };
 
-module.exports.getStudentByLessonId = (lsnId, cb)=> {
+module.exports.getStudentOfOneLesson = (userId, cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/users/student/lesson/${lsnId}`,
+        url: `${config.databaseServer}/api/users/student/${userId}/lesson`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -2273,7 +2257,6 @@ module.exports.getStudentByLessonId = (lsnId, cb)=> {
     })
 
 };
-
 
 module.exports.getAllTickets = (supId ,cb)=> {
     request.get({
@@ -2300,7 +2283,6 @@ module.exports.getAllTickets = (supId ,cb)=> {
 
 };
 
-
 module.exports.getTicketByStuId = (stuId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/ticket/student/${stuId}`,
@@ -2325,8 +2307,6 @@ module.exports.getTicketByStuId = (stuId, cb)=> {
     })
 
 };
-
-
 
 module.exports.getAllQuestionOfLesson = (lsnId, cb)=> {
     request.get({
@@ -2519,9 +2499,6 @@ module.exports.updateTypeOfTicket = (updateInfo , depId , cb)=> {
     })
 };
 
-
-    
-
 module.exports.updateCertificate = (updateInfo, certId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/certificate/${certId}`,
@@ -2690,6 +2667,7 @@ module.exports.getAdminById = (admId, cb)=> {
     })
 
 };
+
 module.exports.getAllCertifications = ( cb)=> {
     request.get({
         url: `${config.databaseServer}/api/certificate`,
@@ -2715,7 +2693,6 @@ module.exports.getAllCertifications = ( cb)=> {
 
 };
 
-
 module.exports.getSupporterById = (supId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/supporter/${supId}`,
@@ -2740,7 +2717,6 @@ module.exports.getSupporterById = (supId, cb)=> {
     })
 
 };
-
 
 module.exports.getResultUsrLsn = (usrId, lsnId, cb)=> {
     request.get({
@@ -2917,7 +2893,6 @@ module.exports.getNextLesson = (lsnId, cb)=> {
 
 };
 
-
 module.exports.getStudentByLevel = (lvlId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/student/level/${lvlId}/best`,
@@ -3019,17 +2994,3 @@ module.exports.answerQuestion = (info , cb)=> {
     })
 
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,69 +1,85 @@
 var io = require('socket.io')();
-var chatroom = require('./chatRoom')
+let database = require('../database/database')
+// usernames which are currently connected to the chat
+var usernames = [];
 
-io.on('connection', function (client) {
-    client.on('register', handleRegister)
+// rooms which are currently available in chat
 
-    client.on('join', handleJoin)
+// })
 
-    client.on('leave', handleLeave)
+    io.sockets.on('connection', function (socket) {
+        database.getAllLessons((lessons)=> {
+            let rooms =[]
+            if(lessons[0] != undefined){
+                for(var i=0;i<lessons.length;i++){
+                    rooms.push(lessons[i].title)
+                }
+            }
+        // when the client emits 'getChatInfo', this listens and executes
+        socket.on('getChatInfo', function (user) {
+            if (typeof user == "string") {
+                user = JSON.parse(user)
+            }
+            // store the username in the socket session for this client
+            database.getStudentOfOneLesson(user._id, (result)=> {
+                // usernames[username] = username;
+                for(var k=0;k<result.length;k++){
+                    if(result[k].student[0]!= undefined){
+                        if(result[k].student[0]._id == user._id ){
+                            socket.username = result[k].student[0].username
+                            socket.userData = result[k].student[0]
+                            // delete socket.userData.password
 
-    client.on('message', handleMessage)
+                        }
+                        usernames.push(result[k].student[0].username)
+                    }
+                }
+                // console.log("usernames" , usernames)
+                socket.room = result[0].lesson[0].title;
+                socket.join(result[0].lesson[0].title);
+                let data = {}
+                data.chatroomName = socket.room
+                data.userCount = usernames.length
+                // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                // echo to room 1 that a person has connected to their room
+                io.to(result[0].lesson[0].title).emit('updateChat', data);
+                // socket.emit('updateRooms', rooms, socket.room);
 
-    client.on('chatrooms', handleGetChatrooms)
+            })
+        });
 
-    client.on('availableUsers', handleGetAvailableUsers)
+        // when the client emits 'sendchat', this listens and executes
+        socket.on('sendChat', function (data) {
+            // we tell the client to execute 'updatechat' with 2 parameters
+            io.to(socket.room).emit('updateChat', socket.userData, data);
+        });
 
-    client.on('disconnect', function () {
-        console.log('client disconnect...', client.id)
-        handleDisconnect()
-    })
+        socket.on('switchRoom', function (newroom) {
+            // leave the current room (stored in session)
+            socket.leave(socket.room);
+            // join new room, received as function parameter
+            socket.join(newroom);
+            socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
+            // sent message to OLD room
+            socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has left this room');
+            // update socket session room title
+            socket.room = newroom;
+            socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
+            socket.emit('updaterooms', rooms, newroom);
+        });
 
-    client.on('error', function (err) {
-        console.log('received error from client:', client.id)
-        console.log(err)
-    })
+        // when the user disconnects.. perform this
+        socket.on('disconnect', function () {
+            // remove the username from global usernames list
+            delete usernames[socket.username];
+            // update list of users in chat, client-side
+            io.sockets.emit('updateusers', usernames);
+            // echo globally that this client has left
+            socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
+            socket.leave(socket.room);
+        });
+    });
 })
-function handleRegister(userName, callback) {
-    if (!clientManager.isUserAvailable(userName))
-        return callback('user is not available')
-
-    const user = clientManager.getUserByName(userName)
-    clientManager.registerClient(client, user)
-
-    return callback(null, user)
-}
-function handleEvent(chatroomName, createEntry) {
-    return ensureValidChatroomAndUserSelected(chatroomName)
-        .then(function ({ chatroom, user }) {
-            // append event to chat history
-            const entry = { user, ...createEntry() }
-            chatroom.addEntry(entry)
-
-            // notify other clients in chatroom
-            chatroom.broadcastMessage({ chat: chatroomName, ...entry })
-            return chatroom
-        })
-}
-function handleJoin(chatroomName, callback) {
-    const createEntry = () => ({ event: `joined ${chatroomName}` })
-
-    handleEvent(chatroomName, createEntry)
-        .then(function (chatroom) {
-            // add member to chatroom
-            chatroom.addUser(client)
-
-            // send chat history to client
-            callback(null, chatroom.getChatHistory())
-        })
-        .catch(callback)
-}
-function handleDisconnect() {
-    // remove user profile
-    clientManager.removeClient(client)
-    // remove member from all chatrooms
-    chatroomManager.removeClient(client)
-}
 
 
 module.exports = io;
