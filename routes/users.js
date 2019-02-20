@@ -446,7 +446,12 @@ router.post('/supporter', (req, res)=> {
 });
 
 router.post('/chatAdmin', (req, res)=> {
+    
+    if(typeof req.body.chatrooms == "string"){
+        req.body.chatrooms == JSON.parse(req.body.chatrooms)
+    }
     req.body.password = hashHelper.hash(req.body.password)
+    logger.info("chatAdminBody" , req.body)
     if (req.files) {
         if (req.files.file != null) {
             // type file
@@ -716,7 +721,7 @@ router.put('/chatAdmin/:caId', (req, res) => {
 });
 
 router.get('/chatAdmin', (req, res) => {
-    database.getSupporters((getResult)=> {
+    database.getChatAdmins((getResult)=> {
         if (getResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -730,9 +735,8 @@ router.get('/chatAdmin', (req, res) => {
         else {
             for (var i = 0; i < getResult.length; i++) {
                 delete getResult[i].password
-                getResult[i].department = getResult[i].department[0]
             }
-            response.response('اطلاعات همه ی پشتیبان ها', getResult, (result)=> {
+            response.response('اطلاعات همه ی ادمین های چت', getResult, (result)=> {
                 res.json(result)
 
             })
@@ -741,8 +745,7 @@ router.get('/chatAdmin', (req, res) => {
 });
 
 router.get('/chatAdmin/:caId', (req, res)=> {
-    database.getSupporterById(req.params.supId, (sup)=> {
-
+    database.getChatAdminById(req.params.caId, (sup)=> {
         if (sup == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -763,8 +766,33 @@ router.get('/chatAdmin/:caId', (req, res)=> {
     })
 });
 
+router.get('/chatrooms/selective', (req, res)=> {
+    database.getAllLessons((lesson)=> {
+        if (lesson == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (lesson == 0) {
+            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let temp = []
 
+            for (var i = 0; i < lesson.length; i++) {
+                temp[i] = {}
+                temp[i].label = lesson[i].title;
+                temp[i].value = lesson[i]._id
+            }
+            response.response('اطلاعات همه ی چت روم ها', temp, (result)=> {
+                res.json(result)
+            })
 
+        }
+    })
+});
 
 router.post('/student/register', (req, res)=> {
     console.log("body:", req.body)

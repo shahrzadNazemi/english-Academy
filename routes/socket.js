@@ -49,10 +49,21 @@ io.sockets.on('connection', function (socket) {
 
         // when the client emits 'sendchat', this listens and executes
         socket.on('sendChat', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
             // we tell the client to execute 'updatechat' with 2 parameters
-            data.user = socket.userData
-            data.time = new Date().getTime()
-            io.to(socket.room).emit('updateChat', data);
+            let info = {}
+            // console.log("socket.userData" , socket.userData)
+            info.user = {}
+            info.user.fname = socket.userData.fname
+            info.user.lname = socket.userData.lname
+            info.user.avatarUrl = socket.userData.avatarUrl
+            info.user._id = socket.userData._id
+            info.user.username = socket.userData.username
+            info.time = new Date().getTime()
+            info.msg = data.msg
+            io.to(socket.room).emit('updateChat', info);
         });
 
         socket.on('switchRoom', function (newroom) {
