@@ -21,30 +21,52 @@ io.sockets.on('connection', function (socket) {
                 user = JSON.parse(user)
             }
             // store the username in the socket session for this client
-            database.getStudentOfOneLesson(user._id, (result)=> {
-                // usernames[username] = username;
-                for (var k = 0; k < result.length; k++) {
-                    if (result[k].student[0] != undefined) {
-                        if (result[k].student[0]._id == user._id) {
-                            socket.username = result[k].student[0].username
-                            socket.userData = result[k].student[0]
-                            // delete socket.userData.password
+            if (user.chatroom != undefined) {
+                database.getChatAdminById(user._id, (chatAdmin)=> {
+                        database.getStudentByLesson(user.chatroom.value , (result)=>{
+                                    socket.username = chatAdmin.username
+                                    socket.userData = chatAdmin
+                                    usernames.push(chatAdmin.username)
 
+
+                            socket.room = result[0].lesson[0].title;
+                            socket.join(result[0].lesson[0].title);
+                            let data = {}
+                            data.chatroomName = socket.room
+                            data.userCount = usernames.length
+                            // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                            // echo to room 1 that a person has connected to their room
+                            io.to(result[0].lesson[0].title).emit('updateInfo', data);
+                        })
+                })
+            }
+            else{
+                database.getStudentOfOneLesson(user._id, (result)=> {
+                    // usernames[username] = username;
+                    for (var k = 0; k < result.length; k++) {
+                        if (result[k].student[0] != undefined) {
+                            if (result[k].student[0]._id == user._id) {
+                                socket.username = result[k].student[0].username
+                                socket.userData = result[k].student[0]
+                                // delete socket.userData.password
+
+                            }
+                            usernames.push(result[k].student[0].username)
                         }
-                        usernames.push(result[k].student[0].username)
                     }
-                }
-                socket.room = result[0].lesson[0].title;
-                socket.join(result[0].lesson[0].title);
-                let data = {}
-                data.chatroomName = socket.room
-                data.userCount = usernames.length
-                // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                // echo to room 1 that a person has connected to their room
-                io.to(result[0].lesson[0].title).emit('updateInfo', data);
-                // socket.emit('updateRooms', rooms, socket.room);
+                    socket.room = result[0].lesson[0].title;
+                    socket.join(result[0].lesson[0].title);
+                    let data = {}
+                    data.chatroomName = socket.room
+                    data.userCount = usernames.length
+                    // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                    // echo to room 1 that a person has connected to their room
+                    io.to(result[0].lesson[0].title).emit('updateInfo', data);
+                    // socket.emit('updateRooms', rooms, socket.room);
 
-            })
+                })
+
+            }
         });
 
         // when the client emits 'sendchat', this listens and executes
@@ -54,10 +76,16 @@ io.sockets.on('connection', function (socket) {
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
-            // console.log("socket.userData" , socket.userData)
+            console.log("socket.userData" , socket.userData)
             info.user = {}
-            info.user.fname = socket.userData.fname
-            info.user.lname = socket.userData.lname
+            if(socket.userData.fname != undefined){
+                info.user.fname = socket.userData.fname
+                info.user.lname = socket.userData.lname
+            }
+            else{
+                info.user.name = socket.userData.name
+            }
+           
             info.user.avatarUrl = socket.userData.avatarUrl
             info.user._id = socket.userData._id
             info.user.username = socket.userData.username
