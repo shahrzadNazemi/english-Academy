@@ -1394,6 +1394,30 @@ module.exports.delSound = (sndId, cb)=> {
     })
 };
 
+module.exports.delChatroom = (chId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/chatroom/${chId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.delType = (typeId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/lesson/type/${typeId}`,
@@ -1789,6 +1813,30 @@ module.exports.getAllLessons = (cb)=> {
     })
 };
 
+module.exports.getAllChatrooms = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/chatroom`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.getAllTrickes = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/trick`,
@@ -1983,6 +2031,35 @@ module.exports.addTicket = (ticketInfo, cb)=> {
         }
     })
 };
+
+module.exports.addChatroom = (chatroomInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/chatroom`,
+        headers: {"content-Type": "application/json"},
+        body: chatroomInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 module.exports.addCertificate = (certInfo, cb)=> {
     request.post({
@@ -2594,6 +2671,36 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
+module.exports.updateChatroom = (updateInfo, chId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/chatroom/${chId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.updateTicket = (updateInfo, tktId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/ticket/${tktId}`,
@@ -2828,6 +2935,31 @@ module.exports.updateViewToSetTrue = (id, userId, type, cb)=> {
 module.exports.getAdminById = (admId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin/${admId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+module.exports.getChatroomById = (chId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/chatroom/${chId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {

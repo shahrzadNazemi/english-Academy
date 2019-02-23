@@ -766,34 +766,6 @@ router.get('/chatAdmin/:caId', (req, res)=> {
     })
 });
 
-router.get('/chatrooms/selective', (req, res)=> {
-    database.getAllLessons((lesson)=> {
-        if (lesson == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (lesson == 0) {
-            response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            let temp = []
-
-            for (var i = 0; i < lesson.length; i++) {
-                temp[i] = {}
-                temp[i].label = lesson[i].title;
-                temp[i].value = lesson[i]._id
-            }
-            response.response('اطلاعات همه ی چت روم ها', temp, (result)=> {
-                res.json(result)
-            })
-
-        }
-    })
-});
-
 router.post('/student/register', (req, res)=> {
     console.log("body:", req.body)
     if (req.files)

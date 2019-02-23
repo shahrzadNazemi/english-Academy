@@ -55,3 +55,9 @@ module.exports.uploadPathPersonalImg = "/var/fileAccess/site/upload/student/pers
 module.exports.uploadPathChatAdminImage = "/var/fileAccess/site/upload/chatAdmin/avatar"
 
 module.exports.downloadPathChatAdminImage= "http://185.94.99.69:9000/upload/chatAdmin/avatar";
+
+module.exports.downloadPathChatroomImage= "http://185.94.99.69:9000/upload/chatroom/avatar";
+
+module.exports.uploadPathChatroomImage = "/var/fileAccess/site/upload/chatroom/avatar"
+
+
