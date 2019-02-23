@@ -18,20 +18,26 @@ const trim = require('../util/trimmer')
 
 router.post('/', (req, res)=> {
     trim.expressTrimmer(req, (req)=> {
-        logger.info("req.body" , req.body)
-        if(req.body.lesson){
+        logger.info("req.body", req.body)
+        if (req.body.lesson) {
             req.body.lesson = JSON.parse(req.body.lesson)
-            req.body.level ={}
+            req.body.level = {}
         }
-        else if(req.body.level){
+        else if (req.body.level) {
             req.body.level = JSON.parse(req.body.level)
-            req.body.lesson ={}
+            req.body.lesson = {}
         }
         if (req.files) {
             if (req.files.file != null) {
                 database.addChatroom(req.body, (addResult)=> {
                         if (addResult == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (addResult == -2) {
+                            let errData = {"duplicated": "این چت روم برای این درس یا لول وجود دارد"}
+                            response.validation('این چت روم برای این درس یا لول وجود دارد', errData, "duplicated", (result)=> {
                                 res.json(result)
                             })
                         }
@@ -96,6 +102,12 @@ router.post('/', (req, res)=> {
                         res.json(result)
                     })
                 }
+                else if (addResult == -2) {
+                    let errData = {"duplicated": "این چت روم برای این درس یا لول وجود دارد"}
+                    response.validation('این چت روم برای این درس یا لول وجود دارد', errData, "duplicated", (result)=> {
+                        res.json(result)
+                    })
+                }
                 else {
                     response.responseCreated('اطلاعات با موفقیت ثبت شد.', addResult, (result)=> {
                         res.json(result)
@@ -109,13 +121,13 @@ router.post('/', (req, res)=> {
 
 router.put('/:chId', (req, res)=> {
     trim.expressTrimmer(req, (req)=> {
-        if(req.body.lesson){
+        if (req.body.lesson) {
             req.body.lesson = JSON.parse(req.body.lesson)
-            req.body.level ={}
+            req.body.level = {}
         }
-        else if(req.body.level){
+        else if (req.body.level) {
             req.body.level = JSON.parse(req.body.level)
-            req.body.lesson ={}
+            req.body.lesson = {}
         }
         if (req.files) {
             database.getChatroomById(req.params.chId, (result)=> {
@@ -419,7 +431,6 @@ router.get('/', (req, res)=> {
     })
 
 });
-
 
 
 module.exports = router
