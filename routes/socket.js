@@ -1,7 +1,7 @@
 var io = require('socket.io')();
 let database = require('../database/database')
 // usernames which are currently connected to the chat
-var usernames = [];
+// var messages = []
 
 // rooms which are currently available in chat
 
@@ -17,30 +17,32 @@ io.sockets.on('connection', function (socket) {
         }
         // when the client emits 'getChatInfo', this listens and executes
         socket.on('getChatInfo', function (user) {
+            var usernames = [];
+
             if (typeof user == "string") {
                 user = JSON.parse(user)
             }
             // store the username in the socket session for this client
             if (user.chatroom != undefined) {
                 database.getChatAdminById(user._id, (chatAdmin)=> {
-                        database.getStudentByLesson(user.chatroom.value , (result)=>{
-                                    socket.username = chatAdmin.username
-                                    socket.userData = chatAdmin
-                                    usernames.push(chatAdmin.username)
+                    database.getStudentByLesson(user.chatroom.value, (result)=> {
+                        socket.username = chatAdmin.username
+                        socket.userData = chatAdmin
+                        usernames.push(chatAdmin.username)
 
 
-                            socket.room = result[0].lesson[0].title;
-                            socket.join(result[0].lesson[0].title);
-                            let data = {}
-                            data.chatroomName = socket.room
-                            data.userCount = usernames.length
-                            // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                            // echo to room 1 that a person has connected to their room
-                            io.to(result[0].lesson[0].title).emit('updateInfo', data);
-                        })
+                        socket.room = result[0].lesson[0].title;
+                        socket.join(result[0].lesson[0].title);
+                        let data = {}
+                        data.chatroomName = socket.room
+                        data.userCount = usernames.length
+                        // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                        // echo to room 1 that a person has connected to their room
+                        io.to(result[0].lesson[0].title).emit('updateInfo', data);
+                    })
                 })
             }
-            else{
+            else {
                 database.getStudentOfOneLesson(user._id, (result)=> {
                     // usernames[username] = username;
                     for (var k = 0; k < result.length; k++) {
@@ -76,16 +78,16 @@ io.sockets.on('connection', function (socket) {
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
-            console.log("socket.userData" , socket.userData)
+            console.log("socket.userData", socket.userData)
             info.user = {}
-            if(socket.userData.fname != undefined){
+            if (socket.userData.fname != undefined) {
                 info.user.fname = socket.userData.fname
                 info.user.lname = socket.userData.lname
             }
-            else{
+            else {
                 info.user.name = socket.userData.name
             }
-           
+
             info.user.avatarUrl = socket.userData.avatarUrl
             info.user._id = socket.userData._id
             info.user.username = socket.userData.username

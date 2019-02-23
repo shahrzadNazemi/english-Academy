@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/socket.js" afterPath="$PROJECT_DIR$/routes/socket.js" />
     </list>
     <ignored path="englishAcademi.iws" />
@@ -46,11 +45,11 @@
       <file leaf-file-name="socket.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/socket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="40">
-              <caret line="25" column="85" selection-start-line="25" selection-start-column="85" selection-end-line="25" selection-end-column="85" />
+            <state relative-caret-position="20">
+              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding>
-                <element signature="e#1920#3156#0" expanded="false" />
-                <element signature="e#2037#2546#0" expanded="false" />
+                <element signature="e#1866#3102#0" expanded="false" />
+                <element signature="e#1983#2492#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -59,7 +58,7 @@
       <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/users.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
+            <state relative-caret-position="660">
               <caret line="447" column="39" selection-start-line="447" selection-start-column="39" selection-end-line="447" selection-end-column="39" />
               <folding>
                 <element signature="e#510#1297#0" expanded="false" />
@@ -2041,7 +2040,7 @@
       <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="123">
+            <state relative-caret-position="4000">
               <caret line="2417" column="51" selection-start-line="2417" selection-start-column="51" selection-end-line="2417" selection-end-column="51" />
               <folding>
                 <element signature="e#245#865#0" expanded="false" />
@@ -3527,15 +3526,16 @@
       <workItem from="1550564988301" duration="11711000" />
       <workItem from="1550639135861" duration="19683000" />
       <workItem from="1550686017125" duration="2802000" />
-      <workItem from="1550742738011" duration="3093000" />
+      <workItem from="1550742738011" duration="4228000" />
+      <workItem from="1550898891724" duration="1193000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="844660000" />
+    <option name="totallyTimeSpent" value="846988000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -8293,7 +8293,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
+        <state relative-caret-position="660">
           <caret line="447" column="39" selection-start-line="447" selection-start-column="39" selection-end-line="447" selection-end-column="39" />
           <folding>
             <element signature="e#510#1297#0" expanded="false" />
@@ -8908,7 +8908,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
+        <state relative-caret-position="4000">
           <caret line="2417" column="51" selection-start-line="2417" selection-start-column="51" selection-end-line="2417" selection-end-column="51" />
           <folding>
             <element signature="e#245#865#0" expanded="false" />
@@ -9814,11 +9814,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/socket.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="25" column="85" selection-start-line="25" selection-start-column="85" selection-end-line="25" selection-end-column="85" />
+        <state relative-caret-position="20">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
-            <element signature="e#1920#3156#0" expanded="false" />
-            <element signature="e#2037#2546#0" expanded="false" />
+            <element signature="e#1866#3102#0" expanded="false" />
+            <element signature="e#1983#2492#0" expanded="false" />
           </folding>
         </state>
       </provider>
