@@ -18,9 +18,16 @@ io.sockets.on('connection', function (socket) {
             }
             database.getChatroomById(user.chatroom._id, (chatRoom)=> {
                 if (chatRoom == -1) {
-                    if (user.chatAdmin != undefined) {
+                    if (user.chatAdmin) {
                         database.getChatAdminById(user._id, (chatAdmin)=> {
                             database.studentByChId(user.chatroom._id, (result)=> {
+                                for (var k = 0; k < result.length; k++) {
+                                    if (result[k] != undefined) {
+                                        usernames.push(result[k].username)
+                                    }
+                                }
+                                console.log("usernames" , usernames)
+
                                 socket.username = chatAdmin.username
                                 socket.userData = chatAdmin
                                 usernames.push(chatAdmin.username)
@@ -93,9 +100,14 @@ io.sockets.on('connection', function (socket) {
                     }
                     
                     if (chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime) {
-                        if (user.chatAdmin != undefined) {
+                        if (user.chatAdmin) {
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
+                                    for (var k = 0; k < result.length; k++) {
+                                        if (result[k] != undefined) {
+                                            usernames.push(result[k].username)
+                                        }
+                                    }
                                     socket.username = chatAdmin.username
                                     socket.userData = chatAdmin
                                     usernames.push(chatAdmin.username)
