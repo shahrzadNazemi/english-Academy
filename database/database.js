@@ -2982,6 +2982,32 @@ module.exports.getChatroomById = (chId, cb)=> {
 
 };
 
+module.exports.studentByChId = (chId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/chatroom/${chId}/student`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
+
 module.exports.getAllCertifications = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/certificate`,
@@ -3308,3 +3334,63 @@ module.exports.answerQuestion = (info, cb)=> {
     })
 
 };
+
+
+module.exports.addMsg = (msgInfo)=> {
+    request.post({
+        url: `${config.databaseServer}/api/message`,
+        headers: {"content-Type": "application/json"},
+        body: msgInfo,
+        json: true
+    }, function (err, response, body) {
+        console.log(response.statusCode)
+    })
+};
+
+module.exports.delMsg = (msgId)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/message/${msgId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        console.log(response.statusCode)
+    })
+};
+
+module.exports.getMsgByChatRoom = (chId , cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/message/chatRoom/${chId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
+module.exports.editMsg = (msgId , info)=> {
+    request.post({
+        url: `${config.databaseServer}/api/message/${msgId}`,
+        headers: {"content-Type": "application/json"},
+        body :info,
+        json: true
+    }, function (err, response, body) {
+        console.log(response.statusCode)
+    })
+};
+
+

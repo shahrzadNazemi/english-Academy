@@ -1,73 +1,81 @@
 var io = require('socket.io')();
 let database = require('../database/database')
-// usernames which are currently connected to the chat
-// var messages = []
-
-// rooms which are currently available in chat
-
-// })
 
 io.sockets.on('connection', function (socket) {
-    database.getAllLessons((lessons)=> {
+    database.getAllChatrooms((chatrooms)=> {
         let rooms = []
-        if (lessons[0] != undefined) {
-            for (var i = 0; i < lessons.length; i++) {
-                rooms.push(lessons[i].title)
+        if (chatrooms[0] != undefined) {
+            for (var i = 0; i < chatrooms.length; i++) {
+                rooms.push(chatrooms[i].title)
             }
         }
         // when the client emits 'getChatInfo', this listens and executes
         socket.on('getChatInfo', function (user) {
             var usernames = [];
-
             if (typeof user == "string") {
                 user = JSON.parse(user)
             }
             // store the username in the socket session for this client
-            if (user.chatroom != undefined) {
+            if (user.chatAdmin != undefined) {
                 database.getChatAdminById(user._id, (chatAdmin)=> {
-                    database.getStudentByLesson(user.chatroom.value, (result)=> {
+                    database.studentByChId(user.chatroom.value, (result)=> {
                         socket.username = chatAdmin.username
                         socket.userData = chatAdmin
                         usernames.push(chatAdmin.username)
-
-
-                        socket.room = result[0].lesson[0].title;
-                        socket.join(result[0].lesson[0].title);
+                        socket.room = user.chatroom.label;
+                        socket.join(user.chatroom.label);
                         let data = {}
-                        data.chatroomName = socket.room
-                        data.userCount = usernames.length
-                        // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                        // echo to room 1 that a person has connected to their room
-                        io.to(result[0].lesson[0].title).emit('updateInfo', data);
+                        database.getMsgByChatRoom(user.chatroom.value , (msg)=>{
+                            if(msg ==0 || msg == -1){
+                                data.allChat = []
+                            }
+                            else{
+                                data.allChat = msg
+                            }
+                            data.chatroomName = socket.room
+                            data.userCount = usernames.length
+                            // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                            // echo to room 1 that a person has connected to their room
+                            io.to(user.chatroom.label).emit('updateInfo', data);
+                        })
+
                     })
                 })
             }
             else {
-                database.getStudentOfOneLesson(user._id, (result)=> {
-                    // usernames[username] = username;
+                database.studentByChId(user.chatroom._id, (result)=> {
                     for (var k = 0; k < result.length; k++) {
-                        if (result[k].student[0] != undefined) {
-                            if (result[k].student[0]._id == user._id) {
-                                socket.username = result[k].student[0].username
-                                socket.userData = result[k].student[0]
+                        if (result[k] != undefined) {
+                            if (result[k]._id == user._id) {
+                                socket.username = result[k].username
+                                socket.userData = result[k]
                                 // delete socket.userData.password
 
                             }
-                            usernames.push(result[k].student[0].username)
+                            usernames.push(result[k].username)
                         }
                     }
-                    socket.room = result[0].lesson[0].title;
-                    socket.join(result[0].lesson[0].title);
+                    socket.room = user.chatroom.title;
+                    socket.roomId = user.chatroom._id
+                    socket.join(user.chatroom.title);
                     let data = {}
-                    data.chatroomName = socket.room
-                    data.userCount = usernames.length
-                    // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                    // echo to room 1 that a person has connected to their room
-                    io.to(result[0].lesson[0].title).emit('updateInfo', data);
-                    // socket.emit('updateRooms', rooms, socket.room);
+                    database.getMsgByChatRoom(user.chatroom._id , (msg)=> {
+                        if (msg == 0 || msg == -1) {
+                            data.allChat = []
+                        }
+                        else {
+                            data.allChat = msg
+                        }
+                        data.chatroomName = socket.room
+                        data.userCount = usernames.length
+                        // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                        // echo to room 1 that a person has connected to their room
+                        io.to(user.chatroom.title).emit('updateInfo', data);
+                        // socket.emit('updateRooms', rooms, socket.room);
+                    })
+
 
                 })
-
             }
         });
 
@@ -93,6 +101,11 @@ io.sockets.on('connection', function (socket) {
             info.user.username = socket.userData.username
             info.time = new Date().getTime()
             info.msg = data.msg
+            let msgInfo ={}
+            msgInfo.content= info.msg;
+            msgInfo.usrId = info.user._id
+            msgInfo.chId = socket.roomId
+            database.addMsg(msgInfo)
             io.to(socket.room).emit('updateChat', info);
         });
 

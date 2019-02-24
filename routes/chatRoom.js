@@ -301,8 +301,8 @@ router.delete('/:chId', (req, res)=> {
     })
 });
 
-router.get('/student/:stdId', (req, res)=> {
-    database.getChatroomByStuId(req.params.stdId, (chatroom)=> {
+router.get('/:chId/student/', (req, res)=> {
+    database.studentByChId(req.params.chId, (chatroom)=> {
         if (chatroom == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
