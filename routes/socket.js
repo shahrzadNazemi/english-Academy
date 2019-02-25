@@ -99,7 +99,7 @@ io.sockets.on('connection', function (socket) {
                         chatRoom.endTime = parseInt(chatRoom.endTime)
                     }
 
-                    if (9 <=  moment().format('HH') &&  moment().format('HH') <= 17) {
+                    if (1) {
                         if (user.chatAdmin) {
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
