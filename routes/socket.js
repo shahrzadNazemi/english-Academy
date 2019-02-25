@@ -39,6 +39,10 @@ io.sockets.on('connection', function (socket) {
                                         data.allChat = []
                                     }
                                     else {
+                                        data.pin = msg[0].pin
+                                        data.mark = msg[0].mark
+                                        delete msg[0].pin
+                                        delete msg[0].mark
                                         data.allChat = msg
                                     }
                                     data.title = socket.room
@@ -73,6 +77,10 @@ io.sockets.on('connection', function (socket) {
                                     data.allChat = []
                                 }
                                 else {
+                                    data.pin = msg[0].pin
+                                    data.mark = msg[0].mark
+                                    delete msg[0].pin
+                                    delete msg[0].mark
                                     data.allChat = msg
                                 }
                                 data.title = socket.room
