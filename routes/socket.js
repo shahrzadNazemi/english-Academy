@@ -100,6 +100,8 @@ io.sockets.on('connection', function (socket) {
                     }
                     
                     if (chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime) {
+                        console.log("studentByChId" , 78)
+
                         if (user.chatAdmin) {
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
@@ -133,7 +135,6 @@ io.sockets.on('connection', function (socket) {
                         }
                         else {
                             database.studentByChId(user.chatroom._id, (result)=> {
-                                console.log("studentByChId" , result)
                                 for (var k = 0; k < result.length; k++) {
                                     if (result[k] != undefined) {
                                         if (result[k]._id == user._id) {
