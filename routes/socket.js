@@ -41,7 +41,7 @@ io.sockets.on('connection', function (socket) {
                                     else {
                                         data.allChat = msg
                                     }
-                                    data.chatroomName = socket.room
+                                    data.title = socket.room
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
@@ -75,7 +75,7 @@ io.sockets.on('connection', function (socket) {
                                 else {
                                     data.allChat = msg
                                 }
-                                data.chatroomName = socket.room
+                                data.title = socket.room
                                 data.userCount = usernames.length
                                 // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                 // echo to room 1 that a person has connected to their room
@@ -125,7 +125,7 @@ io.sockets.on('connection', function (socket) {
                                             delete msg[0].mark
                                             data.allChat = msg
                                         }
-                                        data.chatroomName = socket.room
+                                        data.title = socket.room
                                         data.userCount = usernames.length
                                         // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                         // echo to room 1 that a person has connected to their room
@@ -163,7 +163,7 @@ io.sockets.on('connection', function (socket) {
                                         delete msg[0].mark
                                         data.allChat = msg
                                     }
-                                    data.chatroomName = socket.room
+                                    data.title = socket.room
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
