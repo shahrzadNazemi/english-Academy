@@ -133,6 +133,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         else {
                             database.studentByChId(user.chatroom._id, (result)=> {
+                                console.log("studentByChId" , result)
                                 for (var k = 0; k < result.length; k++) {
                                     if (result[k] != undefined) {
                                         if (result[k]._id == user._id) {
