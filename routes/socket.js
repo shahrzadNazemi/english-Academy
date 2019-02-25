@@ -169,7 +169,7 @@ io.sockets.on('connection', function (socket) {
                     }
                     else {
                         console.log("studentByChId" , chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime)
-
+socket.room= user.chatroom.title
                         let data = {"time": "time is over"}
                         io.to(user.chatroom.title).emit('updateInfo', data);
                     }
