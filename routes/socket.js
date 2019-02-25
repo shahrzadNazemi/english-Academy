@@ -100,7 +100,6 @@ io.sockets.on('connection', function (socket) {
                     }
 
                     if (chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime) {
-
                         if (user.chatAdmin) {
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
@@ -169,7 +168,7 @@ io.sockets.on('connection', function (socket) {
                         }
                     }
                     else {
-                        console.log("studentByChId" , 78)
+                        console.log("studentByChId" , chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime)
 
                         let data = {"time": "time is over"}
                         io.to(user.chatroom.title).emit('updateInfo', data);
