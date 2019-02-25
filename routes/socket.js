@@ -26,7 +26,7 @@ io.sockets.on('connection', function (socket) {
                                         usernames.push(result[k].username)
                                     }
                                 }
-                                console.log("usernames" , usernames)
+                                console.log("usernames", usernames)
 
                                 socket.username = chatAdmin.username
                                 socket.userData = chatAdmin
@@ -92,10 +92,10 @@ io.sockets.on('connection', function (socket) {
                     io.to(user.chatroom.title).emit('updateInfo', data);
                 }
                 else {
-                    if(typeof chatRoom.startTime == "string" ){
+                    if (typeof chatRoom.startTime == "string") {
                         chatRoom.startTime = parseInt(chatRoom.startTime)
                     }
-                    if(typeof chatRoom.endTime == "string" ){
+                    if (typeof chatRoom.endTime == "string") {
                         chatRoom.endTime = parseInt(chatRoom.endTime)
                     }
 
@@ -119,6 +119,10 @@ io.sockets.on('connection', function (socket) {
                                             data.allChat = []
                                         }
                                         else {
+                                            data.pin = msg[0].pin
+                                            data.mark = msg[0].mark
+                                            delete msg[0].pin
+                                            delete msg[0].mark
                                             data.allChat = msg
                                         }
                                         data.chatroomName = socket.room
@@ -153,7 +157,7 @@ io.sockets.on('connection', function (socket) {
                                         data.allChat = []
                                     }
                                     else {
-                                        data.pin =msg[0].pin
+                                        data.pin = msg[0].pin
                                         data.mark = msg[0].mark
                                         delete msg[0].pin
                                         delete msg[0].mark
@@ -172,8 +176,8 @@ io.sockets.on('connection', function (socket) {
                         }
                     }
                     else {
-                        console.log("studentByChId" , chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime)
-socket.room= user.chatroom.title
+                        console.log("studentByChId", chatRoom.startTime <= moment().format('HH') && moment().format('HH') <= chatRoom.endTime)
+                        socket.room = user.chatroom.title
                         let data = {"time": "time is over"}
                         io.to(user.chatroom.title).emit('updateInfo', data);
                     }
@@ -205,7 +209,7 @@ socket.room= user.chatroom.title
             info.time = new Date().getTime()
             info.msg = data.msg
             let msgInfo = {}
-            msgInfo.content = info.msg;
+            msgInfo.msg = info.msg;
             msgInfo.usrId = info.user._id
             msgInfo.chId = socket.roomId
             database.addMsg(msgInfo)
@@ -230,7 +234,7 @@ socket.room= user.chatroom.title
             let info = {}
             info.status = "done"
             data.pinned = true
-            database.editMsg(data.msgId ,data )
+            database.editMsg(data.msgId, data)
             io.to(socket.room).emit('pinMsg', info);
         });
 
@@ -242,7 +246,7 @@ socket.room= user.chatroom.title
             let info = {}
             info.status = "done"
             data.marked = true
-            database.editMsg(data.msgId ,data )
+            database.editMsg(data.msgId, data)
             io.to(socket.room).emit('markMsg', info);
         });
 
@@ -254,11 +258,9 @@ socket.room= user.chatroom.title
             let info = {}
             info.status = "done"
             data.warned = true
-            database.editMsg(data.msgId ,data )
+            database.editMsg(data.msgId, data)
             io.to(socket.room).emit('warnMsg', info);
         });
-
-
 
 
         socket.on('switchRoom', function (newroom) {
