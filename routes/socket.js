@@ -98,9 +98,9 @@ io.sockets.on('connection', function (socket) {
                     if(typeof chatRoom.endTime == "string" ){
                         chatRoom.endTime = parseInt(chatRoom.endTime)
                     }
-                    
+                    console.log("studentByChId" , 78)
+
                     if (chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime) {
-                        console.log("studentByChId" , 78)
 
                         if (user.chatAdmin) {
                             database.getChatAdminById(user._id, (chatAdmin)=> {
