@@ -98,7 +98,6 @@ io.sockets.on('connection', function (socket) {
                     if(typeof chatRoom.endTime == "string" ){
                         chatRoom.endTime = parseInt(chatRoom.endTime)
                     }
-                    console.log("studentByChId" , 78)
 
                     if (chatRoom.startTime <=  moment().format('HH') &&  moment().format('HH') <= chatRoom.endTime) {
 
@@ -170,6 +169,8 @@ io.sockets.on('connection', function (socket) {
                         }
                     }
                     else {
+                        console.log("studentByChId" , 78)
+
                         let data = {"time": "time is over"}
                         io.to(user.chatroom.title).emit('updateInfo', data);
                     }
