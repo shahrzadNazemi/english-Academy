@@ -146,6 +146,9 @@ router.put('/supporter/:supId', (req, res) => {
             }
             else {
                 if (student.avatarUrl) {
+                    if(student.avatarUrl== undefined){
+                        student.avatarUrl = ""
+                    }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathSupporterImage}`, `${config.uploadPathSupporterImage}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {
@@ -564,6 +567,9 @@ router.put('/chatAdmin/:caId', (req, res) => {
             }
             else {
                 if (student.avatarUrl) {
+                    if(student.avatarUrl== undefined){
+                        student.avatarUrl = ""
+                    }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathChatAdminImage}`, `${config.uploadPathChatAdminImage}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {
@@ -1215,6 +1221,9 @@ router.put('/student/:stdId', (req, res) => {
                     })
                 }
                 else {
+                    if(student.avatarUrl== undefined){
+                        student.avatarUrl = ""
+                    }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathStuImage}`, `${config.uploadPathStuImage}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {

@@ -271,6 +271,9 @@ router.put('/:tktId', (req, res)=> {
                                 }
                             }
                             if (update) {
+                                if(result.msg[i].image== undefined){
+                                    result.msg[i].image = ""
+                                }
                                 var unlinkPath = result.msg[i].image.replace(`${config.downloadPathTicketImg}`, `${config.uploadPathTicketImg}`);
                                 fs.unlink(unlinkPath, function (err) {
                                     try {

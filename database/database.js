@@ -3383,7 +3383,7 @@ module.exports.getMsgByChatRoom = (chId , cb)=> {
 
 
 module.exports.editMsg = (msgId , info)=> {
-    request.post({
+    request.put({
         url: `${config.databaseServer}/api/message/${msgId}`,
         headers: {"content-Type": "application/json"},
         body :info,

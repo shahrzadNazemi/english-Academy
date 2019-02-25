@@ -206,6 +206,55 @@ io.sockets.on('connection', function (socket) {
             io.to(socket.room).emit('updateChat', info);
         });
 
+        socket.on('delete', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            let info = {}
+            info.status = "done"
+            database.delMsg(data.msgId)
+            io.to(socket.room).emit('delMsg', info);
+        });
+
+        socket.on('pin', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            // we tell the client to execute 'updatechat' with 2 parameters
+            let info = {}
+            info.status = "done"
+            data.pinned = true
+            database.editMsg(data.msgId ,data )
+            io.to(socket.room).emit('pinMsg', info);
+        });
+
+        socket.on('mark', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            // we tell the client to execute 'updatechat' with 2 parameters
+            let info = {}
+            info.status = "done"
+            data.marked = true
+            database.editMsg(data.msgId ,data )
+            io.to(socket.room).emit('markMsg', info);
+        });
+
+        socket.on('warn', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            // we tell the client to execute 'updatechat' with 2 parameters
+            let info = {}
+            info.status = "done"
+            data.warned = true
+            database.editMsg(data.msgId ,data )
+            io.to(socket.room).emit('warnMsg', info);
+        });
+
+
+
+
         socket.on('switchRoom', function (newroom) {
             // leave the current room (stored in session)
             socket.leave(socket.room);

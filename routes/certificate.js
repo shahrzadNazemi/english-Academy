@@ -149,6 +149,9 @@ router.put('/:certId', (req, res)=> {
             else {
                 console.log(certification)
                 if (req.files.IDCard != null) {
+                    if(certification.IDCard== undefined){
+                        certification.IDCard = ""
+                    }
                     var unlinkPath = certification.IDCard.replace(`${config.downloadPathPathIDCard}`, `${config.uploadPathIDCard}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {
@@ -172,6 +175,9 @@ router.put('/:certId', (req, res)=> {
                                         else {
                                             req.body.IDCard = path.replace(`${config.uploadPathIDCard}`, `${config.downloadPathPathIDCard}`)
                                             if (req.files.personalImg != null) {
+                                                if(certification.personalImg== undefined){
+                                                    certification.personalImg = ""
+                                                }
                                                 var unlinkPath = certification.personalImg.replace(`${config.downloadPathPathIDCard}`, `${config.uploadPathIDCard}`);
                                                 fs.unlink(unlinkPath, function (err) {
                                                     try {
@@ -270,6 +276,9 @@ router.put('/:certId', (req, res)=> {
                     })
                 }
                 else if (req.files.personalImg != null) {
+                    if(certification.personalImg== undefined){
+                        certification.personalImg = ""
+                    }
                     var unlinkPath = certification.personalImg.replace(`${config.downloadPathPathIDCard}`, `${config.uploadPathIDCard}`);
                     fs.unlink(unlinkPath, function (err) {
                         try {

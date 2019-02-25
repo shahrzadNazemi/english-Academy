@@ -128,6 +128,9 @@ router.put('/:NId', (req, res)=> {
                         })
                     }
                     else {
+                        if(notification.avatarUrl== undefined){
+                            notification.avatarUrl = ""
+                        }
                         var unlinkPath = notification.avatarUrl.replace(`${config.downloadPathNotifImage}`, `${config.uploadPathNotifImage}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {

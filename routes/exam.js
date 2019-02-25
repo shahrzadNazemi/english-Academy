@@ -225,6 +225,9 @@ router.put('/:exId', (req, res)=> {
                             })
                         }
                         else {
+                            if(exam.avatarUrl== undefined){
+                                exam.avatarUrl = ""
+                            }
                             var unlinkPath = exam.avatarUrl.replace(`${config.downloadPathExamImage}`, `${config.uploadPathExamImage}`);
                             fs.unlink(unlinkPath, function (err) {
                                 try {

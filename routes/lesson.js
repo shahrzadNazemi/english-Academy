@@ -1227,6 +1227,9 @@ router.put('/video/:vdId', (req, res) => {
                     }
                     else {
                         video = video[0]
+                        if(video.url== undefined){
+                            video.url = ""
+                        }
                         var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
@@ -1292,6 +1295,9 @@ router.put('/video/:vdId', (req, res) => {
 
                                                                             req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
                                                                             if (req.files.srt) {
+                                                                                if(video.srtUrl== undefined){
+                                                                                    video.srtUrl = ""
+                                                                                }
                                                                                 var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                                                                                 fs.unlink(unlinkPath, function (err) {
                                                                                     try {
@@ -1424,6 +1430,9 @@ router.put('/video/:vdId', (req, res) => {
 
             }
             else if (req.files.srt) {
+                if(video.srtUrl== undefined){
+                    video.srtUrl = ""
+                }
                 var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
                 fs.unlink(unlinkPath, function (err) {
                     try {
@@ -1606,6 +1615,9 @@ router.put('/sound/:sndId', (req, res) => {
                 }
                 else {
                     if (req.files.file) {
+                        if(sound[0].url== undefined){
+                            sound[0].url = ""
+                        }
                         var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
@@ -1667,6 +1679,9 @@ router.put('/sound/:sndId', (req, res) => {
                                                                 }
                                                                 else {
                                                                     if (req.files.pic) {
+                                                                        if(sound[0].coverUrl== undefined){
+                                                                            sound[0].coverUrl = ""
+                                                                        }
                                                                         var unlinkPath = sound[0].coverUrl.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
                                                                         fs.unlink(unlinkPath, function (err) {
                                                                             try {
@@ -1775,6 +1790,9 @@ router.put('/sound/:sndId', (req, res) => {
                         })
                     }
                     else if (req.files.pic) {
+                        if(sound[0].coverUrl== undefined){
+                            sound[0].coverUrl = ""
+                        }
                         var unlinkPath = sound[0].coverUrl.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
@@ -2715,8 +2733,6 @@ router.get('/:lsnId', (req, res) => {
                         max.push(lesson[0].sound.length)
                         max.push(lesson[0].text.length)
                         max.sort()
-                        logger.info("mazxxxxxx", max)
-                        logger.info("typeLength", types)
                         for (var k = 0; k < types.length; k++) {
                             types[k].video = []
                             types[k].sound = []
@@ -2767,13 +2783,6 @@ router.get('/:lsnId', (req, res) => {
                                             if (notes == 0 || notes == -1) {
                                                 notes = []
                                             }
-                                            // else {
-                                            //     for (var i = 0; i < notes.length; i++) {
-                                            //         notes[i].category.value = notes[i].category.title
-                                            //         notes[i].category.label = notes[i].category._id
-                                            //
-                                            //     }
-                                            // }
                                             let exam = result.exam
                                             for (var i = 0; i < typeList.length; i++) {
                                                 if (typeList[i].title == "quiz") {
@@ -2784,34 +2793,12 @@ router.get('/:lsnId', (req, res) => {
                                                 //     typeList[i].examData = result.exam
                                                 //     types.push(typeList[i])
                                                 // }
-
                                                 if (typeList[i].title == "note") {
-                                                    logger.info("typeList[i].category",typeList[i].category, typeList[i].title)
-                                                    typeList[i].category.value = typeList[i].category._id
-                                                    typeList[i].category.label = typeList[i].category.title
-                                                    delete  typeList[i].category._id
-                                                    delete  typeList[i].category.title
+                                                    logger.info("here in title = note" , typeList[i])
                                                     typeList[i].noteData = notes
                                                     types.push(typeList[i])
                                                 }
                                             }
-                                            // database.getViewUser(usrId, (view)=> {
-                                            //     if (view == -1) {
-                                            //         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            //             res.json(result)
-                                            //         })
-                                            //     }
-                                            //     else {
-                                            //         lesson[0].viewPermission = view[0].viewPermission
-                                            //         lesson[0] = circJson.stringify(lesson[0])
-                                            //
-                                            //         console.log("le", lesson[0])
-                                            //         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                            //             res.json(result)
-                                            //
-                                            //         })
-                                            //     }
-                                            // })
                                             if (result.timePassed) {
                                                 let pass = moment(result.timePassed).add(1, 'h')
                                                 let timeStamp = new Date(pass).getTime()
@@ -2869,13 +2856,10 @@ router.get('/:lsnId', (req, res) => {
                                                 })
                                             }
                                         })
-
                                     }
                                 })
-
                             }
                             else {
-
                                 database.getViewUser(usrId, (view)=> {
                                     if (view == -1) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2891,7 +2875,6 @@ router.get('/:lsnId', (req, res) => {
                                         })
                                     }
                                 })
-
                             }
                         })
 
@@ -3365,6 +3348,12 @@ router.delete('/sound/:sndId', (req, res) => {
             })
         }
         else {
+            if(sound[0].url== undefined){
+                sound[0].url = ""
+            }
+            if(sound[0].coverUrl== undefined){
+                sound[0].coverUrl = ""
+            }
             var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
             fs.unlink(unlinkPath, function (err) {
                 try {

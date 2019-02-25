@@ -255,6 +255,9 @@ router.put('/:lvlId', (req, res)=> {
                             })
                         }
                         else {
+                            if(level.avatarUrl== undefined){
+                                level.avatarUrl = ""
+                            }
                             var unlinkPath = level.avatarUrl.replace(`${config.downloadPathLevelImage}`, `${config.uploadPathLevelImage}`);
                             fs.unlink(unlinkPath, function (err) {
                                 try{

@@ -311,6 +311,9 @@ router.put('/:QId', (req, res)=> {
         }
         else {
             if (req.files) {
+                if(result.url== undefined){
+                    result.url = ""
+                }
                 var unlinkPath = result.url.replace(`${config.downloadPathQvoice}`, `${config.uploadPathQvoice}`);
                 fs.unlink(unlinkPath, function (err) {
                     try {

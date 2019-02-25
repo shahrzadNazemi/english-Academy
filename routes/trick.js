@@ -204,6 +204,12 @@ router.put('/:trckId', (req, res)=> {
                         })
                     }
                     else {
+                        if(trick[0].url== undefined){
+                            trick[0].url = ""
+                        }
+                        if(trick[0].thumbUrl== undefined){
+                            trick[0].thumbUrl = ""
+                        }
                         var unlinkPath = trick[0].url.replace(`${config.downloadPathTrick}`, `${config.uploadPathTrick}`);
                         fs.unlink(unlinkPath, function (err) {
                             try {
@@ -228,6 +234,9 @@ router.put('/:trckId', (req, res)=> {
                                                             else {
                                                                 req.body.url = path.replace(`${config.uploadPathTrick}`, `${config.downloadPathTrick}`)
                                                                 if (req.files.srt) {
+                                                                    if(trick[0].srtUrl== undefined){
+                                                                        trick[0].srtUrl = ""
+                                                                    }
                                                                     var unlinkPath = trick[0].srtUrl.replace(`${config.downloadPathTrick}`, `${config.uploadPathTrick}`);
                                                                     fs.unlink(unlinkPath, function (err) {
                                                                         try {
@@ -345,6 +354,9 @@ router.put('/:trckId', (req, res)=> {
 
             }
             else if (req.files.srt) {
+                if(trick[0].srtUrl== undefined){
+                    trick[0].srtUrl = ""
+                }
                 var unlinkPath = trick[0].srtUrl.replace(`${config.downloadPathTrick}`, `${config.uploadPathTrick}`);
                 fs.unlink(unlinkPath, function (err) {
                     try {
