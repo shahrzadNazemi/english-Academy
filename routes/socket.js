@@ -226,6 +226,7 @@ io.sockets.on('connection', function (socket) {
             msgInfo.usrId = info.user._id
             msgInfo.chId = socket.roomId
             msgInfo.user = socket.userData
+            msgInfo.time = new Date().getTime()
             database.addMsg(msgInfo)
             io.to(socket.room).emit('updateChat', info);
         });
