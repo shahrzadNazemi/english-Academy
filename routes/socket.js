@@ -236,6 +236,7 @@ io.sockets.on('connection', function (socket) {
             }
             let info = {}
             info.status = "done"
+            info.msgId = data.msgId
             database.delMsg(data.msgId)
             io.to(socket.room).emit('delMsg', info);
         });
