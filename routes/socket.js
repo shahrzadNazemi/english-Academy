@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
-                                    socket.emit('updateInfo' , data)
+                                    socket.emit('updateInfo', data)
                                 })
 
                             })
@@ -87,7 +87,7 @@ io.sockets.on('connection', function (socket) {
                                 data.userCount = usernames.length
                                 // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                 // echo to room 1 that a person has connected to their room
-                                socket.emit('updateInfo' , data)
+                                socket.emit('updateInfo', data)
                                 // socket.emit('updateRooms', rooms, socket.room);
                             })
 
@@ -97,7 +97,7 @@ io.sockets.on('connection', function (socket) {
                 }
                 else if (chatRoom == 0) {
                     let data = {"errMsg": "there is no such a chatRoom"}
-                    socket.emit('updateInfo' , data)
+                    socket.emit('updateInfo', data)
                 }
                 else {
                     if (typeof chatRoom.startTime == "string") {
@@ -123,7 +123,6 @@ io.sockets.on('connection', function (socket) {
                                     usernames.push(chatAdmin.username)
                                     socket.room = user.chatroom.title;
                                     socket.roomId = user.chatroom._id
-
                                     socket.join(user.chatroom.title);
                                     let data = {}
                                     database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
@@ -141,7 +140,7 @@ io.sockets.on('connection', function (socket) {
                                         data.userCount = usernames.length
                                         // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                         // echo to room 1 that a person has connected to their room
-                                        socket.emit('updateInfo' , data)
+                                        socket.emit('updateInfo', data)
                                     })
 
                                 })
@@ -181,7 +180,7 @@ io.sockets.on('connection', function (socket) {
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
                                     // io.to(socket).emit('updateInfo', data);
-                                    socket.emit('updateInfo' , data)
+                                    socket.emit('updateInfo', data)
                                     // socket.emit('updateRooms', rooms, socket.room);
                                 })
                             })
@@ -192,7 +191,7 @@ io.sockets.on('connection', function (socket) {
                         socket.room = user.chatroom.title
                         socket.join(user.chatroom.title);
                         let data = {"time": "time is over"}
-                        socket.emit('updateInfo' , data)
+                        socket.emit('updateInfo', data)
                     }
                 }
             })
@@ -217,8 +216,7 @@ io.sockets.on('connection', function (socket) {
             }
 
             info.user.avatarUrl = socket.userData.avatarUrl
-            info.user._id = socket.userData._id
-            info.user.username = socket.userData.username
+            info.user = socket.userData
             info.time = new Date().getTime()
             info.msg = data.msg
             let msgInfo = {}
