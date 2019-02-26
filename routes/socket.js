@@ -249,6 +249,8 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             info.status = "done"
             data.pinned = true
+            info.msgId = data.msgId
+
             database.editMsg(data.msgId, data)
             io.to(socket.room).emit('pinMsg', info);
         });
@@ -260,6 +262,8 @@ io.sockets.on('connection', function (socket) {
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
+            info.msgId = data.msgId
+
             data.marked = true
             database.editMsg(data.msgId, data)
             io.to(socket.room).emit('markMsg', info);
