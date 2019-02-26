@@ -1,7 +1,7 @@
 var io = require('socket.io')();
 let database = require('../database/database')
 let moment = require('moment-jalaali')
-
+let logger = require('../util/logger')
 io.sockets.on('connection', function (socket) {
     console.log("socket Connected")
     database.getAllChatrooms((chatrooms)=> {
@@ -300,7 +300,7 @@ io.sockets.on('connection', function (socket) {
             // // echo globally that this client has left
             // socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
             // socket.leave(socket.room);
-            console.log("disconnected")
+            logger.error("disconnected socket", 1)
         });
     });
 })
