@@ -3,6 +3,7 @@ let database = require('../database/database')
 let moment = require('moment-jalaali')
 
 io.sockets.on('connection', function (socket) {
+    console.log("socket Connected")
     database.getAllChatrooms((chatrooms)=> {
         let rooms = []
         if (chatrooms[0] != undefined) {
