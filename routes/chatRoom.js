@@ -421,11 +421,15 @@ router.get('/', (req, res)=> {
             })
         }
         else {
+            response.paginationClient(req.query.page, req.query.limit, chatroom, (result1)=> {
+                let countPages = Math.ceil(chatroom.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('چت روم مورد نظر یافت شد.', result1, (result)=> {
+                    res.json(result)
 
-            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
-                res.json(result)
-
+                })
             })
+
 
         }
     })
