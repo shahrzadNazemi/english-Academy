@@ -236,7 +236,7 @@ io.sockets.on('connection', function (socket) {
             }
             let info = {}
             info.status = "done"
-            info.msgId = data.msgId
+            info._id = data.msgId
             database.delMsg(data.msgId)
             io.to(socket.room).emit('delMsg', info);
         });
@@ -249,7 +249,7 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             info.status = "done"
             data.pinned = true
-            info.msgId = data.msgId
+            info._id = data.msgId
 
             database.editMsg(data.msgId, data)
             io.to(socket.room).emit('pinMsg', info);
