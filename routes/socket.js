@@ -206,7 +206,7 @@ io.sockets.on('connection', function (socket) {
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
-            console.log("socket.userData", socket.userData)
+            logger.error("socket.userData", socket.userData)
             info.user = {}
             if (socket.userData.fname != undefined) {
                 info.user.fname = socket.userData.fname

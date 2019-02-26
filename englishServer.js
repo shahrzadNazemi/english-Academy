@@ -96,6 +96,8 @@ var server = app.listen(app.get('port'), function() {
 
 
 
-io.attach(server)
+io.attach(server , {
+    pingTimeout: 999999999999999999999999999,
+})
 
 module.exports = app;
