@@ -450,6 +450,34 @@ router.delete('/:lvlId', (req, res)=> {
     })
 });
 
+router.get('/selective', (req, res)=> {
+    database.getLevels((level)=> {
+        if (level == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (level == 0) {
+            response.respondNotFound('سطح مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let temp = []
+
+            for (var i = 0; i < level.length; i++) {
+                temp[i] = {}
+                temp[i].label = level[i].title;
+                temp[i].value = level[i]._id
+            }
+            response.response('اطلاعات همه ی سطحها', temp, (result)=> {
+                res.json(result)
+            })
+
+        }
+    })
+});
+
 router.get('/:lvlId', (req, res)=> {
     database.getLevelById(req.params.lvlId, (level)=> {
         if (level == -1) {
