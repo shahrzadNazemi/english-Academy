@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
-                                    io.to(user.chatroom.title).emit('updateInfo', data);
+                                    socket.emit('updateInfo' , data)
                                 })
 
                             })
@@ -87,7 +87,7 @@ io.sockets.on('connection', function (socket) {
                                 data.userCount = usernames.length
                                 // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                 // echo to room 1 that a person has connected to their room
-                                io.to(user.chatroom.title).emit('updateInfo', data);
+                                socket.emit('updateInfo' , data)
                                 // socket.emit('updateRooms', rooms, socket.room);
                             })
 
@@ -97,7 +97,7 @@ io.sockets.on('connection', function (socket) {
                 }
                 else if (chatRoom == 0) {
                     let data = {"errMsg": "there is no such a chatRoom"}
-                    io.to(user.chatroom.title).emit('updateInfo', data);
+                    socket.emit('updateInfo' , data)
                 }
                 else {
                     if (typeof chatRoom.startTime == "string") {
@@ -141,7 +141,7 @@ io.sockets.on('connection', function (socket) {
                                         data.userCount = usernames.length
                                         // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                         // echo to room 1 that a person has connected to their room
-                                        io.to(user.chatroom.title).emit('updateInfo', data);
+                                        socket.emit('updateInfo' , data)
                                     })
 
                                 })
@@ -180,7 +180,8 @@ io.sockets.on('connection', function (socket) {
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
-                                    io.to(socket).emit('updateInfo', data);
+                                    // io.to(socket).emit('updateInfo', data);
+                                    socket.emit('updateInfo' , data)
                                     // socket.emit('updateRooms', rooms, socket.room);
                                 })
                             })
@@ -191,7 +192,7 @@ io.sockets.on('connection', function (socket) {
                         socket.room = user.chatroom.title
                         socket.join(user.chatroom.title);
                         let data = {"time": "time is over"}
-                        io.to(user.chatroom.title).emit('updateInfo', data);
+                        socket.emit('updateInfo' , data)
                     }
                 }
             })
