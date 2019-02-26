@@ -14,6 +14,7 @@ const trim = require('../util/trimmer')
 
 router.post('/admin/login', (req, res) => {
     req.body.password = hashHelper.hash(req.body.password)
+    console.log("req.body", req.body)
     database.adminLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

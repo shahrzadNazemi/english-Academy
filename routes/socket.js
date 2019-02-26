@@ -180,11 +180,9 @@ io.sockets.on('connection', function (socket) {
                                     data.userCount = usernames.length
                                     // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                     // echo to room 1 that a person has connected to their room
-                                    io.to(user.chatroom.title).emit('updateInfo', data);
+                                    io.to(socket).emit('updateInfo', data);
                                     // socket.emit('updateRooms', rooms, socket.room);
                                 })
-
-
                             })
                         }
                     }
