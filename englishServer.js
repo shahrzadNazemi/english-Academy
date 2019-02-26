@@ -83,9 +83,6 @@ app.use(function (req, res, next) {
     err.status = 404;
 });
 
-// app.listen(8080, ()=> {
-//     console.log("English server is listening on 8080 ")
-// })
 
 app.set('port', process.env.PORT || 8080);
 
@@ -96,8 +93,6 @@ var server = app.listen(app.get('port'), function() {
 
 
 
-io.attach(server , {
-    pingTimeout: 999999999,
-})
+io.attach(server)
 
 module.exports = app;
