@@ -108,7 +108,8 @@ io.sockets.on('connection', function (socket) {
                     }
 
                     if (1) {
-                        if (user.chatAdmin) {
+                        if (user.chatAdmin == true) {
+                            console.log("here")
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
                                     for (var k = 0; k < result.length; k++) {
@@ -117,9 +118,12 @@ io.sockets.on('connection', function (socket) {
                                         }
                                     }
                                     socket.username = chatAdmin.username
+                                    chatAdmin.role = "admin"
                                     socket.userData = chatAdmin
                                     usernames.push(chatAdmin.username)
                                     socket.room = user.chatroom.title;
+                                    socket.roomId = user.chatroom._id
+
                                     socket.join(user.chatroom.title);
                                     let data = {}
                                     database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
@@ -149,6 +153,7 @@ io.sockets.on('connection', function (socket) {
                                     if (result[k] != undefined) {
                                         if (result[k]._id == user._id) {
                                             socket.username = result[k].username
+                                            result[k].role = "student"
                                             socket.userData = result[k]
                                             // delete socket.userData.password
 
@@ -186,6 +191,7 @@ io.sockets.on('connection', function (socket) {
                     else {
                         console.log("studentByChId", chatRoom.startTime <= moment().format('HH') && moment().format('HH') <= chatRoom.endTime)
                         socket.room = user.chatroom.title
+                        socket.join(user.chatroom.title);
                         let data = {"time": "time is over"}
                         io.to(user.chatroom.title).emit('updateInfo', data);
                     }
@@ -220,6 +226,7 @@ io.sockets.on('connection', function (socket) {
             msgInfo.msg = info.msg;
             msgInfo.usrId = info.user._id
             msgInfo.chId = socket.roomId
+            msgInfo.user = socket.userData
             database.addMsg(msgInfo)
             io.to(socket.room).emit('updateChat', info);
         });
