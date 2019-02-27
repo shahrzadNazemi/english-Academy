@@ -265,6 +265,7 @@ io.sockets.on('connection', function (socket) {
             info.msgId = data.msgId
 
             data.marked = true
+
             database.editMsg(data.msgId, data)
             io.to(socket.room).emit('markMsg', info);
         });
@@ -297,7 +298,7 @@ io.sockets.on('connection', function (socket) {
         });
 
         // when the user disconnects.. perform this
-        socket.on('disconnect', function () {
+        socket.on('disconnect', function (reason) {
             // remove the username from global usernames list
             // delete usernames[socket.username];
             // // update list of users in chat, client-side
@@ -305,7 +306,7 @@ io.sockets.on('connection', function (socket) {
             // // echo globally that this client has left
             // socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
             // socket.leave(socket.room);
-            logger.error("disconnected socket", 1)
+            logger.error("disconnected socket", reason)
         });
     });
 })
