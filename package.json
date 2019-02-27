@@ -33,6 +33,7 @@
     "pretty-bytes": "^5.1.0",
     "request": "^2.88.0",
     "socket.io": "^2.2.0",
+    "stream": "0.0.2",
     "string-trimmer": "^1.0.1",
     "util": "^0.11.1",
     "video-thumbnail-generator": "^1.1.3"

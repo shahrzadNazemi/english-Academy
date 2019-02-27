@@ -2,6 +2,10 @@ var io = require('socket.io')();
 let database = require('../database/database')
 let moment = require('moment-jalaali')
 let logger = require('../util/logger')
+var fs = require('fs')
+var Readable = require('stream').Readable
+let config = require('../util/config')
+
 io.sockets.on('connection', function (socket) {
     console.log("socket Connected")
     database.getAllChatrooms((chatrooms)=> {
@@ -199,7 +203,42 @@ io.sockets.on('connection', function (socket) {
 
         });
 
-        // when the client emits 'sendchat', this listens and executes
+        socket.on('sendVoice', function (base64) {
+            const imgBuffer = Buffer.from(base64, 'base64')
+            var s = new Readable()
+            s.push(imgBuffer)
+            s.push(null)
+           let filePath = `${config.downloadPathVoiceMsg}/${new Date().getTime()}.mp3`
+            s.pipe(fs.createWriteStream(filePath));
+            // we tell the client to execute 'updatechat' with 2 parameters
+            let info = {}
+            logger.error("socket.userData", socket.userData)
+            info.user = {}
+            if (socket.userData.fname != undefined) {
+                info.user.fname = socket.userData.fname
+                info.user.lname = socket.userData.lname
+            }
+            else {
+                info.user.name = socket.userData.name
+            }
+
+            info.user.avatarUrl = socket.userData.avatarUrl
+            info.user = socket.userData
+            info.time = new Date().getTime()
+            info.msg = ""
+            info.voice = filePath
+            let msgInfo = {}
+            msgInfo.msg = info.msg;
+            msgInfo.usrId = info.user._id
+            msgInfo.chId = socket.roomId
+            msgInfo.user = socket.userData
+            msgInfo.time = new Date().getTime()
+            msgInfo.voice =  info.voice
+            database.addMsg(msgInfo , (newMsg)=>{
+                io.to(socket.room).emit('updateChat', newMsg);
+            })
+        });
+
         socket.on('sendChat', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
@@ -230,6 +269,7 @@ io.sockets.on('connection', function (socket) {
                 io.to(socket.room).emit('updateChat', newMsg);
             })
         });
+
 
         socket.on('delete', function (data) {
             if (typeof data == "string") {
