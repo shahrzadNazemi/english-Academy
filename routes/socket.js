@@ -5,6 +5,7 @@ let logger = require('../util/logger')
 var fs = require('fs')
 var Readable = require('stream').Readable
 let config = require('../util/config')
+let lesson = require('../routes/lesson')
 
 io.sockets.on('connection', function (socket) {
     console.log("socket Connected")
@@ -208,35 +209,39 @@ io.sockets.on('connection', function (socket) {
             var s = new Readable()
             s.push(imgBuffer)
             s.push(null)
-           let filePath = `${config.downloadPathVoiceMsg}/${new Date().getTime()}.mp3`
-            s.pipe(fs.createWriteStream(filePath));
-            // we tell the client to execute 'updatechat' with 2 parameters
-            let info = {}
-            logger.error("socket.userData", socket.userData)
-            info.user = {}
-            if (socket.userData.fname != undefined) {
-                info.user.fname = socket.userData.fname
-                info.user.lname = socket.userData.lname
-            }
-            else {
-                info.user.name = socket.userData.name
-            }
+           let filePath = `${config.uploadPathVoiceMsg}/${new Date().getTime()}.mp3`
+            lesson.addDir(filePath, function (newPath) {
+                s.pipe(fs.createWriteStream(filePath));
+                // we tell the client to execute 'updatechat' with 2 parameters
+                let info = {}
+                logger.error("socket.userData", socket.userData)
+                info.user = {}
+                if (socket.userData.fname != undefined) {
+                    info.user.fname = socket.userData.fname
+                    info.user.lname = socket.userData.lname
+                }
+                else {
+                    info.user.name = socket.userData.name
+                }
 
-            info.user.avatarUrl = socket.userData.avatarUrl
-            info.user = socket.userData
-            info.time = new Date().getTime()
-            info.msg = ""
-            info.voice = filePath
-            let msgInfo = {}
-            msgInfo.msg = info.msg;
-            msgInfo.usrId = info.user._id
-            msgInfo.chId = socket.roomId
-            msgInfo.user = socket.userData
-            msgInfo.time = new Date().getTime()
-            msgInfo.voice =  info.voice
-            database.addMsg(msgInfo , (newMsg)=>{
-                io.to(socket.room).emit('updateChat', newMsg);
+                info.user.avatarUrl = socket.userData.avatarUrl
+                info.user = socket.userData
+                info.time = new Date().getTime()
+                info.msg = ""
+                info.voice = `${config.downloadPathVoiceMsg}/${new Date().getTime()}.mp3`
+                let msgInfo = {}
+                msgInfo.msg = info.msg;
+                msgInfo.usrId = info.user._id
+                msgInfo.chId = socket.roomId
+                msgInfo.user = socket.userData
+                msgInfo.time = new Date().getTime()
+                msgInfo.voice =  `${config.downloadPathVoiceMsg}/${new Date().getTime()}.mp3`
+                database.addMsg(msgInfo , (newMsg)=>{
+                    io.to(socket.room).emit('updateChat', newMsg);
+                })
             })
+
+
         });
 
         socket.on('sendChat', function (data) {

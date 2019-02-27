@@ -60,7 +60,10 @@ module.exports.downloadPathChatroomImage= "http://185.94.99.69:9000/upload/chatr
 
 module.exports.uploadPathChatroomImage = "/var/fileAccess/site/upload/chatroom/avatar"
 
-module.exports.downloadPathVoiceMsg = "/var/fileAccess/site/upload/message"
+module.exports.uploadPathVoiceMsg = "/var/fileAccess/site/upload/message"
+
+module.exports.downloadPathVoiceMsg= "http://185.94.99.69:9000/upload/message";
+
 
 
 
