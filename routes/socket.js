@@ -240,8 +240,9 @@ io.sockets.on('connection', function (socket) {
             info.status = "done"
             info._id = data.msg._id
             if(data.msg.pinned == true){
-                info.pin = {}
-                info.pin._id = ""
+                let pin = {}
+                pin._id = ""
+                io.to(socket.room).emit('pinMsg', pin);
             }
             database.delMsg(data.msg._id)
             io.to(socket.room).emit('delMsg', info);
