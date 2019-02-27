@@ -209,8 +209,9 @@ io.sockets.on('connection', function (socket) {
             var s = new Readable()
             s.push(imgBuffer)
             s.push(null)
-           let filePath = `${config.uploadPathVoiceMsg}/${new Date().getTime()}.mp3`
+           let filePath = `${config.uploadPathVoiceMsg}/`
             lesson.addDir(filePath, function (newPath) {
+                filePath = `${config.uploadPathVoiceMsg}/${new Date().getTime()}.mp3`
                 s.pipe(fs.createWriteStream(filePath));
                 // we tell the client to execute 'updatechat' with 2 parameters
                 let info = {}
@@ -230,7 +231,7 @@ io.sockets.on('connection', function (socket) {
                 info.msg = ""
                 info.voice = `${config.downloadPathVoiceMsg}/${new Date().getTime()}.mp3`
                 let msgInfo = {}
-                msgInfo.msg = info.msg;
+                msgInfo.msg = "";
                 msgInfo.usrId = info.user._id
                 msgInfo.chId = socket.roomId
                 msgInfo.user = socket.userData
