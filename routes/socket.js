@@ -272,6 +272,8 @@ io.sockets.on('connection', function (socket) {
             msgInfo.chId = socket.roomId
             msgInfo.user = socket.userData
             msgInfo.time = new Date().getTime()
+            msgInfo.voice = "";
+            msgInfo.type = "text"
             database.addMsg(msgInfo , (newMsg)=>{
                 io.to(socket.room).emit('updateChat', newMsg);
             })
