@@ -93,7 +93,7 @@ var server = app.listen(app.get('port'), function() {
 
 
 
-io.attach(server , { pingInterval: 10e7,
-    pingTimeout: 10e7})
+io.attach(server , { pingInterval: 10,
+    pingTimeout: 4000})
 
 module.exports = app;
