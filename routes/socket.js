@@ -245,6 +245,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
+            logger.info("datain pin" , data)
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
