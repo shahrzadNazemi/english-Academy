@@ -226,8 +226,9 @@ io.sockets.on('connection', function (socket) {
             msgInfo.chId = socket.roomId
             msgInfo.user = socket.userData
             msgInfo.time = new Date().getTime()
-            database.addMsg(msgInfo)
-            io.to(socket.room).emit('updateChat', info);
+            database.addMsg(msgInfo , (newMsg)=>{
+                io.to(socket.room).emit('updateChat', newMsg);
+            })
         });
 
         socket.on('delete', function (data) {
