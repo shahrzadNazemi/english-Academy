@@ -618,7 +618,7 @@ router.post('/sound', (req, res) => {
                                                 })
                                             }
                                             else {
-                                                if(req.files.pic){
+                                                if (req.files.pic) {
                                                     var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
                                                     var file = req.files.pic.name.replace(`.${extension}`, '');
                                                     var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
@@ -663,9 +663,9 @@ router.post('/sound', (req, res) => {
                                                         })
                                                     });
                                                 }
-                                                else{
+                                                else {
                                                     req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
-                                                    req.body.coverUrl =""
+                                                    req.body.coverUrl = ""
                                                     database.addSound(req.body, (result)=> {
                                                         if (result == -1) {
                                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result1)=> {
@@ -726,7 +726,7 @@ router.post('/sound', (req, res) => {
                                                     })
                                                 }
                                                 else {
-                                                    if(req.files.pic){
+                                                    if (req.files.pic) {
                                                         var extension = req.files.pic.name.substring(req.files.pic.name.lastIndexOf('.') + 1).toLowerCase();
                                                         var file = req.files.pic.name.replace(`.${extension}`, '');
                                                         var newFile = new Date().getTime() + '_' + req.body.order + '.' + extension;
@@ -771,7 +771,7 @@ router.post('/sound', (req, res) => {
                                                             })
                                                         });
                                                     }
-                                                    else{
+                                                    else {
                                                         req.body.url = path.replace(`${config.uploadPathSound}`, `${config.downloadPathSound}`)
                                                         req.body.coverUrl = ""
                                                         database.addSound(req.body, (result)=> {
@@ -1227,7 +1227,7 @@ router.put('/video/:vdId', (req, res) => {
                     }
                     else {
                         video = video[0]
-                        if(video.url== undefined){
+                        if (video.url == undefined) {
                             video.url = ""
                         }
                         var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
@@ -1295,7 +1295,7 @@ router.put('/video/:vdId', (req, res) => {
 
                                                                             req.body.url = path.replace(`${config.uploadPathVideo}`, `${config.downloadPathVideo}`)
                                                                             if (req.files.srt) {
-                                                                                if(video.srtUrl== undefined){
+                                                                                if (video.srtUrl == undefined) {
                                                                                     video.srtUrl = ""
                                                                                 }
                                                                                 var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
@@ -1430,7 +1430,7 @@ router.put('/video/:vdId', (req, res) => {
 
             }
             else if (req.files.srt) {
-                if(video.srtUrl== undefined){
+                if (video.srtUrl == undefined) {
                     video.srtUrl = ""
                 }
                 var unlinkPath = video.srtUrl.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
@@ -1615,7 +1615,7 @@ router.put('/sound/:sndId', (req, res) => {
                 }
                 else {
                     if (req.files.file) {
-                        if(sound[0].url== undefined){
+                        if (sound[0].url == undefined) {
                             sound[0].url = ""
                         }
                         var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
@@ -1679,7 +1679,7 @@ router.put('/sound/:sndId', (req, res) => {
                                                                 }
                                                                 else {
                                                                     if (req.files.pic) {
-                                                                        if(sound[0].coverUrl== undefined){
+                                                                        if (sound[0].coverUrl == undefined) {
                                                                             sound[0].coverUrl = ""
                                                                         }
                                                                         var unlinkPath = sound[0].coverUrl.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
@@ -1790,7 +1790,7 @@ router.put('/sound/:sndId', (req, res) => {
                         })
                     }
                     else if (req.files.pic) {
-                        if(sound[0].coverUrl== undefined){
+                        if (sound[0].coverUrl == undefined) {
                             sound[0].coverUrl = ""
                         }
                         var unlinkPath = sound[0].coverUrl.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
@@ -2014,9 +2014,9 @@ router.get('/level/:lvlId', (req, res) => {
                                                             let currentTime = new Date().getTime()
                                                             if (currentTime < pass) {
                                                                 for (var i = 0; i < lessons.length; i++) {
-                                                                    lessons[i].lock = true
+                                                                    lessons[i].status = "locked"
                                                                     if (lessons[i]._id == view[0].lsnId) {
-                                                                        lessons[i].lock = true
+                                                                        lessons[i].status = "locked"
                                                                     }
                                                                 }
                                                                 if (req.query.cli == 1) {
@@ -2074,9 +2074,9 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
                                                             else {
                                                                 for (var i = 0; i < lessons.length; i++) {
-                                                                    lessons[i].lock = true
+                                                                    lessons[i].status = "locked"
                                                                     if (lessons[i]._id == view[0].lsnId) {
-                                                                        lessons[i].lock = false
+                                                                        lessons[i].status = "locked"
                                                                     }
                                                                 }
                                                                 if (req.query.cli == 1) {
@@ -2135,9 +2135,13 @@ router.get('/level/:lvlId', (req, res) => {
                                                         }
                                                         else {
                                                             for (var i = 0; i < lessons.length; i++) {
-                                                                lessons[i].lock = true
+                                                                lessons[i].status = "locked"
                                                                 if (lessons[i]._id == view[0].lsnId) {
-                                                                    lessons[i].lock = false
+                                                                    lessons[i].status = "current"
+                                                                    if(i !=0){
+                                                                        lessons[i - 1].status = "passed"
+
+                                                                    }
                                                                 }
                                                             }
                                                             if (req.query.cli == 1) {
@@ -2213,9 +2217,9 @@ router.get('/level/:lvlId', (req, res) => {
                                                     let currentTime = new Date().getTime()
                                                     if (currentTime < pass) {
                                                         for (var i = 0; i < lessons.length; i++) {
-                                                            lessons[i].lock = true
+                                                            lessons[i].status = "locked"
                                                             if (lessons[i]._id == view[0].lsnId) {
-                                                                lessons[i].lock = true
+                                                                lessons[i].status = "locked"
                                                             }
                                                         }
                                                         if (req.query.cli == 1) {
@@ -2273,9 +2277,13 @@ router.get('/level/:lvlId', (req, res) => {
                                                     }
                                                     else {
                                                         for (var i = 0; i < lessons.length; i++) {
-                                                            lessons[i].lock = true
+                                                            lessons[i].status = "locked"
                                                             if (lessons[i]._id == view[0].lsnId) {
-                                                                lessons[i].lock = false
+                                                                lessons[i].status = "current"
+                                                                if(i !=0){
+                                                                    lessons[i - 1].status = "passed"
+
+                                                                }
                                                             }
                                                         }
                                                         if (req.query.cli == 1) {
@@ -2334,9 +2342,13 @@ router.get('/level/:lvlId', (req, res) => {
                                                 }
                                                 else {
                                                     for (var i = 0; i < lessons.length; i++) {
-                                                        lessons[i].lock = true
+                                                        lessons[i].status = "locked"
                                                         if (lessons[i]._id == view[0].lsnId) {
-                                                            lessons[i].lock = false
+                                                            lessons[i].status = "current"
+                                                            if(i !=0){
+                                                                lessons[i - 1].status = "passed"
+
+                                                            }
                                                         }
                                                     }
                                                     if (req.query.cli == 1) {
@@ -2396,7 +2408,6 @@ router.get('/level/:lvlId', (req, res) => {
 
                                             }
                                         })
-
                                     }
                                 }
                             })
@@ -2794,7 +2805,7 @@ router.get('/:lsnId', (req, res) => {
                                                 //     types.push(typeList[i])
                                                 // }
                                                 if (typeList[i].title == "note") {
-                                                    logger.info("here in title = note" , typeList[i])
+                                                    logger.info("here in title = note", typeList[i])
                                                     typeList[i].noteData = notes
                                                     types.push(typeList[i])
                                                 }
@@ -3038,9 +3049,13 @@ router.get('/', (req, res)=> {
                             }
                             else {
                                 for (var i = 0; i < lessons.length; i++) {
-                                    lessons[i].lock = true
+                                    lessons[i].status = "locked"
                                     if (lessons[i]._id == view[0].lsnId) {
-                                        lessons[i].lock = false
+                                        lessons[i].status = "current"
+                                        if(i !=0){
+                                            lessons[i - 1].status = "passed"
+
+                                        }
                                     }
                                 }
                                 response.paginationClient(req.query.page, req.query.limit, lessons, (result1)=> {
@@ -3293,10 +3308,10 @@ router.delete('/video/:vdId', (req, res) => {
             })
         }
         else {
-            if(video.url == undefined){
-                video.url =""
+            if (video.url == undefined) {
+                video.url = ""
             }
-            if(video.thumbUrl == undefined){
+            if (video.thumbUrl == undefined) {
                 video.thumbUrl = ""
             }
             var unlinkPath = video.url.replace(`${config.downloadPathVideo}`, `${config.uploadPathVideo}`);
@@ -3348,10 +3363,10 @@ router.delete('/sound/:sndId', (req, res) => {
             })
         }
         else {
-            if(sound[0].url== undefined){
+            if (sound[0].url == undefined) {
                 sound[0].url = ""
             }
-            if(sound[0].coverUrl== undefined){
+            if (sound[0].coverUrl == undefined) {
                 sound[0].coverUrl = ""
             }
             var unlinkPath = sound[0].url.replace(`${config.downloadPathSound}`, `${config.uploadPathSound}`);
