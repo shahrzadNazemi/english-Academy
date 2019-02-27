@@ -237,8 +237,12 @@ io.sockets.on('connection', function (socket) {
             }
             let info = {}
             info.status = "done"
-            info._id = data.msgId
-            database.delMsg(data.msgId)
+            info._id = data.msg._id
+            if(data.msg.pinned == true){
+                info.pin = {}
+                info.pin._id = ""
+            }
+            database.delMsg(data.msg._id)
             io.to(socket.room).emit('delMsg', info);
         });
 
