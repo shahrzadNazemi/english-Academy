@@ -235,6 +235,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
+            logger.info("data" , data)
             let info = {}
             info.status = "done"
             info._id = data.msg._id
