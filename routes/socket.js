@@ -166,12 +166,12 @@ io.sockets.on('connection', function (socket) {
                         else {
                             let data = {}
 
-                            data.blocked  =0
-                            database.getStudentById(user._id , (currentUser)=>{
-                                if(currentUser.chatrooms != undefined){
-                                    for(var i=0;i<currentUser.chatrooms.length;i++){
-                                        if(currentUser.chatrooms[i] && currentUser.chatrooms[i]._id == user.chatroom._id){
-                                         data.blocked = currentUser.chatrooms[i].blocked
+                            data.blocked = 0
+                            database.getStudentById(user._id, (currentUser)=> {
+                                if (currentUser.chatrooms != undefined) {
+                                    for (var i = 0; i < currentUser.chatrooms.length; i++) {
+                                        if (currentUser.chatrooms[i] && currentUser.chatrooms[i]._id == user.chatroom._id) {
+                                            data.blocked = currentUser.chatrooms[i].blocked
                                         }
                                     }
                                 }
@@ -342,7 +342,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            if( typeof data.blocked =="string"){
+            if (typeof data.blocked == "string") {
                 data.blocked = parseInt(data.blocked)
             }
             // we tell the client to execute 'updatechat' with 2 parameters
@@ -364,7 +364,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            if( typeof data.blocked =="string"){
+            if (typeof data.blocked == "string") {
                 data.blocked = parseInt(data.blocked)
             }
             // we tell the client to execute 'updatechat' with 2 parameters
@@ -392,10 +392,12 @@ io.sockets.on('connection', function (socket) {
             info._id = data._id
             data.warned = true
             database.updateStudent(data, data._id, (warned)=> {
-               info.count = warned
+                info.count = warned
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
+                io.sockets.connected[socketIds[data.chaId]].emit('warnMsg', info)
+
                 io.sockets.connected[socketIds[data._id]].emit('warnMsg', info)
             })
 
