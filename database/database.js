@@ -3032,8 +3032,6 @@ module.exports.getBlockedStuOfChatRoom = (chId, cb)=> {
 
 };
 
-
-
 module.exports.getAllCertifications = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/certificate`,
@@ -3387,6 +3385,32 @@ module.exports.addMsg = (msgInfo , cb)=> {
     })
 };
 
+module.exports.addReportMsg = (reportInfo , cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/message/report`,
+        headers: {"content-Type": "application/json"},
+        body: reportInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.delMsg = (msgId)=> {
     request.delete({
         url: `${config.databaseServer}/api/message/${msgId}`,
@@ -3447,14 +3471,28 @@ module.exports.getChatroomByChatAdmin = (caId , cb)=> {
 
 
 
-module.exports.editMsg = (msgId , info)=> {
+module.exports.editMsg = (msgId , info , cb)=> {
     request.put({
         url: `${config.databaseServer}/api/message/${msgId}`,
         headers: {"content-Type": "application/json"},
         body :info,
         json: true
     }, function (err, response, body) {
-        console.log(response.statusCode)
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
     })
 };
 

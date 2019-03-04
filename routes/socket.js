@@ -364,19 +364,21 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            if (typeof data.blocked == "string") {
-                data.blocked = parseInt(data.blocked)
-            }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
             info._id = data._id
-            database.updateStudent(data, data._id, (blocked)=> {
-                info.blocked = blocked
-                info.msg = data.msg
+            database.editMsg(data.msgId, data, (reported)=> {
+                info.msg = reported
                 logger.info("socketIds[data._id]", socketIds)
+                if (reported.chatAdmins != 0 && reported.chatAdmins != -1) {
+                    for (var i = 0; i < reported.chatAdmins.length; i++) {
+                        io.sockets.connected[socketIds[reported.chatAdmins[i]._id]].emit('reportMsg', info)
+                    }
+                }
+
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
-                io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+
             })
 
 
@@ -396,8 +398,7 @@ io.sockets.on('connection', function (socket) {
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
-                io.sockets.connected[socketIds[data.chaId]].emit('warnMsg', info)
-
+                io.sockets.connected[socketIds[data.caId]].emit('warnMsg', info)
                 io.sockets.connected[socketIds[data._id]].emit('warnMsg', info)
             })
 
