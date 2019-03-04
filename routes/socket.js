@@ -6,22 +6,27 @@ var fs = require('fs')
 var Readable = require('stream').Readable
 let config = require('../util/config')
 let lesson = require('../routes/lesson')
+let socketIds = {};
 
 io.sockets.on('connection', function (socket) {
     console.log("socket Connected")
+
     database.getAllChatrooms((chatrooms)=> {
         let rooms = []
+
         if (chatrooms[0] != undefined) {
             for (var i = 0; i < chatrooms.length; i++) {
                 rooms.push(chatrooms[i].title)
             }
         }
         socket.on('getChatInfo', function (user) {
-
             var usernames = [];
+
             if (typeof user == "string") {
                 user = JSON.parse(user)
             }
+            socketIds[user._id] = socket.id;
+
             database.getChatroomById(user.chatroom._id, (chatRoom)=> {
                 if (chatRoom == -1) {
                     if (user.chatAdmin) {
@@ -115,12 +120,14 @@ io.sockets.on('connection', function (socket) {
 
                     if (1) {
                         if (user.chatAdmin == true) {
+
                             console.log("here")
                             database.getChatAdminById(user._id, (chatAdmin)=> {
                                 database.studentByChId(user.chatroom._id, (result)=> {
                                     for (var k = 0; k < result.length; k++) {
                                         if (result[k] != undefined) {
                                             usernames.push(result[k].username)
+
                                         }
                                     }
                                     socket.username = chatAdmin.username
@@ -130,6 +137,8 @@ io.sockets.on('connection', function (socket) {
                                     socket.room = user.chatroom.title;
                                     socket.roomId = user.chatroom._id
                                     socket.join(user.chatroom.title);
+
+                                    // socketIds.push(socket.id)
                                     let data = {}
                                     database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
                                         if (msg == 0 || msg == -1) {
@@ -146,6 +155,8 @@ io.sockets.on('connection', function (socket) {
                                         data.userCount = usernames.length
                                         // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                         // echo to room 1 that a person has connected to their room
+                                        logger.info("socketIds", socketIds)
+
                                         socket.emit('updateInfo', data)
                                     })
 
@@ -153,42 +164,57 @@ io.sockets.on('connection', function (socket) {
                             })
                         }
                         else {
-                            database.studentByChId(user.chatroom._id, (result)=> {
-                                for (var k = 0; k < result.length; k++) {
-                                    if (result[k] != undefined) {
-                                        if (result[k]._id == user._id) {
-                                            socket.username = result[k].username
-                                            result[k].role = "student"
-                                            socket.userData = result[k]
-                                            // delete socket.userData.password
+                            let data = {}
 
+                            data.blocked  =0
+                            database.getStudentById(user._id , (currentUser)=>{
+                                if(currentUser.chatrooms != undefined){
+                                    for(var i=0;i<currentUser.chatrooms.length;i++){
+                                        if(currentUser.chatrooms[i] && currentUser.chatrooms[i]._id == user.chatroom._id){
+                                         data.blocked = currentUser.chatrooms[i].blocked
                                         }
-                                        usernames.push(result[k].username)
                                     }
                                 }
-                                socket.room = user.chatroom.title;
-                                socket.roomId = user.chatroom._id
-                                socket.join(user.chatroom.title);
-                                let data = {}
-                                database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
-                                    if (msg == 0 || msg == -1) {
-                                        data.allChat = []
+                                database.studentByChId(user.chatroom._id, (result)=> {
+                                    for (var k = 0; k < result.length; k++) {
+                                        if (result[k] != undefined) {
+                                            if (result[k]._id == user._id) {
+                                                socket.username = result[k].username
+                                                result[k].role = "student"
+                                                socket.userData = result[k]
+                                                // delete socket.userData.password
+
+                                            }
+                                            usernames.push(result[k].username)
+                                        }
                                     }
-                                    else {
-                                        data.pin = msg[0].pin
-                                        data.mark = msg[0].mark
-                                        delete msg[0].pin
-                                        delete msg[0].mark
-                                        data.allChat = msg
-                                    }
-                                    data.title = socket.room
-                                    data.userCount = usernames.length
-                                    // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                                    // echo to room 1 that a person has connected to their room
-                                    // io.to(socket).emit('updateInfo', data);
-                                    socket.emit('updateInfo', data)
-                                    // socket.emit('updateRooms', rooms, socket.room);
+                                    socket.room = user.chatroom.title;
+                                    socket.roomId = user.chatroom._id
+                                    socket.join(user.chatroom.title);
+                                    socketIds[user._id] = socket.id
+                                    database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
+                                        if (msg == 0 || msg == -1) {
+                                            data.allChat = []
+                                        }
+                                        else {
+                                            data.pin = msg[0].pin
+                                            data.mark = msg[0].mark
+                                            delete msg[0].pin
+                                            delete msg[0].mark
+                                            data.allChat = msg
+                                        }
+                                        data.title = socket.room
+                                        data.userCount = usernames.length
+                                        // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                                        // echo to room 1 that a person has connected to their room
+                                        // io.to(socket).emit('updateInfo', data);
+                                        logger.info("warn io", socketIds)
+
+                                        socket.emit('updateInfo', data)
+                                        // socket.emit('updateRooms', rooms, socket.room);
+                                    })
                                 })
+
                             })
                         }
                     }
@@ -210,7 +236,7 @@ io.sockets.on('connection', function (socket) {
             s.push(imgBuffer)
             s.push(null)
             let time = new Date().getTime()
-           let filePath = `${config.uploadPathVoiceMsg}/`
+            let filePath = `${config.uploadPathVoiceMsg}/`
             lesson.addDir(filePath, function (newPath) {
                 filePath = `${config.uploadPathVoiceMsg}/${time}.mp3`
                 s.pipe(fs.createWriteStream(filePath));
@@ -237,8 +263,8 @@ io.sockets.on('connection', function (socket) {
                 msgInfo.chId = socket.roomId
                 msgInfo.user = socket.userData
                 msgInfo.time = new Date().getTime()
-                msgInfo.voice =  `${config.downloadPathVoiceMsg}/${time}.mp3`
-                database.addMsg(msgInfo , (newMsg)=>{
+                msgInfo.voice = `${config.downloadPathVoiceMsg}/${time}.mp3`
+                database.addMsg(msgInfo, (newMsg)=> {
                     io.to(socket.room).emit('updateChat', newMsg);
                 })
             })
@@ -274,21 +300,20 @@ io.sockets.on('connection', function (socket) {
             msgInfo.time = new Date().getTime()
             msgInfo.voice = "";
             msgInfo.type = "text"
-            database.addMsg(msgInfo , (newMsg)=>{
+            database.addMsg(msgInfo, (newMsg)=> {
                 io.to(socket.room).emit('updateChat', newMsg);
             })
         });
-
 
         socket.on('delete', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            logger.info("data" , data)
+            logger.info("data", data)
             let info = {}
             info.status = "done"
             info._id = data.msg._id
-            if(data.msg.pinned == true){
+            if (data.msg.pinned == true) {
                 let pin = {}
                 pin._id = ""
                 io.to(socket.room).emit('pinMsg', pin);
@@ -302,7 +327,7 @@ io.sockets.on('connection', function (socket) {
                 data = JSON.parse(data)
             }
             data = data.msg
-            logger.info("datain pin" , data)
+            logger.info("datain pin", data)
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
@@ -313,19 +338,48 @@ io.sockets.on('connection', function (socket) {
             io.to(socket.room).emit('pinMsg', info);
         });
 
-        socket.on('mark', function (data) {
+        socket.on('block', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
+            }
+            if( typeof data.blocked =="string"){
+                data.blocked = parseInt(data.blocked)
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
-            info._id = data.msgId
+            info._id = data._id
+            database.updateStudent(data, data._id, (blocked)=> {
+                info.blocked = blocked
+                info.msg = data.msg
+                logger.info("socketIds[data._id]", socketIds)
+                // io.to(socketIds[data._id]).emit('warnMsg', info)
+                io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+            })
 
-            data.marked = true
 
-            database.editMsg(data.msgId, data)
-            io.to(socket.room).emit('markMsg', info);
+        });
+
+        socket.on('report', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            if( typeof data.blocked =="string"){
+                data.blocked = parseInt(data.blocked)
+            }
+            // we tell the client to execute 'updatechat' with 2 parameters
+            let info = {}
+            info.status = "done"
+            info._id = data._id
+            database.updateStudent(data, data._id, (blocked)=> {
+                info.blocked = blocked
+                info.msg = data.msg
+                logger.info("socketIds[data._id]", socketIds)
+                // io.to(socketIds[data._id]).emit('warnMsg', info)
+                io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+            })
+
+
         });
 
         socket.on('warn', function (data) {
@@ -335,24 +389,16 @@ io.sockets.on('connection', function (socket) {
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             info.status = "done"
+            info._id = data._id
             data.warned = true
-            database.editMsg(data.msgId, data)
-            io.to(socket.room).emit('warnMsg', info);
-        });
+            database.updateStudent(data, data._id, (warned)=> {
+               info.count = warned
+                info.msg = data.msg
+                logger.info("socketIds[data._id]", socketIds)
+                // io.to(socketIds[data._id]).emit('warnMsg', info)
+                io.sockets.connected[socketIds[data._id]].emit('warnMsg', info)
+            })
 
-
-        socket.on('switchRoom', function (newroom) {
-            // leave the current room (stored in session)
-            socket.leave(socket.room);
-            // join new room, received as function parameter
-            socket.join(newroom);
-            socket.emit('updatechat', 'SERVER', 'you have connected to ' + newroom);
-            // sent message to OLD room
-            socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has left this room');
-            // update socket session room title
-            socket.room = newroom;
-            socket.broadcast.to(newroom).emit('updatechat', 'SERVER', socket.username + ' has joined this room');
-            socket.emit('updaterooms', rooms, newroom);
         });
 
         // when the user disconnects.. perform this

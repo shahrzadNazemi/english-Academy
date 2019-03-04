@@ -323,6 +323,28 @@ router.get('/:chId/student/', (req, res)=> {
 
 });
 
+router.get('/:chId/student/blocked', (req, res)=> {
+    database.getBlockedStuOfChatRoom(req.params.chId, (chatroom)=> {
+        if (chatroom == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (chatroom == 0) {
+            response.respondNotFound('چت روم مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
 router.get('/chatAdmin/:caId', (req, res)=> {
     database.getChatroomByChatAdmin(req.params.caId, (chatroom)=> {
         if (chatroom == -1) {
