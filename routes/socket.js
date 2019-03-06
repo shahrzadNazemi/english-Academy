@@ -417,7 +417,7 @@ io.sockets.on('connection', function (socket) {
 
                 }
                 if(socketIds[data.user._id] != undefined){
-                    io.sockets.connected[socketIds[data._id]].emit('warnMsg', info)
+                    io.sockets.connected[socketIds[data.user._id]].emit('warnMsg', info)
 
                 }
             })
