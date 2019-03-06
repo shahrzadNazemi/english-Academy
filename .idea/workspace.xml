@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/chatRoom.js" afterPath="$PROJECT_DIR$/routes/chatRoom.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,8 +44,8 @@
       <file leaf-file-name="socket.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/socket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="395" column="49" selection-start-line="395" selection-start-column="49" selection-end-line="395" selection-end-column="49" />
+            <state relative-caret-position="278">
+              <caret line="395" column="46" selection-start-line="395" selection-start-column="46" selection-end-line="395" selection-end-column="46" />
               <folding>
                 <element signature="e#517#646#0" expanded="false" />
                 <element signature="e#574#636#0" expanded="false" />
@@ -117,8 +115,8 @@
                 <element signature="e#17458#17682#0" expanded="false" />
                 <element signature="e#17533#17664#0" expanded="false" />
                 <element signature="e#17868#17923#0" expanded="false" />
-                <element signature="e#18680#19178#0" expanded="false" />
-                <element signature="e#18694#18743#0" expanded="false" />
+                <element signature="e#18835#19333#0" expanded="false" />
+                <element signature="e#18849#18898#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -3415,9 +3413,9 @@
         <option value="$PROJECT_DIR$/routes/question.js" />
         <option value="$PROJECT_DIR$/util/config.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
-        <option value="$PROJECT_DIR$/routes/socket.js" />
         <option value="$PROJECT_DIR$/routes/chatRoom.js" />
         <option value="$PROJECT_DIR$/database/database.js" />
+        <option value="$PROJECT_DIR$/routes/socket.js" />
       </list>
     </option>
   </component>
@@ -4019,12 +4017,12 @@
       <workItem from="1551505163177" duration="14667000" />
       <workItem from="1551591464023" duration="6621000" />
       <workItem from="1551677848826" duration="14329000" />
-      <workItem from="1551852137653" duration="375000" />
+      <workItem from="1551852137653" duration="564000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="953215000" />
+    <option name="totallyTimeSpent" value="953404000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -4037,7 +4035,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4957265" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33509833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28156996" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28156996" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11043873" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -10799,8 +10797,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/socket.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="395" column="49" selection-start-line="395" selection-start-column="49" selection-end-line="395" selection-end-column="49" />
+        <state relative-caret-position="278">
+          <caret line="395" column="46" selection-start-line="395" selection-start-column="46" selection-end-line="395" selection-end-column="46" />
           <folding>
             <element signature="e#517#646#0" expanded="false" />
             <element signature="e#574#636#0" expanded="false" />
@@ -10870,8 +10868,8 @@
             <element signature="e#17458#17682#0" expanded="false" />
             <element signature="e#17533#17664#0" expanded="false" />
             <element signature="e#17868#17923#0" expanded="false" />
-            <element signature="e#18680#19178#0" expanded="false" />
-            <element signature="e#18694#18743#0" expanded="false" />
+            <element signature="e#18835#19333#0" expanded="false" />
+            <element signature="e#18849#18898#0" expanded="false" />
           </folding>
         </state>
       </provider>
