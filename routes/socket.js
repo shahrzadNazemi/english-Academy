@@ -398,7 +398,7 @@ io.sockets.on('connection', function (socket) {
                 info.count = warned
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
-                logger.info("_id]", data._id)
+                logger.info("_id]", data)
 
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
                 if(socketIds[data.caId] != undefined){
