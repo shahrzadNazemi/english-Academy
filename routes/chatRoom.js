@@ -301,6 +301,28 @@ router.delete('/:chId', (req, res)=> {
     })
 });
 
+router.get('/:chId/reported', (req, res)=> {
+    database.getreportedMsgChatRoom(req.params.chId, (chatroom)=> {
+        if (chatroom == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (chatroom == 0) {
+            response.respondNotFound('چت روم مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
 router.get('/:chId/student/', (req, res)=> {
     database.studentByChId(req.params.chId, (chatroom)=> {
         if (chatroom == -1) {
@@ -344,6 +366,8 @@ router.get('/:chId/student/blocked', (req, res)=> {
     })
 
 });
+
+
 
 router.get('/chatAdmin/:caId', (req, res)=> {
     database.getChatroomByChatAdmin(req.params.caId, (chatroom)=> {
