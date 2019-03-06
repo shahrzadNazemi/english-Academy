@@ -342,11 +342,13 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
+            data = data.msg
             if (typeof data.blocked == "string") {
                 data.blocked = parseInt(data.blocked)
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
+            
             info.status = "done"
             info._id = data._id
             database.updateStudent(data, data._id, (blocked)=> {
