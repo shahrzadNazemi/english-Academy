@@ -351,8 +351,8 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             
             info.status = "done"
-            info._id = data._id
-            database.updateStudent(data, data._id, (blocked)=> {
+            info._id = data.user._id
+            database.updateStudent(data, data.user._id, (blocked)=> {
                 info.blocked = blocked
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
