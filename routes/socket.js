@@ -392,7 +392,7 @@ io.sockets.on('connection', function (socket) {
             
             let info = {}
             info.status = "done"
-            // info._id = data._id
+            data = data.msg
             data.warned = true
             database.updateStudent(data, data._id, (warned)=> {
                 info.count = warned
