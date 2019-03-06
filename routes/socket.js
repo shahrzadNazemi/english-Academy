@@ -361,7 +361,7 @@ io.sockets.on('connection', function (socket) {
                     io.sockets.connected[socketIds[data.caId]].emit('blockMsg', info)
                 }
                 if(socketIds[data.user._id] != undefined){
-                    io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+                    io.sockets.connected[socketIds[data.user._id]].emit('blockMsg', info)
                 }
             })
 
