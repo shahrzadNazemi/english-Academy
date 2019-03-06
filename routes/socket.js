@@ -357,6 +357,9 @@ io.sockets.on('connection', function (socket) {
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
+                if(socketIds[data.caId] != undefined){
+                    io.sockets.connected[socketIds[data.caId]].emit('blockMsg', info)
+                }
                 if(socketIds[data._id] != undefined){
                     io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
                 }
