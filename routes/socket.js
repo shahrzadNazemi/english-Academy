@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
                         chatRoom.endTime = parseInt(chatRoom.endTime)
                     }
 
-                    if (1) {
+                    if (chatRoom.startTime <= moment().format('HH') && moment().format('HH') <= chatRoom.endTime) {
                         if (user.chatAdmin == true) {
 
                             console.log("here")
@@ -165,7 +165,6 @@ io.sockets.on('connection', function (socket) {
                         }
                         else {
                             let data = {}
-
                             data.blocked = 0
                             database.getStudentById(user._id, (currentUser)=> {
                                 if (currentUser.chatrooms != undefined) {
@@ -175,46 +174,57 @@ io.sockets.on('connection', function (socket) {
                                         }
                                     }
                                 }
-                                database.studentByChId(user.chatroom._id, (result)=> {
-                                    for (var k = 0; k < result.length; k++) {
-                                        if (result[k] != undefined) {
-                                            if (result[k]._id == user._id) {
-                                                socket.username = result[k].username
-                                                result[k].role = "student"
-                                                socket.userData = result[k]
-                                                // delete socket.userData.password
-
+                                database.getChatAdminByChatRoom(user.chatroom._id  , (chatAdmins)=>{
+                                    logger.info("chatAdmins" , chatAdmins)
+                                    if(chatAdmins !=0 && chatAdmins!= -1 ){
+                                        for (var k = 0; k < chatAdmins.length; k++) {
+                                            if (chatAdmins[k] != undefined) {
+                                                usernames.push(chatAdmins[k].username)
                                             }
-                                            usernames.push(result[k].username)
                                         }
                                     }
-                                    socket.room = user.chatroom.title;
-                                    socket.roomId = user.chatroom._id
-                                    socket.join(user.chatroom.title);
-                                    socketIds[user._id] = socket.id
-                                    database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
-                                        if (msg == 0 || msg == -1) {
-                                            data.allChat = []
-                                        }
-                                        else {
-                                            data.pin = msg[0].pin
-                                            data.mark = msg[0].mark
-                                            delete msg[0].pin
-                                            delete msg[0].mark
-                                            data.allChat = msg
-                                        }
-                                        data.title = socket.room
-                                        data.userCount = usernames.length
-                                        // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
-                                        // echo to room 1 that a person has connected to their room
-                                        // io.to(socket).emit('updateInfo', data);
-                                        logger.info("warn io", socketIds)
+                                    database.studentByChId(user.chatroom._id, (result)=> {
+                                        for (var k = 0; k < result.length; k++) {
+                                            if (result[k] != undefined) {
+                                                if (result[k]._id == user._id) {
+                                                    socket.username = result[k].username
+                                                    result[k].role = "student"
+                                                    socket.userData = result[k]
+                                                    // delete socket.userData.password
 
-                                        socket.emit('updateInfo', data)
-                                        // socket.emit('updateRooms', rooms, socket.room);
+                                                }
+                                                usernames.push(result[k].username)
+                                            }
+                                        }
+                                        socket.room = user.chatroom.title;
+                                        socket.roomId = user.chatroom._id
+                                        socket.join(user.chatroom.title);
+                                        socketIds[user._id] = socket.id
+                                        database.getMsgByChatRoom(user.chatroom._id, (msg)=> {
+                                            if (msg == 0 || msg == -1) {
+                                                data.allChat = []
+                                            }
+                                            else {
+                                                data.pin = msg[0].pin
+                                                data.mark = msg[0].mark
+                                                delete msg[0].pin
+                                                delete msg[0].mark
+                                                data.allChat = msg
+                                            }
+                                            data.title = socket.room
+                                            data.userCount = usernames.length
+                                            // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
+                                            // echo to room 1 that a person has connected to their room
+                                            // io.to(socket).emit('updateInfo', data);
+                                            logger.info("warn io", socketIds)
+
+                                            socket.emit('updateInfo', data)
+                                            // socket.emit('updateRooms', rooms, socket.room);
+                                        })
                                     })
-                                })
 
+
+                                })
                             })
                         }
                     }
@@ -346,21 +356,28 @@ io.sockets.on('connection', function (socket) {
             if (typeof data.blocked == "string") {
                 data.blocked = parseInt(data.blocked)
             }
-            logger.info("data" , data)
+
+            logger.info("data", data)
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
-            
+
             info.status = "done"
             info._id = data.user._id
+            if (data.blocked == 0) {
+                data.blockedTime = ""
+            }
+            else {
+                data.blockedTime = new Date().getTime()
+            }
             database.updateStudent(data, data.user._id, (blocked)=> {
                 info.blocked = blocked
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
-                if(socketIds[data.caId] != undefined){
+                if (socketIds[data.caId] != undefined) {
                     io.sockets.connected[socketIds[data.caId]].emit('blockMsg', info)
                 }
-                if(socketIds[data.user._id] != undefined){
+                if (socketIds[data.user._id] != undefined) {
                     io.sockets.connected[socketIds[data.user._id]].emit('blockMsg', info)
                 }
             })
@@ -381,7 +398,7 @@ io.sockets.on('connection', function (socket) {
                 logger.info("socketIds[data._id]", socketIds)
                 if (reported.chatAdmins != 0 && reported.chatAdmins != -1) {
                     for (var i = 0; i < reported.chatAdmins.length; i++) {
-                        if(socketIds[reported.chatAdmins[i]._id] != undefined){
+                        if (socketIds[reported.chatAdmins[i]._id] != undefined) {
                             io.sockets.connected[socketIds[reported.chatAdmins[i]._id]].emit('reportMsg', info)
 
                         }
@@ -400,7 +417,7 @@ io.sockets.on('connection', function (socket) {
                 data = JSON.parse(data)
             }
             // we tell the client to execute 'updatechat' with 2 parameters
-            
+
             let info = {}
             info.status = "done"
             data = data.msg
@@ -412,11 +429,10 @@ io.sockets.on('connection', function (socket) {
                 logger.info("_id]", data)
 
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
-                if(socketIds[data.caId] != undefined){
+                if (socketIds[data.caId] != undefined) {
                     io.sockets.connected[socketIds[data.caId]].emit('warnMsg', info)
-
                 }
-                if(socketIds[data.user._id] != undefined){
+                if (socketIds[data.user._id] != undefined) {
                     io.sockets.connected[socketIds[data.user._id]].emit('warnMsg', info)
 
                 }
