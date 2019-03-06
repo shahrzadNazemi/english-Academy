@@ -354,7 +354,9 @@ io.sockets.on('connection', function (socket) {
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
                 // io.to(socketIds[data._id]).emit('warnMsg', info)
-                io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+                if(socketIds[data._id] != undefined){
+                    io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
+                }
             })
 
 
@@ -373,7 +375,10 @@ io.sockets.on('connection', function (socket) {
                 logger.info("socketIds[data._id]", socketIds)
                 if (reported.chatAdmins != 0 && reported.chatAdmins != -1) {
                     for (var i = 0; i < reported.chatAdmins.length; i++) {
-                        io.sockets.connected[socketIds[reported.chatAdmins[i]._id]].emit('reportMsg', info)
+                        if(socketIds[reported.chatAdmins[i]._id] != undefined){
+                            io.sockets.connected[socketIds[reported.chatAdmins[i]._id]].emit('reportMsg', info)
+
+                        }
                     }
                 }
 
