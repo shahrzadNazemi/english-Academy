@@ -405,7 +405,7 @@ io.sockets.on('connection', function (socket) {
             info.status = "done"
             data = data.msg
             data.warned = true
-            database.updateStudent(data, data._id, (warned)=> {
+            database.updateStudent(data, data.user._id, (warned)=> {
                 info.count = warned
                 info.msg = data.msg
                 logger.info("socketIds[data._id]", socketIds)
