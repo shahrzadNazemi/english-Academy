@@ -360,7 +360,7 @@ io.sockets.on('connection', function (socket) {
                 if(socketIds[data.caId] != undefined){
                     io.sockets.connected[socketIds[data.caId]].emit('blockMsg', info)
                 }
-                if(socketIds[data._id] != undefined){
+                if(socketIds[data.user._id] != undefined){
                     io.sockets.connected[socketIds[data._id]].emit('blockMsg', info)
                 }
             })
@@ -416,7 +416,7 @@ io.sockets.on('connection', function (socket) {
                     io.sockets.connected[socketIds[data.caId]].emit('warnMsg', info)
 
                 }
-                if(socketIds[data._id] != undefined){
+                if(socketIds[data.user._id] != undefined){
                     io.sockets.connected[socketIds[data._id]].emit('warnMsg', info)
 
                 }
