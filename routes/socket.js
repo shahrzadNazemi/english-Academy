@@ -346,6 +346,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data.blocked == "string") {
                 data.blocked = parseInt(data.blocked)
             }
+            logger.info("data" , data)
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
             
