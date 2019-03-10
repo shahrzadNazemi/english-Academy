@@ -64,6 +64,12 @@ module.exports.uploadPathVoiceMsg = "/var/fileAccess/site/upload/message"
 
 module.exports.downloadPathVoiceMsg= "http://185.94.99.69:9000/upload/message";
 
+module.exports.uploadPathTutorImage= "/var/fileAccess/site/upload/tutor/avatar"
+
+module.exports.downloadPathTutorImage= "http://185.94.99.69:9000/upload/tutor/avatar";
+
+
+
 
 
 

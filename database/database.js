@@ -1035,6 +1035,159 @@ module.exports.updateText = (updateInfo, txtId, cb)=> {
     })
 };
 
+module.exports.updateTutor = (updateInfo, tId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/tutor/${tId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getTutorById = (tId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/tutor/${tId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.delTutor = (tId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/users/tutor/${tId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getTutors = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/tutor`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.addTutor = (updateInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/tutor`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.updateNote = (updateInfo, ntId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/lesson/note/${ntId}`,
@@ -1622,8 +1775,6 @@ module.exports.getChatAdmins = (cb)=> {
         }
     })
 };
-
-
 
 
 module.exports.getStudentOfLevel = (lvlId, cb)=> {
@@ -3411,7 +3562,7 @@ module.exports.answerQuestion = (info, cb)=> {
 };
 
 
-module.exports.addMsg = (msgInfo , cb)=> {
+module.exports.addMsg = (msgInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/message`,
         headers: {"content-Type": "application/json"},
@@ -3436,7 +3587,7 @@ module.exports.addMsg = (msgInfo , cb)=> {
     })
 };
 
-module.exports.addReportMsg = (reportInfo , cb)=> {
+module.exports.addReportMsg = (reportInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/message/report`,
         headers: {"content-Type": "application/json"},
@@ -3472,7 +3623,7 @@ module.exports.delMsg = (msgId)=> {
     })
 };
 
-module.exports.getMsgByChatRoom = (chId , cb)=> {
+module.exports.getMsgByChatRoom = (chId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/message/chatRoom/${chId}`,
         headers: {"content-Type": "application/json"},
@@ -3496,7 +3647,7 @@ module.exports.getMsgByChatRoom = (chId , cb)=> {
     })
 };
 
-module.exports.getChatroomByChatAdmin = (caId , cb)=> {
+module.exports.getChatroomByChatAdmin = (caId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/chatroom/chatAdmin${caId}`,
         headers: {"content-Type": "application/json"},
@@ -3521,12 +3672,11 @@ module.exports.getChatroomByChatAdmin = (caId , cb)=> {
 };
 
 
-
-module.exports.editMsg = (msgId , info , cb)=> {
+module.exports.editMsg = (msgId, info, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/message/${msgId}`,
         headers: {"content-Type": "application/json"},
-        body :info,
+        body: info,
         json: true
     }, function (err, response, body) {
         if (err) {
