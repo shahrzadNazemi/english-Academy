@@ -836,27 +836,35 @@ router.post('/type', (req, res)=> {
         })
     }
     else {
+if(req.body.category[0] != undefined && req.body.title != "VIP"){
+    errorData = {"category": ["دسته بندی برای این نوع دسته بندی نمیتواند بیش از یک عدد باشد."]}
+    response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, "category", (result)=> {
+        res.json(result)
+    })
+}
+        else{
+    database.addType(req.body, (type)=> {
+        if (type == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (type == -3) {
+            let data = {"title": "عنوان نباید تکراری باشد"}
+            response.validation('اطلاعات وارد شده اشتباه است.', data, 'duplicated', (result)=> {
+                res.json(result)
 
-        database.addType(req.body, (type)=> {
-            if (type == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (type == -3) {
-                let data = {"title": "عنوان نباید تکراری باشد"}
-                response.validation('اطلاعات وارد شده اشتباه است.', data, 'duplicated', (result)=> {
-                    res.json(result)
+            })
+        }
+        else {
+            response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
+                res.json(result)
 
-                })
-            }
-            else {
-                response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
-                    res.json(result)
+            })
+        }
+    })
 
-                })
-            }
-        })
+}
     }
 });
 
