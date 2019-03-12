@@ -38,7 +38,7 @@ const type = {
     type: "object",
     properties: {
         title: {type: "string"},
-        category: {type: "object"},
+        category: {type:[ "object", "array"]}
     },
     required: ["title"],
     additionalProperties: false
@@ -836,6 +836,7 @@ router.post('/type', (req, res)=> {
         })
     }
     else {
+
         database.addType(req.body, (type)=> {
             if (type == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

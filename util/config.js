@@ -64,9 +64,17 @@ module.exports.uploadPathVoiceMsg = "/var/fileAccess/site/upload/message"
 
 module.exports.downloadPathVoiceMsg= "http://185.94.99.69:9000/upload/message";
 
+module.exports.downloadPathVIPVoiceMsg= "http://185.94.99.69:9000/upload/message/vip/voice";
+
+module.exports.uploadPathVIPVoiceMsg = "/var/fileAccess/site/upload/message/vip/voice"
+
 module.exports.uploadPathTutorImage= "/var/fileAccess/site/upload/tutor/avatar"
 
 module.exports.downloadPathTutorImage= "http://185.94.99.69:9000/upload/tutor/avatar";
+
+module.exports.downloadPathVIPImgMsg= "http://185.94.99.69:9000/upload/message/vip/img";
+
+module.exports.uploadPathVIPImgMsg = "/var/fileAccess/site/upload/message/vip/img"
 
 
 

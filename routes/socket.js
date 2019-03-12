@@ -9,8 +9,6 @@ let lesson = require('../routes/lesson')
 let socketIds = {};
 
 io.sockets.on('connection', function (socket) {
-    console.log("socket Connected")
-
     database.getAllChatrooms((chatrooms)=> {
         let rooms = []
 
@@ -174,9 +172,9 @@ io.sockets.on('connection', function (socket) {
                                         }
                                     }
                                 }
-                                database.getChatAdminByChatRoom(user.chatroom._id  , (chatAdmins)=>{
-                                    logger.info("chatAdmins" , chatAdmins)
-                                    if(chatAdmins !=0 && chatAdmins!= -1 ){
+                                database.getChatAdminByChatRoom(user.chatroom._id, (chatAdmins)=> {
+                                    logger.info("chatAdmins", chatAdmins)
+                                    if (chatAdmins != 0 && chatAdmins != -1) {
                                         for (var k = 0; k < chatAdmins.length; k++) {
                                             if (chatAdmins[k] != undefined) {
                                                 usernames.push(chatAdmins[k].username)
@@ -439,6 +437,151 @@ io.sockets.on('connection', function (socket) {
             })
 
         });
+
+        //tutor
+        socket.on('tutor', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            let info = {}
+            socketIds[data._id] = socket.id;
+            info.msg = "you are connected now"
+            socket.emit('connected', info)
+
+        });
+        socket.on('chatRequest', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            let info = {}
+            socketIds[data._id] = socket.id;
+            database.getTutorByLevel(data.lvlId, (tutors)=> {
+                if (tutors == -1 || tutors == 0) {
+                    info.msg = "there is no tutor right now"
+                    socket.emit('noTutor', info)
+                }
+                else {
+                    for (var i = 0; i < tutors.length; i++) {
+                        if (socketIds[tutors[i]._id] != undefined) {
+                            io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', data)
+                        }
+
+                    }
+                }
+            })
+
+            // io.to(socketIds[data._id]).emit('warnMsg', info)
+        });
+        socket.on('acceptChat', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            database.popUserFromOtherTutors(data.user, (popoed)=> {
+                database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
+                    database.getVIPUserMessages(data.user._id, (allMesssages)=> {
+                        if (allMesssages == -1 || allMesssages == 0) {
+                            data.allMessages = []
+                        }
+                        else {
+                            data.allMessages = allMesssages
+                        }
+                        if (socketIds[data.user._id] != undefined) {
+                            io.sockets.connected[socketIds[data.user._id]].emit('chatAccepted', data)
+                        }
+                    })
+
+                })
+            })
+        });
+        socket.on('pvChat', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+            let info = {}
+            info.usrId = data.user._id;
+            info.tutorId = data.tutor._id;
+            info.time = new Date().getTime()
+            info.msg = data.msg
+            info.voice = ""
+            info.img = ""
+            database.addTutorMsg(info, (message)=> {
+                message.user = data.user
+                message.tutor = data.tutor
+                if (socketIds[data.user._id])
+                io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                if (socketIds[data.tutor._id])
+                io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
+            })
+        });
+        socket.on('pvVoice', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+
+            let base64 = data.base64
+            const imgBuffer = Buffer.from(base64, 'base64')
+            var s = new Readable()
+            s.push(imgBuffer)
+            s.push(null)
+            let time = new Date().getTime()
+            let filePath = `${config.uploadPathVIPVoiceMsg}/`
+            lesson.addDir(filePath, function (newPath) {
+                filePath = `${config.uploadPathVIPVoiceMsg}/${time}.mp3`
+                s.pipe(fs.createWriteStream(filePath));
+                // we tell the client to execute 'updatechat' with 2 parameters
+                let msgInfo = {}
+                msgInfo.msg = "";
+                msgInfo.img = "";
+                msgInfo.usrId = data.user._id
+                msgInfo.tutorId = data.tutor._id
+                msgInfo.time = new Date().getTime()
+                msgInfo.voice = `${config.downloadPathVIPVoiceMsg}/${time}.mp3`
+                database.addTutorMsg(msgInfo, (newMsg)=> {
+                    if (socketIds[data.user._id])
+                        io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
+                    if (socketIds[data.tutor._id])
+
+                        io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
+                })
+            })
+
+
+        });
+        socket.on('pvImg', function (data) {
+            if (typeof data == "string") {
+                data = JSON.parse(data)
+            }
+
+            let base64 = data.base64
+            const imgBuffer = Buffer.from(base64, 'base64')
+            var s = new Readable()
+            s.push(imgBuffer)
+            s.push(null)
+            let time = new Date().getTime()
+            let filePath = `${config.uploadPathVIPImgMsg}/`
+            lesson.addDir(filePath, function (newPath) {
+                filePath = `${config.uploadPathVIPImgMsg}/${time}.png`
+                s.pipe(fs.createWriteStream(filePath));
+                // we tell the client to execute 'updatechat' with 2 parameters
+                let msgInfo = {}
+                msgInfo.msg = "";
+                msgInfo.img = "";
+                msgInfo.usrId = data.user._id
+                msgInfo.tutorId = data.tutor._id
+                msgInfo.time = new Date().getTime()
+                msgInfo.voice = `${config.downloadPathVIPImgMsg}/${time}.png`
+                database.addTutorMsg(msgInfo, (newMsg)=> {
+                    if (socketIds[data.user._id])
+                        io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
+                    if (socketIds[data.tutor._id])
+
+                        io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
+                })
+            })
+
+
+        });
+
 
         // when the user disconnects.. perform this
         socket.on('disconnect', function (reason) {

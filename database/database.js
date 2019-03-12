@@ -1066,6 +1066,162 @@ module.exports.updateTutor = (updateInfo, tId, cb)=> {
     })
 };
 
+module.exports.addUserForTutor = (updateInfo, tId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/tutor/${tId}/student`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.popUserFromOtherTutors = (updateInfo, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/tutor/popStu`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
+module.exports.addTutorMsg = (data , cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/message/tutor`,
+        headers: {"content-Type": "application/json"},
+        body: data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getTutorByLevel = (lvlId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/tutor/level/${lvlId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getVIPUserMessages = (usrId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/message/user/vip/${usrId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
+
 module.exports.getTutorById = (tId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/tutor/${tId}`,
@@ -1095,6 +1251,8 @@ module.exports.getTutorById = (tId, cb)=> {
         }
     })
 };
+
+
 
 module.exports.delTutor = (tId, cb)=> {
     request.delete({
