@@ -205,7 +205,7 @@ router.post('/', (req, res)=> {
                 req.body.answers = JSON.parse(req.body.answers)
             }
             database.getTypeById(req.body.typeId, (type)=> {
-                if (type == -1 ||type == 0) {
+                if (type == -1 || type == 0) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
                     })
@@ -311,7 +311,7 @@ router.put('/:QId', (req, res)=> {
         }
         else {
             if (req.files) {
-                if(result.url== undefined){
+                if (result.url == undefined) {
                     result.url = ""
                 }
                 var unlinkPath = result.url.replace(`${config.downloadPathQvoice}`, `${config.uploadPathQvoice}`);
@@ -555,15 +555,16 @@ router.post('/answer', (req, res)=> {
         }
         else {
             req.body.usrId = student[0]._id
-            if(req.body.lsnId == undefined){
-                database.getExamById(req.body.exaId , (exam)=>{
-                    if(exam == 0 || exam == -1){
+            //answerExam
+            if (req.body.lsnId == undefined && req.body.type == "exam") {
+                database.getExamById(req.body.exaId, (exam)=> {
+                    if (exam == 0 || exam == -1) {
                         response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
                             res.json(result)
                         })
                     }
-                    else{
-                        req.body.lsnId =exam.preLesson.value
+                    else {
+                        req.body.lsnId = exam.preLesson.value
                         database.getResultUsrLsn(student[0]._id, req.body.lsnId, (result)=> {
                             if (result == -1) {
                                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -578,17 +579,14 @@ router.post('/answer', (req, res)=> {
 
                             }
                             else {
-                                if(typeof result.timePassed == "string"){
-                                    result.timePassed = parseInt(result.timePassed)
-                                }
-                                if(typeof result.examTimePassed == "string"){
+                                if (typeof result.examTimePassed == "string") {
                                     result.examTimePassed = parseInt(result.examTimePassed)
                                 }
-                                if(req.body.type == "exam"){
+                                //examed before
                                     if (result.examTimePassed) {
-                                        let pass = moment(result.examTimePassed).add(1 , 'h')
+                                        let pass = moment(result.examTimePassed).add(1, 'h')
                                         let currentTime = new Date().getTime()
-                                        if (currentTime < moment(result.examTimePassed).add(result.exam.time , 'm')) {
+                                        if (currentTime < moment(result.examTimePassed).add(result.exam.time, 'm')) {
                                             database.answerQuestion(req.body, (question)=> {
                                                 if (question == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -641,6 +639,7 @@ router.post('/answer', (req, res)=> {
 
 
                                     }
+                                        //firstTime
                                     else {
                                         database.answerQuestion(req.body, (question)=> {
                                             if (question == -1) {
@@ -663,87 +662,7 @@ router.post('/answer', (req, res)=> {
                                         })
 
                                     }
-                                }
-                                else{
-                                    if (result.timePassed) {
-                                        let pass = moment(result.timePassed).add(1 , 'h')
-                                        let currentTime = new Date().getTime()
-                                        if (currentTime < moment(result.timePassed).add(result.quiz.time , 'm')) {
-                                            database.answerQuestion(req.body, (question)=> {
-                                                if (question == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else if (question == 0) {
-                                                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
 
-                                                }
-                                                else {
-                                                    response.response('اطلاعات سوالات', question, (result)=> {
-                                                        res.json(result)
-                                                    })
-
-                                                }
-                                            })
-                                        }
-                                        else {
-                                            if (pass < currentTime) {
-                                                req.body.round = true
-                                                database.answerQuestion(req.body, (question)=> {
-                                                    if (question == -1) {
-                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                            res.json(result)
-                                                        })
-                                                    }
-                                                    else if (question == 0) {
-                                                        response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                            res.json(result)
-                                                        })
-
-                                                    }
-                                                    else {
-                                                        response.response('اطلاعات سوالات', question, (result)=> {
-                                                            res.json(result)
-                                                        })
-
-                                                    }
-                                                })
-                                            }
-                                            else {
-                                                response.validation('یک ساعت ', {}, 403, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                        }
-
-
-                                    }
-                                    else {
-                                        database.answerQuestion(req.body, (question)=> {
-                                            if (question == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else if (question == 0) {
-                                                response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                            else {
-                                                response.response('اطلاعات سوالات', question, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                        })
-
-                                    }
-                                }
 
                             }
                         })
@@ -751,196 +670,112 @@ router.post('/answer', (req, res)=> {
                     }
                 })
             }
-                else{
-                    database.getResultUsrLsn(student[0]._id, req.body.lsnId, (result)=> {
-                        if (result == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                res.json(result)
-                            })
+            //answerQuiz
+            else {
+                database.getResultUsrLsn(student[0]._id, req.body.lsnId, (result)=> {
+                    if (result == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+
+                    }
+                    else if (result == 0) {
+                        response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+
+                    }
+                    else {
+                        if (typeof result.timePassed == "string") {
+                            result.timePassed = parseInt(result.timePassed)
+                        }
+                        //answered before
+                        if (result.timePassed) {
+                            let pass = moment(result.timePassed).add(1, 'h')
+                            let currentTime = new Date().getTime()
+                            //if currently doing the exam
+                            if (currentTime < moment(result.timePassed).add(result.quiz.time, 'm')) {
+                                database.answerQuestion(req.body, (question)=> {
+                                    if (question == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (question == 0) {
+                                        response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+
+                                    }
+                                    else {
+                                        response.response('اطلاعات سوالات', question, (result)=> {
+                                            res.json(result)
+                                        })
+
+                                    }
+                                })
+                            }
+                                //else
+                            else {
+                                if (pass < currentTime) {
+                                    req.body.round = true
+                                    database.answerQuestion(req.body, (question)=> {
+                                        if (question == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (question == 0) {
+                                            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+
+                                        }
+                                        else {
+                                            response.response('اطلاعات سوالات', question, (result)=> {
+                                                res.json(result)
+                                            })
+
+                                        }
+                                    })
+                                }
+                                else {
+                                    response.validation('یک ساعت ', {}, 403, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                            }
+
 
                         }
-                        else if (result == 0) {
-                            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                res.json(result)
-                            })
-
-                        }
+                        //answered for the first time
                         else {
-                            if(typeof result.timePassed == "string"){
-                                result.timePassed = parseInt(result.timePassed)
-                            }
-                            if(typeof result.examTimePassed == "string"){
-                                result.examTimePassed = parseInt(result.examTimePassed)
-                            }
-                            if(req.body.type == "exam"){
-                                if (result.examTimePassed) {
-                                    let pass = moment(result.examTimePassed).add(1 , 'h')
-                                    let currentTime = new Date().getTime()
-                                    if (currentTime < moment(result.examTimePassed).add(result.exam.time , 'm')) {
-                                        database.answerQuestion(req.body, (question)=> {
-                                            if (question == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else if (question == 0) {
-                                                response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                            else {
-                                                response.response('اطلاعات سوالات', question, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                        })
-                                    }
-                                    else {
-                                        if (pass < currentTime) {
-                                            req.body.round = true
-                                            database.answerQuestion(req.body, (question)=> {
-                                                if (question == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else if (question == 0) {
-                                                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-
-                                                }
-                                                else {
-                                                    response.response('اطلاعات سوالات', question, (result)=> {
-                                                        res.json(result)
-                                                    })
-
-                                                }
-                                            })
-                                        }
-                                        else {
-                                            response.validation('یک ساعت ', {}, 403, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                    }
-
-
+                            database.answerQuestion(req.body, (question)=> {
+                                if (question == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
                                 }
-                                else {
-                                    database.answerQuestion(req.body, (question)=> {
-                                        if (question == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (question == 0) {
-                                            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-
-                                        }
-                                        else {
-                                            response.response('اطلاعات سوالات', question, (result)=> {
-                                                res.json(result)
-                                            })
-
-                                        }
+                                else if (question == 0) {
+                                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
+                                        res.json(result)
                                     })
 
                                 }
-                            }
-                            else{
-                                //answered before
-                                if (result.timePassed) {
-                                    let pass = moment(result.timePassed).add(1 , 'h')
-                                    let currentTime = new Date().getTime()
-                                    if (currentTime < moment(result.timePassed).add(result.quiz.time , 'm')) {
-                                        database.answerQuestion(req.body, (question)=> {
-                                            if (question == -1) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else if (question == 0) {
-                                                response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                            else {
-                                                response.response('اطلاعات سوالات', question, (result)=> {
-                                                    res.json(result)
-                                                })
-
-                                            }
-                                        })
-                                    }
-                                    else {
-                                        if (pass < currentTime) {
-                                            req.body.round = true
-                                            database.answerQuestion(req.body, (question)=> {
-                                                if (question == -1) {
-                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-                                                }
-                                                else if (question == 0) {
-                                                    response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                        res.json(result)
-                                                    })
-
-                                                }
-                                                else {
-                                                    response.response('اطلاعات سوالات', question, (result)=> {
-                                                        res.json(result)
-                                                    })
-
-                                                }
-                                            })
-                                        }
-                                        else {
-                                            response.validation('یک ساعت ', {}, 403, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                    }
-
-
-                                }
-                                 //answered for the first time
                                 else {
-                                    database.answerQuestion(req.body, (question)=> {
-                                        if (question == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (question == 0) {
-                                            response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-
-                                        }
-                                        else {
-                                            response.response('اطلاعات سوالات', question, (result)=> {
-                                                res.json(result)
-                                            })
-
-                                        }
+                                    response.response('اطلاعات سوالات', question, (result)=> {
+                                        res.json(result)
                                     })
 
                                 }
-                            }
+                            })
 
                         }
-                    })
+                    }
+                })
 
-                }
-            // }
-          
+            }
+
 
         }
     })
