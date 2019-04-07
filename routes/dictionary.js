@@ -4,6 +4,7 @@ var router = express.Router();
 let logger = require('../util/logger');
 let response = require('../util/responseHelper');
 let fs = require('fs')
+let config = require('../util/config')
 
 
 
@@ -37,13 +38,12 @@ router.post('/', (req, res)=> {
     });
 });
 
-var fs = require('fs');
 var es = require('elasticsearch');
 var client = new es.Client({
-    host: 'localhost:9200'
+    host: config.elasticHost
 });
 
-fs.readFile('recipeitems-latest.json', {encoding: 'utf-8'}, function(err, data) {
+fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function(err, data) {
     if (err) { throw err; }
 
     // Build up a giant bulk request for elasticsearch.

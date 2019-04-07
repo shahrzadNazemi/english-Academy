@@ -1545,8 +1545,8 @@ router.put('/student/:stdId', (req, res) => {
     if (req.body.mobile == "") {
         delete req.body.mobile
     }
-    if (req.body.vip == "") {
-        delete req.body.vip
+    if (req.body.purchaseStatus == "") {
+        delete req.body.purchaseStatus
     }
     if (req.body.avatarUrl == "") {
         delete req.body.avatarUrl
