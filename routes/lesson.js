@@ -565,7 +565,7 @@ router.post('/file', (req, res)=> {
         })
     }
     else {
-        if (req.body.category[0] != undefined && req.body.title != "VIP") {
+        if (req.body.category[0] != undefined && req.body.title != "vip") {
             errorData = {"category": ["دسته بندی برای این نوع دسته بندی نمیتواند بیش از یک عدد باشد."]}
             response.validation(`اطلاعات وارد شده اشتباه است.`, errorData, "category", (result)=> {
                 res.json(result)
@@ -869,7 +869,6 @@ router.post('/sound', (req, res) => {
 });
 
 router.post('/type', (req, res)=> {
-    console.log("req.body" , req.body)
     let valid = ajv.validate(type, req.body);
     if (!valid) {
         let errorData
