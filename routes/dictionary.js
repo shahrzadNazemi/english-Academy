@@ -1,4 +1,3 @@
-
 var express = require('express');
 var router = express.Router();
 let logger = require('../util/logger');
@@ -8,43 +7,42 @@ let config = require('../util/config')
 var es = require('elasticsearch');
 var client = new es.Client({
     host: config.elasticHost,
-    log:"trace"
+    log: "trace"
 });
-
 
 
 router.post('/', (req, res)=> {
     let str = req.body.search
-    fs.readFile('./util/tbl_content.json', 'utf8',   (err, data)=> {
-        if(err){
+    fs.readFile('./util/tbl_content.json', 'utf8', (err, data)=> {
+        if (err) {
             console.log(err)
         }
-        else{
-            var result=[];
+        else {
+            var result = [];
             data = JSON.parse(data)
-            for(var i = 0; i < data.length; i++) {
-                if(data[i].en == str){
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].en == str) {
                     result.push(data[i]);
                 }
             }
-            if(data.length == 0){
+            if (data.length == 0) {
                 response.response('اطلاعات ', result, (resi)=> {
                     res.json(resi)
                 })
             }
-            else{
+            else {
                 response.response('اطلاعات ', result[0], (resi)=> {
                     res.json(resi)
                 })
             }
-           
+
         }
 
     });
 });
 
-router.get('/' , (req,res)=>{
-    
+router.get('/', (req, res)=> {
+
     client.ping({
         // ping usually has a 3000ms timeout
         requestTimeout: 1000
@@ -55,51 +53,35 @@ router.get('/' , (req,res)=>{
             console.log('All is well');
         }
     });
-    fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function(err, data) {
-        if (err) { throw err; }
-let line = req.query.search
+    fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function (err, data) {
+        if (err) {
+            throw err;
+        }
+        let line = req.query.search
         // Build up a giant bulk request for elasticsearch.
-      let bulk_request = data.split('\n').reduce(function(bulk_request, line) {
-            var obj, recipe;
-          console.log("line" , line)
+        let bulk_request = data.split('\n').reduce(function (bulk_request, line) {
+            var obj = line
 
-            try {
-                obj = JSON.parse(line);
-                console.log("line")
-            } catch(e) {
-                // console.log('Done reading');
-                return bulk_request;
-            }
 
-            // Rework the data slightly
-            recipe = {
-                id: obj._id.$oid, // Was originally a mongodb entry
-                name: obj.name,
-                source: obj.source,
-                url: obj.url,
-                recipeYield: obj.recipeYield,
-                ingredients: obj.ingredients.split('\n'),
-                prepTime: obj.prepTime,
-                cookTime: obj.cookTime,
-                datePublished: obj.datePublished,
-                description: obj.description
-            };
+            // Rework the data slightl
 
-            bulk_request.push({index: {_index: 'recipes', _type: 'recipe', _id: recipe.id}});
-            bulk_request.push(recipe);
+            bulk_request.push({index: {_index: 'dictionary', _type: 'json', _id:obj.id }});
+            bulk_request.push(obj);
             return bulk_request;
         }, []);
 
         // A little voodoo to simulate synchronous insert
         var busy = false;
-        var callback = function(err, resp) {
-            if (err) { console.log(err); }
+        var callback = function (err, resp) {
+            if (err) {
+                console.log(err);
+            }
 
             busy = false;
         };
 
         // Recursively whittle away at bulk_request, 1000 at a time.
-        var perhaps_insert = function(){
+        var perhaps_insert = function () {
             if (!busy) {
                 busy = true;
                 client.bulk({
@@ -119,8 +101,6 @@ let line = req.query.search
         perhaps_insert();
     });
 })
-
-
 
 
 module.exports = router

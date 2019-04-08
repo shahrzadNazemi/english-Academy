@@ -147,7 +147,7 @@ router.put('/supporter/:supId', (req, res) => {
             }
             else {
                 if (student.avatarUrl) {
-                    if(student.avatarUrl== undefined){
+                    if (student.avatarUrl == undefined) {
                         student.avatarUrl = ""
                     }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathSupporterImage}`, `${config.uploadPathSupporterImage}`);
@@ -451,17 +451,17 @@ router.post('/supporter', (req, res)=> {
 
 
 router.post('/chatAdmin', (req, res)=> {
-    if(req.body.chatrooms){
-        if(typeof req.body.chatrooms == "string"){
+    if (req.body.chatrooms) {
+        if (typeof req.body.chatrooms == "string") {
             req.body.chatrooms = JSON.parse(req.body.chatrooms)
         }
     }
-    else{
+    else {
         req.body.chatrooms = []
     }
 
     req.body.password = hashHelper.hash(req.body.password)
-    logger.info("chatAdminBody" , req.body)
+    logger.info("chatAdminBody", req.body)
     if (req.files) {
         if (req.files.file != null) {
             // type file
@@ -574,7 +574,7 @@ router.put('/chatAdmin/:caId', (req, res) => {
             }
             else {
                 if (student.avatarUrl) {
-                    if(student.avatarUrl== undefined){
+                    if (student.avatarUrl == undefined) {
                         student.avatarUrl = ""
                     }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathChatAdminImage}`, `${config.uploadPathChatAdminImage}`);
@@ -780,30 +780,29 @@ router.get('/chatAdmin/:caId', (req, res)=> {
 });
 
 
-
 router.post('/tutor', (req, res)=> {
-    req.body.answered =0;
+    req.body.answered = 0;
     req.body.passed = 0
-if(req.body.users){
-    if(typeof req.body.users == "string"){
-        req.body.users = JSON.parse(req.body.users)
+    if (req.body.users) {
+        if (typeof req.body.users == "string") {
+            req.body.users = JSON.parse(req.body.users)
+        }
     }
-}
-    else{
-    req.body.users  = []
-}
-    if( req.body.levels){
-        if(typeof req.body.levels == "string"){
+    else {
+        req.body.users = []
+    }
+    if (req.body.levels) {
+        if (typeof req.body.levels == "string") {
             req.body.levels = JSON.parse(req.body.levels)
         }
     }
-    else{
+    else {
         req.body.levels = []
     }
 
 
     req.body.password = hashHelper.hash(req.body.password)
-    logger.info("tutorBody" , req.body)
+    logger.info("tutorBody", req.body)
     if (req.files) {
         if (req.files.file != null) {
             // type file
@@ -915,7 +914,7 @@ router.put('/tutor/:tId', (req, res) => {
             }
             else {
                 if (student.avatarUrl) {
-                    if(student.avatarUrl== undefined){
+                    if (student.avatarUrl == undefined) {
                         student.avatarUrl = ""
                     }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathTutorImage}`, `${config.uploadPathTutorImage}`);
@@ -1121,9 +1120,8 @@ router.get('/tutor/:tId', (req, res)=> {
 });
 
 
-
 router.post('/student/register', (req, res)=> {
-    trim.expressTrimmer(req, (req)=>{
+    trim.expressTrimmer(req, (req)=> {
         console.log("body:", req.body)
         if (req.files)
             console.log("file:", req.files.file)
@@ -1268,7 +1266,6 @@ router.post('/student/register', (req, res)=> {
 
         }
     })
-     
 
 
 });
@@ -1576,7 +1573,7 @@ router.put('/student/:stdId', (req, res) => {
                     })
                 }
                 else {
-                    if(student.avatarUrl== undefined){
+                    if (student.avatarUrl == undefined) {
                         student.avatarUrl = ""
                     }
                     var unlinkPath = student.avatarUrl.replace(`${config.downloadPathStuImage}`, `${config.uploadPathStuImage}`);
@@ -1650,6 +1647,14 @@ router.put('/student/:stdId', (req, res) => {
         })
     }
     else {
+        if (!Object.keys(req.body.purchaseStatus).length == 0) {
+            let purchase = req.body.purchaseStatus
+            delete req.body.purchaseStatus
+            req.body.purchaseStatus = {}
+            req.body.purchaseStatus.value = purchase.value
+            req.body.purchaseStatus.date = purchase.date
+            req.body.purchaseStatus.refId = purchase.refId
+        }
         database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
             if (Putresult == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
