@@ -52,8 +52,9 @@ fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function(err, data) 
 
         try {
             obj = JSON.parse(line);
+            console.log("line")
         } catch(e) {
-            console.log('Done reading');
+            // console.log('Done reading');
             return bulk_request;
         }
 
