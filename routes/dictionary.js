@@ -59,8 +59,9 @@ router.get('/' , (req,res)=>{
         if (err) { throw err; }
 let line = req.query.search
         // Build up a giant bulk request for elasticsearch.
-        bulk_request = data.split('\n').reduce(function(bulk_request, line) {
+      let bulk_request = data.split('\n').reduce(function(bulk_request, line) {
             var obj, recipe;
+          console.log("line" , line)
 
             try {
                 obj = JSON.parse(line);
