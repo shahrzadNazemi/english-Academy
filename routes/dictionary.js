@@ -7,7 +7,8 @@ let fs = require('fs')
 let config = require('../util/config')
 var es = require('elasticsearch');
 var client = new es.Client({
-    host: config.elasticHost
+    host: config.elasticHost,
+    log:"trace"
 });
 
 
@@ -43,6 +44,16 @@ router.post('/', (req, res)=> {
 });
 
 router.get('/' , (req,res)=>{
+    client.ping({
+        // ping usually has a 3000ms timeout
+        requestTimeout: 1000
+    }, function (error) {
+        if (error) {
+            console.trace('elasticsearch cluster is down!');
+        } else {
+            console.log('All is well');
+        }
+    });
     fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function(err, data) {
         if (err) { throw err; }
 
@@ -105,7 +116,6 @@ router.get('/' , (req,res)=>{
 
         perhaps_insert();
     });
-
 })
 
 

@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/dictionary.js" afterPath="$PROJECT_DIR$/routes/dictionary.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1890,18 +1891,18 @@
       <file leaf-file-name="dictionary.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-626">
-              <caret line="57" column="32" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+            <state relative-caret-position="40">
+              <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
               <folding>
-                <element signature="e#350#998#0" expanded="false" />
-                <element signature="e#367#407#0" expanded="false" />
-                <element signature="e#420#991#0" expanded="false" />
-                <element signature="e#534#648#0" expanded="false" />
-                <element signature="e#573#634#0" expanded="false" />
-                <element signature="e#681#815#0" expanded="false" />
-                <element signature="e#746#800#0" expanded="false" />
-                <element signature="e#832#969#0" expanded="false" />
-                <element signature="e#900#954#0" expanded="false" />
+                <element signature="e#462#1110#0" expanded="false" />
+                <element signature="e#479#519#0" expanded="false" />
+                <element signature="e#532#1103#0" expanded="false" />
+                <element signature="e#646#760#0" expanded="false" />
+                <element signature="e#685#746#0" expanded="false" />
+                <element signature="e#793#927#0" expanded="false" />
+                <element signature="e#858#912#0" expanded="false" />
+                <element signature="e#944#1081#0" expanded="false" />
+                <element signature="e#1012#1066#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -2566,12 +2567,12 @@
       <workItem from="1554015129095" duration="2083000" />
       <workItem from="1554525457626" duration="6705000" />
       <workItem from="1554615653416" duration="4335000" />
-      <workItem from="1554697221834" duration="2911000" />
+      <workItem from="1554697221834" duration="4396000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1020605000" />
+    <option name="totallyTimeSpent" value="1022090000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -6968,18 +6969,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-626">
-          <caret line="57" column="32" selection-start-line="57" selection-start-column="32" selection-end-line="57" selection-end-column="32" />
+        <state relative-caret-position="40">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
           <folding>
-            <element signature="e#350#998#0" expanded="false" />
-            <element signature="e#367#407#0" expanded="false" />
-            <element signature="e#420#991#0" expanded="false" />
-            <element signature="e#534#648#0" expanded="false" />
-            <element signature="e#573#634#0" expanded="false" />
-            <element signature="e#681#815#0" expanded="false" />
-            <element signature="e#746#800#0" expanded="false" />
-            <element signature="e#832#969#0" expanded="false" />
-            <element signature="e#900#954#0" expanded="false" />
+            <element signature="e#462#1110#0" expanded="false" />
+            <element signature="e#479#519#0" expanded="false" />
+            <element signature="e#532#1103#0" expanded="false" />
+            <element signature="e#646#760#0" expanded="false" />
+            <element signature="e#685#746#0" expanded="false" />
+            <element signature="e#793#927#0" expanded="false" />
+            <element signature="e#858#912#0" expanded="false" />
+            <element signature="e#944#1081#0" expanded="false" />
+            <element signature="e#1012#1066#0" expanded="false" />
           </folding>
         </state>
       </provider>
