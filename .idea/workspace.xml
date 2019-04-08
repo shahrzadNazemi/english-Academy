@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/dictionary.js" afterPath="$PROJECT_DIR$/routes/dictionary.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/util/config.js" afterPath="$PROJECT_DIR$/util/config.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -59,7 +57,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/util/config.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="146">
@@ -1889,11 +1887,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dictionary.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dictionary.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="40" column="34" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
+            <state relative-caret-position="319">
+              <caret line="106" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
               <folding>
                 <element signature="e#350#998#0" expanded="false" />
                 <element signature="e#367#407#0" expanded="false" />
@@ -1955,8 +1953,8 @@
         <option value="$PROJECT_DIR$/routes/question.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
         <option value="$PROJECT_DIR$/routes/users.js" />
-        <option value="$PROJECT_DIR$/routes/dictionary.js" />
         <option value="$PROJECT_DIR$/util/config.js" />
+        <option value="$PROJECT_DIR$/routes/dictionary.js" />
       </list>
     </option>
   </component>
@@ -2568,12 +2566,12 @@
       <workItem from="1554015129095" duration="2083000" />
       <workItem from="1554525457626" duration="6705000" />
       <workItem from="1554615653416" duration="4335000" />
-      <workItem from="1554697221834" duration="1555000" />
+      <workItem from="1554697221834" duration="1792000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1019249000" />
+    <option name="totallyTimeSpent" value="1019486000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -6960,10 +6958,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/util/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="78" column="46" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/dictionary.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="40" column="34" selection-start-line="40" selection-start-column="34" selection-end-line="40" selection-end-column="34" />
+        <state relative-caret-position="319">
+          <caret line="106" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
           <folding>
             <element signature="e#350#998#0" expanded="false" />
             <element signature="e#367#407#0" expanded="false" />
@@ -6975,14 +6981,6 @@
             <element signature="e#832#969#0" expanded="false" />
             <element signature="e#900#954#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/util/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="78" column="46" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
