@@ -76,7 +76,7 @@ module.exports.downloadPathVIPImgMsg= "http://185.94.99.69:9000/upload/message/v
 
 module.exports.uploadPathVIPImgMsg = "/var/fileAccess/site/upload/message/vip/img"
 
-module.exports.elasticHost = "http://185.94.99.69:9200"
+module.exports.elasticHost = "http://localhost:9200"
 
 
 
