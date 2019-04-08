@@ -44,6 +44,7 @@ router.post('/', (req, res)=> {
 });
 
 router.get('/' , (req,res)=>{
+    
     client.ping({
         // ping usually has a 3000ms timeout
         requestTimeout: 1000
@@ -56,7 +57,7 @@ router.get('/' , (req,res)=>{
     });
     fs.readFile('./util/tbl_content.json', {encoding: 'utf-8'}, function(err, data) {
         if (err) { throw err; }
-
+let line = req.query.search
         // Build up a giant bulk request for elasticsearch.
         bulk_request = data.split('\n').reduce(function(bulk_request, line) {
             var obj, recipe;
