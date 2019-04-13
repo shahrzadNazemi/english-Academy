@@ -440,10 +440,11 @@ io.sockets.on('connection', function (socket) {
 
         //tutor
         socket.on('tutor', function (dat) {
-           
             if (typeof dat == "string") {
                 dat = JSON.parse(dat)
             }
+            console.log("data of tutor" , dat)
+
             let data= dat.data
             let info = {}
             console.log("data of tutor" , data)
