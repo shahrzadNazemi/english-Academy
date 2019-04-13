@@ -61,10 +61,6 @@ router.get('/', (req, res)=> {
         // Build up a giant bulk request for elasticsearch.
         let bulk_request = data.split('\n').reduce(function (bulk_request, line) {
             var obj = line
-
-
-            // Rework the data slightl
-
             bulk_request.push({index: {_index: 'dictionary', _type: 'json', _id:obj.id }});
             bulk_request.push(obj);
             return bulk_request;

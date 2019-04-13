@@ -1125,7 +1125,7 @@ router.post('/student/register', (req, res)=> {
         console.log("body:", req.body)
         if (req.files)
             console.log("file:", req.files.file)
-        if (req.body.password == undefined || req.body.username == undefined) {
+        if (req.body.password == undefined || req.body.username == undefined || req.body.mobile == undefined) {
             let errData = {"password": "پسورد را وارد کنید"}
             response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
                 res.json(result)
@@ -1213,7 +1213,7 @@ router.post('/student/register', (req, res)=> {
                                                 else {
                                                     delete  req.body.setAvatar
                                                     delete req.body.password
-                                                    req.body.jwt = jwt.signUser(req.body.username)
+                                                    // req.body.jwt = jwt.signUser(req.body.username)
                                                     response.response('ورود با موفقیت انجام شد', req.body, (result)=> {
                                                         res.json(result)
 
@@ -1246,7 +1246,7 @@ router.post('/student/register', (req, res)=> {
                     else {
                         delete req.body.password
                         req.body._id = student
-                        req.body.jwt = jwt.signUser(req.body.username)
+                        // req.body.jwt = jwt.signUser(req.body.username)
                         let viewInfo = {}
                         viewInfo.usrId = req.body._id
                         viewInfo.lsnId = "0";
@@ -1291,48 +1291,20 @@ router.post('/student/login', (req, res) => {
                 })
             }
             else {
-                database.getLessonById(loginResult.lastPassedLesson, (lesson)=> {
-                    database.getExamPassedCount(loginResult._id, (exam)=> {
-                        if (exam == -1 || exam == 0) {
-                            loginResult.examPassed = 0
-                        }
-                        else {
-                            loginResult.examPassed = exam.length
-                        }
-                        if (loginResult.score == 0) {
-                            delete loginResult.password
-                            let data = loginResult
-                            data.progress = 0
-                            delete lesson[0].video
-                            delete lesson[0].sound
-                            delete lesson[0].text
-                            data.lesson = lesson[0]
-                            data.jwt = jwt.signUser(loginResult.username)
-                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                res.json(result)
-
-                            })
-
-                        }
-                        else {
-                            statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                                if (progress != -1) {
-                                    delete loginResult.password
-                                    let data = loginResult
-                                    data.progress = progress
-                                    delete lesson[0].video
-                                    delete lesson[0].sound
-                                    delete lesson[0].text
-                                    data.lesson = lesson[0]
-                                    data.jwt = jwt.signUser(loginResult.username)
-                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                        res.json(result)
-
-                                    })
+                database.getViewUser(loginResult._id , (view)=>{
+                    if(view !=0 && view !=-1) {
+                        database.getLessonById(view[0].lsnId, (lesson)=> {
+                            database.getExamPassedCount(loginResult._id, (exam)=> {
+                                if (exam == -1 || exam == 0) {
+                                    loginResult.examPassed = 0
                                 }
                                 else {
+                                    loginResult.examPassed = exam.length
+                                }
+                                if (loginResult.score == 0) {
                                     delete loginResult.password
                                     let data = loginResult
+                                    data.progress = 0
                                     delete lesson[0].video
                                     delete lesson[0].sound
                                     delete lesson[0].text
@@ -1342,18 +1314,140 @@ router.post('/student/login', (req, res) => {
                                         res.json(result)
 
                                     })
+
+                                }
+                                else {
+                                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                                        if (progress != -1) {
+                                            delete loginResult.password
+                                            let data = loginResult
+                                            data.progress = progress
+                                            delete lesson[0].video
+                                            delete lesson[0].sound
+                                            delete lesson[0].text
+                                            data.lesson = lesson[0]
+                                            data.jwt = jwt.signUser(loginResult.username)
+                                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                        else {
+                                            delete loginResult.password
+                                            let data = loginResult
+                                            delete lesson[0].video
+                                            delete lesson[0].sound
+                                            delete lesson[0].text
+                                            data.lesson = lesson[0]
+                                            data.jwt = jwt.signUser(loginResult.username)
+                                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                    })
+
                                 }
                             })
 
-                        }
-                    })
 
+                        })
+                    }
+                    else{
+                        res.status(300).end('')
+                    }
+                }
 
-                })
-
+                )
             }
         })
     }
+
+});
+
+router.post('/student/verification', (req, res) => {
+
+        database.verification(req.body, function (verifResult) {
+            if (verifResult == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (verifResult == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                let updateStu = {}
+                updateStu.verify = true
+                database.updateStudent(updateStu , req.body._id , (updated)=>{
+                    if (updated == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (updated == 0) {
+                        response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else{
+                        updated.jwt = jwt.signUser(updated.username)
+                        response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                            res.json(result)
+
+                        })
+                    }
+                })
+               
+            }
+        })
+
+
+
+});
+
+router.post('/student/resendVerify', (req, res) => {
+
+    database.verification(req.body, function (verifResult) {
+        if (verifResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (verifResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let updateStu = {}
+            updateStu.verify = true
+            database.updateStudent(updateStu , req.body._id , (updated)=>{
+                if (updated == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (updated == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else{
+                    updated.jwt = jwt.signUser(updated.username)
+                    response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+
+        }
+    })
+
+
 
 });
 

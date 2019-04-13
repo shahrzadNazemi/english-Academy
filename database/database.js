@@ -2313,6 +2313,35 @@ module.exports.addStu = (stuInfo, cb)=> {
     })
 };
 
+module.exports.verification = (info, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/student/verification`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.addTicket = (ticketInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/ticket`,
