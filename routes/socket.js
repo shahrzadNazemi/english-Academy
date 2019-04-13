@@ -500,6 +500,7 @@ io.sockets.on('connection', function (socket) {
                 dat= JSON.parse(dat)
             }
             let data = dat.data
+            console.log("dataacceptChat" , data)
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
                     database.getVIPUserMessages(data.user._id, (allMesssages)=> {
