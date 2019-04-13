@@ -476,7 +476,13 @@ io.sockets.on('connection', function (socket) {
                         else {
                             for (var i = 0; i < tutors.length; i++) {
                                 if (socketIds[tutors[i]._id] != undefined) {
-                                    io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', data)
+                                    let info = {}
+                                    info.fname = data.fname
+                                    info.lname = data.lname
+                                    info._id = data._id
+                                    info.avatarUrl = data.avatarUrl
+                                    info.score = data.score
+                                    io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', info)
                                 }
 
                             }
