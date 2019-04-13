@@ -462,7 +462,7 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             console.log("data" , data)
             socketIds[data._id] = socket.id;
-            database.getTutorByLevel(data.lvlId, (tutors)=> {
+            database.getTutorByLevel(data.level._id, (tutors)=> {
                 if (tutors == -1 || tutors == 0) {
                     info.msg = "there is no tutor right now"
                     socket.emit('noTutor', info)
