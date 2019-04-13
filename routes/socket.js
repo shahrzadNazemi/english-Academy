@@ -460,6 +460,7 @@ io.sockets.on('connection', function (socket) {
                 data = JSON.parse(data)
             }
             let info = {}
+            console.log("data" , data)
             socketIds[data._id] = socket.id;
             database.getTutorByLevel(data.lvlId, (tutors)=> {
                 if (tutors == -1 || tutors == 0) {
