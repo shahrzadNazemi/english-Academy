@@ -9,9 +9,10 @@ let lesson = require('../routes/lesson')
 let socketIds = {};
 
 io.sockets.on('connection', function (socket) {
+    console.log("connected")
+
     database.getAllChatrooms((chatrooms)=> {
         let rooms = []
-console.log("connected")
         if (chatrooms[0] != undefined) {
             for (var i = 0; i < chatrooms.length; i++) {
                 rooms.push(chatrooms[i].title)
@@ -443,9 +444,9 @@ console.log("connected")
             if (typeof dat == "string") {
                 dat = JSON.parse(dat)
             }
-            let data= dat.data
+            let data = dat.data
             let info = {}
-            console.log("data of tutor" , data)
+            console.log("data of tutor", data)
             socketIds[data._id] = socket.id;
             info.msg = "you are connected now"
             io.sockets.connected[socketIds[data._id]].emit('connected', info)
@@ -513,9 +514,9 @@ console.log("connected")
                 message.user = data.user
                 message.tutor = data.tutor
                 if (socketIds[data.user._id])
-                io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                    io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
                 if (socketIds[data.tutor._id])
-                io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
+                    io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
         });
 
