@@ -618,9 +618,9 @@ io.sockets.on('connection', function (socket) {
         socket.on('disconnect', function (reason) {
             console.log("disconnect" , socketIds[socket.id])
             let usrId = socketIds[socket.id]
-            delete socketIds[socket.id]
-            console.log("disconnect" , socketIds)
-            socket.emit("disconnectedUser" ,usrId )
+            // delete socketIds[socket.id]
+            // console.log("disconnect" , socketIds)
+            // socket.emit("disconnectedUser" ,usrId )
 
             // remove the username from global usernames list
             // delete usernames[socket.username];
