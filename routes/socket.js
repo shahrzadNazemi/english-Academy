@@ -440,7 +440,7 @@ io.sockets.on('connection', function (socket) {
 
         //tutor
         socket.on('tutor', function (dat) {
-            console.log("dat" , dat)
+            console.log("dat" , dat.data)
             let data= dat.data
             if (typeof data == "string") {
                 data = JSON.parse(data)
