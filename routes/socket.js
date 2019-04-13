@@ -440,7 +440,6 @@ io.sockets.on('connection', function (socket) {
 
         //tutor
         socket.on('tutor', function (dat) {
-           let  data = dat.data
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
@@ -449,7 +448,6 @@ io.sockets.on('connection', function (socket) {
             socketIds[data._id] = socket.id;
             info.msg = "you are connected now"
             socket.emit('connected', info)
-
         });
 
         socket.on('chatRequest', function (data) {
