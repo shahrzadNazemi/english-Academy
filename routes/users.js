@@ -781,6 +781,7 @@ router.get('/chatAdmin/:caId', (req, res)=> {
 
 
 router.post('/tutor', (req, res)=> {
+    console.log("boy in add tutor" , req.body)
     req.body.answered = 0;
     req.body.passed = 0
     if (req.body.users) {
