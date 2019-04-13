@@ -444,11 +444,13 @@ io.sockets.on('connection', function (socket) {
                 data = JSON.parse(data)
             }
             let info = {}
+            console.log("data of tutor" , data)
             socketIds[data._id] = socket.id;
             info.msg = "you are connected now"
             socket.emit('connected', info)
 
         });
+
         socket.on('chatRequest', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
@@ -472,6 +474,7 @@ io.sockets.on('connection', function (socket) {
 
             // io.to(socketIds[data._id]).emit('warnMsg', info)
         });
+
         socket.on('acceptChat', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
@@ -493,6 +496,7 @@ io.sockets.on('connection', function (socket) {
                 })
             })
         });
+
         socket.on('pvChat', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
@@ -513,6 +517,7 @@ io.sockets.on('connection', function (socket) {
                 io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
         });
+
         socket.on('pvVoice', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
@@ -547,6 +552,7 @@ io.sockets.on('connection', function (socket) {
 
 
         });
+
         socket.on('pvImg', function (data) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
