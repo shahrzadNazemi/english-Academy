@@ -462,18 +462,26 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             console.log("data" , data)
             socketIds[data._id] = socket.id;
-            database.getTutorByLevel(data.level._id, (tutors)=> {
-                if (tutors == -1 || tutors == 0) {
+            database.getlevelOfStudent(data._id , (level)=>{
+                if(level == 0 || level == -1){
                     info.msg = "there is no tutor right now"
                     socket.emit('noTutor', info)
                 }
-                else {
-                    for (var i = 0; i < tutors.length; i++) {
-                        if (socketIds[tutors[i]._id] != undefined) {
-                            io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', data)
+                else{
+                    database.getTutorByLevel(level._id, (tutors)=> {
+                        if (tutors == -1 || tutors == 0) {
+                            info.msg = "there is no tutor right now"
+                            socket.emit('noTutor', info)
                         }
+                        else {
+                            for (var i = 0; i < tutors.length; i++) {
+                                if (socketIds[tutors[i]._id] != undefined) {
+                                    io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', data)
+                                }
 
-                    }
+                            }
+                        }
+                    })
                 }
             })
 
