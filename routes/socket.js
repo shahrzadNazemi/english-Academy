@@ -482,6 +482,7 @@ io.sockets.on('connection', function (socket) {
                                     info._id = data._id
                                     info.avatarUrl = data.avatarUrl
                                     info.score = data.score
+                                    info.time = new Date().getTime()
                                     io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', info)
                                 }
 
