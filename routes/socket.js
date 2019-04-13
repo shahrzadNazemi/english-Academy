@@ -495,10 +495,11 @@ io.sockets.on('connection', function (socket) {
             // io.to(socketIds[data._id]).emit('warnMsg', info)
         });
 
-        socket.on('acceptChat', function (data) {
-            if (typeof data == "string") {
-                data = JSON.parse(data)
+        socket.on('acceptChat', function (dat) {
+            if (typeof dat == "string") {
+                dat= JSON.parse(dat)
             }
+            let data = dat.data
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
                     database.getVIPUserMessages(data.user._id, (allMesssages)=> {
@@ -611,6 +612,12 @@ io.sockets.on('connection', function (socket) {
 
         // when the user disconnects.. perform this
         socket.on('disconnect', function (reason) {
+            console.log("disconnect" , socketIds[socket.id])
+            let usrId = socketIds[socket.id]
+            delete socketIds[socket.id]
+            console.log("disconnect" , socketIds)
+            socket.emit("disconnectedUser" ,usrId )
+
             // remove the username from global usernames list
             // delete usernames[socket.username];
             // // update list of users in chat, client-side
