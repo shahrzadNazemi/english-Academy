@@ -11,7 +11,7 @@ let socketIds = {};
 io.sockets.on('connection', function (socket) {
     database.getAllChatrooms((chatrooms)=> {
         let rooms = []
-
+console.log("connected")
         if (chatrooms[0] != undefined) {
             for (var i = 0; i < chatrooms.length; i++) {
                 rooms.push(chatrooms[i].title)
