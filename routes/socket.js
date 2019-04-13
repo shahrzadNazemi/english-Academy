@@ -440,11 +440,11 @@ io.sockets.on('connection', function (socket) {
 
         //tutor
         socket.on('tutor', function (dat) {
-            console.log("dat" , dat.data)
-            let data= dat.data
-            if (typeof data == "string") {
-                data = JSON.parse(data)
+           
+            if (typeof dat == "string") {
+                dat = JSON.parse(dat)
             }
+            let data= dat.data
             let info = {}
             console.log("data of tutor" , data)
             socketIds[data._id] = socket.id;
