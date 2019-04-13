@@ -443,14 +443,13 @@ io.sockets.on('connection', function (socket) {
             if (typeof dat == "string") {
                 dat = JSON.parse(dat)
             }
-            console.log("data of tutor" , dat)
-
             let data= dat.data
             let info = {}
             console.log("data of tutor" , data)
             socketIds[data._id] = socket.id;
             info.msg = "you are connected now"
-            socket.emit('connected', info)
+            io.sockets.connected[socketIds[data._id]].emit('connected', info)
+            // socket.emit('connected', info)
         });
 
         socket.on('chatRequest', function (data) {
