@@ -448,6 +448,8 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             console.log("data of tutor", data)
             socketIds[data._id] = socket.id;
+            console.log("data of tutor", socketIds)
+
             info.msg = "you are connected now"
             io.sockets.connected[socketIds[data._id]].emit('connected', info)
             // socket.emit('connected', info)
