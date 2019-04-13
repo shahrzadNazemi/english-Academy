@@ -509,7 +509,10 @@ io.sockets.on('connection', function (socket) {
                         else {
                             data.allMessages = allMesssages
                         }
+                        io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
+
                         if (socketIds[data.user._id] != undefined) {
+
                             io.sockets.connected[socketIds[data.user._id]].emit('chatAccepted', data)
                         }
                     })
