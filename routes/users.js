@@ -1367,7 +1367,9 @@ router.post('/student/login', (req, res) => {
 });
 
 router.post('/student/verification', (req, res) => {
-database.getStudentById(req.body._id , (student)=>{
+    console.log("body in resend" , req.body)
+
+    database.getStudentById(req.body._id , (student)=>{
     if (student == -1) {
         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
             res.json(result)
@@ -1424,7 +1426,6 @@ database.getStudentById(req.body._id , (student)=>{
 });
 
 router.post('/student/resendVerify', (req, res) => {
-    console.log("body in resend" , req.body)
     database.resendVerification(req.body, function (verifResult) {
         if (verifResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
