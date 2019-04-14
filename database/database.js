@@ -1220,6 +1220,67 @@ module.exports.getVIPUserMessages = (usrId, cb)=> {
     })
 };
 
+module.exports.getClosedChatsOfTutor = (trId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/user/tutor/${trId}/closedChat`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getOpenChatsOfTutor = (trId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/user/tutor/${trId}/openChat`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 
 
 module.exports.getTutorById = (tId, cb)=> {

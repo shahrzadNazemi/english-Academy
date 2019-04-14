@@ -1367,43 +1367,46 @@ router.post('/student/login', (req, res) => {
 });
 
 router.post('/student/verification', (req, res) => {
+database.getStudentById(req.body._id , (student)=>{
+    req.body.mobile = student.mobile
+    database.verification(req.body, function (verifResult) {
+        if (verifResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (verifResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let updateStu = {}
+            updateStu.verify = true
+            database.updateStudent(updateStu , req.body._id , (updated)=>{
+                if (updated == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (updated == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else{
+                    updated.jwt = jwt.signUser(updated.username)
+                    response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                        res.json(result)
 
-        database.verification(req.body, function (verifResult) {
-            if (verifResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (verifResult == 0) {
-                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                let updateStu = {}
-                updateStu.verify = true
-                database.updateStudent(updateStu , req.body._id , (updated)=>{
-                    if (updated == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (updated == 0) {
-                        response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else{
-                        updated.jwt = jwt.signUser(updated.username)
-                        response.response('ورود با موفقیت انجام شد', updated, (result)=> {
-                            res.json(result)
+                    })
+                }
+            })
 
-                        })
-                    }
-                })
-               
-            }
-        })
+        }
+    })
+
+})
 
 
 

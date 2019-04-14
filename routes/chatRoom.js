@@ -367,6 +367,52 @@ router.get('/:chId/student/blocked', (req, res)=> {
 
 });
 
+router.get('/tutor/:trId/closed', (req, res)=> {
+    database.getClosedChatsOfTutor(req.params.trId, (chatroom)=> {
+        if (chatroom == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (chatroom == 0) {
+            response.respondNotFound('چت روم مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
+router.get('/tutor/:trId/open', (req, res)=> {
+    database.getOpenChatsOfTutor(req.params.trId, (chatroom)=> {
+        if (chatroom == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (chatroom == 0) {
+            response.respondNotFound('چت روم مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
+
+
 
 
 router.get('/chatAdmin/:caId', (req, res)=> {
