@@ -1424,8 +1424,7 @@ database.getStudentById(req.body._id , (student)=>{
 });
 
 router.post('/student/resendVerify', (req, res) => {
-
-    database.verification(req.body, function (verifResult) {
+    database.resendVerification(req.body, function (verifResult) {
         if (verifResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
