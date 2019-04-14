@@ -462,6 +462,8 @@ io.sockets.on('connection', function (socket) {
             let info = {}
             console.log("data" , data)
             socketIds[data._id] = socket.id;
+            socket.room = data._id
+            socket.join(data._id);
             database.getlevelOfStudent(data._id , (level)=>{
                 if(level == 0 || level == -1){
                     info.msg = "there is no tutor right now"
@@ -510,6 +512,8 @@ io.sockets.on('connection', function (socket) {
                         else {
                             data.allMessages = allMesssages
                         }
+                        socket.room = data.user._id
+                        socket.join(data.user._id);
                         io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
                         if (socketIds[data.user._id] != undefined) {
@@ -536,10 +540,11 @@ io.sockets.on('connection', function (socket) {
             database.addTutorMsg(info, (message)=> {
                 message.user = data.user
                 message.tutor = data.tutor
-                if (socketIds[data.user._id])
-                    io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
-                if (socketIds[data.tutor._id])
-                    io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
+                io.to(socket.room).emit('updatePVchat', message);
+                // if (socketIds[data.user._id])
+                //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                // if (socketIds[data.tutor._id])
+                //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
         });
 
@@ -567,11 +572,13 @@ io.sockets.on('connection', function (socket) {
                 msgInfo.time = new Date().getTime()
                 msgInfo.voice = `${config.downloadPathVIPVoiceMsg}/${time}.mp3`
                 database.addTutorMsg(msgInfo, (newMsg)=> {
-                    if (socketIds[data.user._id])
-                        io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
-                    if (socketIds[data.tutor._id])
+                    io.to(socket.room).emit('updatePVchat', newMsg);
 
-                        io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
+                    // if (socketIds[data.user._id])
+                    //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
+                    // if (socketIds[data.tutor._id])
+                    //
+                    //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
                 })
             })
 
@@ -602,16 +609,32 @@ io.sockets.on('connection', function (socket) {
                 msgInfo.time = new Date().getTime()
                 msgInfo.voice = `${config.downloadPathVIPImgMsg}/${time}.png`
                 database.addTutorMsg(msgInfo, (newMsg)=> {
-                    if (socketIds[data.user._id])
-                        io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
-                    if (socketIds[data.tutor._id])
+                    io.to(socket.room).emit('updatePVchat', newMsg);
 
-                        io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
+                    // if (socketIds[data.user._id])
+                    //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', newMsg)
+                    // if (socketIds[data.tutor._id])
+                    //
+                    //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', newMsg)
                 })
             })
 
 
         });
+
+        socket.on('endChat', function (data) {
+            if (typeof data == "string") {
+                data= JSON.parse(data)
+            }
+            database.popUserFromOtherTutors(data.user, (popoed)=> {
+                data.user.endChat = true
+                database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
+                    socket.leave(data.user._id)
+                    socket.emit("endedChat" , data.user)
+                })
+            })
+        });
+
 
 
         // when the user disconnects.. perform this
