@@ -380,7 +380,7 @@ router.get('/tutor/:trId/closed', (req, res)=> {
             })
         }
         else {
-            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+            response.response('چت روم مورد نظر یافت شد.', chatroom[0].closedStudents, (result)=> {
                 res.json(result)
 
             })
@@ -402,7 +402,7 @@ router.get('/tutor/:trId/open', (req, res)=> {
             })
         }
         else {
-            response.response('چت روم مورد نظر یافت شد.', chatroom, (result)=> {
+            response.response('چت روم مورد نظر یافت شد.', chatroom[0].openStudents, (result)=> {
                 res.json(result)
 
             })
