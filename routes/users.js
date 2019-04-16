@@ -553,6 +553,7 @@ router.get('/supporter/:supId', (req, res)=> {
 });
 
 router.post('/supporter', (req, res)=> {
+    logger.info("postSupporter body" , req.body)
     req.body.password = hashHelper.hash(req.body.password)
     if (req.files) {
         if (req.files.file != null) {
