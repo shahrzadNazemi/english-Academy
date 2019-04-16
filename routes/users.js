@@ -1267,8 +1267,6 @@ router.post('/student/register', (req, res)=> {
 
         }
     })
-
-
 });
 
 router.post('/student/login', (req, res) => {
@@ -2202,12 +2200,7 @@ router.get('/student/:stdId', (req, res) => {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
                 database.getExamPassedCount(getResult._id, (exam)=> {
                     console.log("dsfsgfdfgldhkgjhdkgh", exam)
-                    if (exam == -1 || exam == 0) {
-                        getResult.examPassed = 0
-                    }
-                    else {
-                        getResult.examPassed = exam.length
-                    }
+                        getResult.examPassed = exam
                     if (getResult.score == 0) {
 
                         delete getResult.password
@@ -2253,10 +2246,7 @@ router.get('/student/:stdId', (req, res) => {
                         })
                     }
                 })
-
-
             })
-
         }
     })
 });

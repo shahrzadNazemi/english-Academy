@@ -487,7 +487,6 @@ io.sockets.on('connection', function (socket) {
                                     info.time = new Date().getTime()
                                     io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', info)
                                 }
-
                             }
                         }
                     })
@@ -514,6 +513,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         socket.room = data.user._id
                         socket.join(data.user._id);
+                        console.log("socket in acceptChat" , socket)
                         io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
                         if (socketIds[data.user._id] != undefined) {
@@ -537,9 +537,13 @@ io.sockets.on('connection', function (socket) {
             info.msg = data.msg
             info.voice = ""
             info.img = ""
+            // socket.room = data.user._id
+            console.log("socket in pvChat" , socket)
+
             database.addTutorMsg(info, (message)=> {
                 message.user = data.user
                 message.tutor = data.tutor
+                message.msg = data.msg
                 io.to(socket.room).emit('updatePVchat', message);
                 // if (socketIds[data.user._id])
                 //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
@@ -629,8 +633,9 @@ io.sockets.on('connection', function (socket) {
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 data.user.endChat = true
                 database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
+                    io.to(socket.room).emit('endedChat', data.user);
                     socket.leave(data.user._id)
-                    socket.emit("endedChat" , data.user)
+                    // socket.emit("endedChat" , data.user)
                 })
             })
         });
