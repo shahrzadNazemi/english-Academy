@@ -309,6 +309,201 @@ router.put('/supporter/:supId', (req, res) => {
 
 });
 
+router.put('/changePass/:id', (req, res) => {
+    if (req.body.oldPassword == undefined) {
+        let errData = {"OldPassword": "پسورد را وارد کنید"}
+        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+            res.json(result)
+        })
+    }
+    else {
+        req.body.oldPassword = hashHelper.hash(req.body.oldPassword)
+        req.body.password = hashHelper.hash(req.body.newPassword)
+        if(req.body.role == "admin"){
+            database.getAdminById(req.params.id, (student)=> {
+                if (student == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (student == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    if (req.body.oldPassword == student.password) {
+                        let newStudent = Object.assign({}, student, req.body)
+                        database.updateAdmin(newStudent, req.params.id, (Putresult)=> {
+                            if (Putresult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (Putresult == 0) {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                delete Putresult.password
+                                response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                        })
+                    }
+                    else {
+                        let errData = {"OldPassword": "پسورد اشتباه است"}
+                        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+            })
+
+        }
+        else if(req.body.role == "chatAdmin"){
+            database.getChatAdminById(req.params.id, (student)=> {
+                if (student == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (student == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    if (req.body.oldPassword == student.password) {
+                        let newStudent = Object.assign({}, student, req.body)
+                        database.updateChatAdmin(newStudent, req.params.id, (Putresult)=> {
+                            if (Putresult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (Putresult == 0) {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                delete Putresult.password
+                                response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                        })
+                    }
+                    else {
+                        let errData = {"OldPassword": "پسورد اشتباه است"}
+                        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+            })
+
+        }
+        else if(req.body.role == "supporter"){
+            database.getSupporterById(req.params.id, (student)=> {
+                if (student == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (student == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    if (req.body.oldPassword == student.password) {
+                        let newStudent = Object.assign({}, student, req.body)
+                        database.updateSupporter(newStudent, req.params.id, (Putresult)=> {
+                            if (Putresult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (Putresult == 0) {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                delete Putresult.password
+                                response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                        })
+                    }
+                    else {
+                        let errData = {"OldPassword": "پسورد اشتباه است"}
+                        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+            })
+
+        }
+        else if(req.body.role == "tutor"){
+            database.getTutorById(req.params.id, (student)=> {
+                if (student == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (student == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    if (req.body.oldPassword == student.password) {
+                        let newStudent = Object.assign({}, student, req.body)
+                        database.updateTutor(newStudent, req.params.id, (Putresult)=> {
+                            if (Putresult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (Putresult == 0) {
+                                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                delete Putresult.password
+                                response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                    res.json(result)
+
+                                })
+                            }
+                        })
+                    }
+                    else {
+                        let errData = {"OldPassword": "پسورد اشتباه است"}
+                        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+                            res.json(result)
+                        })
+                    }
+                }
+            })
+
+        }
+    }
+
+});
+
+
 router.get('/supporter', (req, res) => {
     database.getSupporters((getResult)=> {
         if (getResult == -1) {
