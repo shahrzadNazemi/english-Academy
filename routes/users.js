@@ -128,6 +128,9 @@ router.post('/admin', (req, res)=> {
 
 
 router.put('/supporter/:supId', (req, res) => {
+    logger.info("body in update supporter" , req.body)
+    logger.info("file in update supporter" , req.files)
+
     if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
 
@@ -556,6 +559,8 @@ router.post('/chatAdmin', (req, res)=> {
 });
 
 router.put('/chatAdmin/:caId', (req, res) => {
+    logger.info("body in update chatAdmin" , req.body)
+    logger.info("file in update chatAdmin" , req.files)
     if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
 
