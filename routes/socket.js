@@ -459,6 +459,8 @@ io.sockets.on('connection', function (socket) {
             socketIds[data._id] = socket.id;
             socket.room = data._id
             socket.join(data._id);
+
+            logger.info("room in chatrequest" , socket.room)
             database.getlevelOfStudent(data._id, (level)=> {
                 if (level == 0 || level == -1) {
                     info.msg = "there is no tutor right now"
@@ -533,7 +535,6 @@ io.sockets.on('connection', function (socket) {
             info.voice = ""
             info.img = ""
             socket.room = data.user._id
-            logger.info("data", data)
 
             // socketIds[data._id] = socket.id;
             // logger.info("socketIds[data.user._id]", socket.id)
