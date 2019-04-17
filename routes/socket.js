@@ -542,9 +542,10 @@ io.sockets.on('connection', function (socket) {
             info.img = ""
             // socket.room = data.user._id
             database.addTutorMsg(info, (message)=> {
-                message.user = data.user
+                // logger.info("message" , message)
+                message.student = data.user
                 message.tutor = data.tutor
-                message.msg = data.msg
+                // message.msg = data.msg
                 io.to(socket.room).emit('updatePVchat', message);
                 // if (socketIds[data.user._id])
                 //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
