@@ -530,7 +530,7 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            logger.info("dta in pvchat" , data.user._id)
+            logger.info("dta in pvchat" , data.user)
 
             let info = {}
             info.usrId = data.user._id;
