@@ -507,7 +507,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         socket.room = data.user._id
                         socket.join(data.user._id);
-                        logger.info("acceptChat SocketIds", socketIds)
+                        logger.info("acceptChat room", socket.room)
                         io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
                         if (socketIds[data.user._id] != undefined) {
@@ -536,8 +536,9 @@ io.sockets.on('connection', function (socket) {
             logger.info("data", data)
 
             // socketIds[data._id] = socket.id;
-            logger.info("socketIds[data.user._id]", socket.id)
-            logger.info("socket.id", socketIds[data.user._id])
+            // logger.info("socketIds[data.user._id]", socket.id)
+            logger.info("pvChat room", socket.room)
+
 
             if (socket.id == socketIds[data.user._id]) {
                 info.sender = "student"
