@@ -527,6 +527,7 @@ io.sockets.on('connection', function (socket) {
         });
 
         socket.on('pvChat', function (data) {
+            logger.info("dta in pvchat" , data)
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
@@ -539,7 +540,6 @@ io.sockets.on('connection', function (socket) {
             info.img = ""
             // socket.room = data.user._id
             console.log("socket in pvChat" , socket)
-
             database.addTutorMsg(info, (message)=> {
                 message.user = data.user
                 message.tutor = data.tutor
