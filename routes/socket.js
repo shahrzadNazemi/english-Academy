@@ -540,7 +540,6 @@ io.sockets.on('connection', function (socket) {
             info.voice = ""
             info.img = ""
             // socket.room = data.user._id
-            console.log("socket in pvChat" , socket)
             database.addTutorMsg(info, (message)=> {
                 message.user = data.user
                 message.tutor = data.tutor
