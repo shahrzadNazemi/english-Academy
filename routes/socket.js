@@ -527,10 +527,11 @@ io.sockets.on('connection', function (socket) {
         });
 
         socket.on('pvChat', function (data) {
-            logger.info("dta in pvchat" , data)
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
+            logger.info("dta in pvchat" , data)
+
             let info = {}
             info.usrId = data.user._id;
             info.tutorId = data.tutor._id;
