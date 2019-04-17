@@ -536,6 +536,8 @@ io.sockets.on('connection', function (socket) {
             info.msg = data.msg
             info.voice = ""
             info.img = ""
+            socket.room = data.user._id
+
             // socketIds[data._id] = socket.id;
 logger.info("socketIds[data.user._id]" ,socketIds[data.user._id] )
             logger.info("socket.id" ,socketIds[data.user._id] )
@@ -549,9 +551,10 @@ logger.info("socketIds[data.user._id]" ,socketIds[data.user._id] )
             // socket.room = data.user._id
             database.addTutorMsg(info, (message)=> {
                 // logger.info("message" , message)
-                message.student = data.user
-                message.tutor = data.tutor
+                // message.student = data.user
+                // message.tutor = data.tutor
                 // message.msg = data.msg
+                
                 io.to(socket.room).emit('updatePVchat', message);
                 // if (socketIds[data.user._id])
                 //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
