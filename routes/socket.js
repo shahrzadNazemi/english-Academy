@@ -537,8 +537,10 @@ io.sockets.on('connection', function (socket) {
             info.voice = ""
             info.img = ""
             // socketIds[data._id] = socket.id;
+logger.info("socketIds[data.user._id]" ,socketIds[data.user._id] )
+            logger.info("socket.id" ,socketIds[data.user._id] )
 
-            if(socket.id ==socketIds[data.user._id] ){
+            if(socket.id == socketIds[data.user._id] ){
                 info.sender = "student"
             }
             else{
