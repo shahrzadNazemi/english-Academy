@@ -553,8 +553,8 @@ io.sockets.on('connection', function (socket) {
                 // message.msg = data.msg
 
                 io.to(socket.room).emit('updatePVchat', message);
-                if (socketIds[data.user._id])
-                    io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                // if (socketIds[data.user._id])
+                //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
                 // if (socketIds[data.tutor._id])
                 //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
