@@ -459,12 +459,12 @@ io.sockets.on('connection', function (socket) {
             socketIds[data._id] = socket.id;
             socket.room = data._id
             socket.join(data._id);
-            database.getlevelOfStudent(data._id , (level)=>{
-                if(level == 0 || level == -1){
+            database.getlevelOfStudent(data._id, (level)=> {
+                if (level == 0 || level == -1) {
                     info.msg = "there is no tutor right now"
                     socket.emit('noTutor', info)
                 }
-                else{
+                else {
                     database.getTutorByLevel(level._id, (tutors)=> {
                         if (tutors == -1 || tutors == 0) {
                             info.msg = "there is no tutor right now"
@@ -493,7 +493,7 @@ io.sockets.on('connection', function (socket) {
 
         socket.on('acceptChat', function (dat) {
             if (typeof dat == "string") {
-                dat= JSON.parse(dat)
+                dat = JSON.parse(dat)
             }
             let data = dat.data
             database.popUserFromOtherTutors(data.user, (popoed)=> {
@@ -507,7 +507,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         socket.room = data.user._id
                         socket.join(data.user._id);
-                        logger.info("acceptChat SocketIds" , socketIds)
+                        logger.info("acceptChat SocketIds", socketIds)
                         io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
                         if (socketIds[data.user._id] != undefined) {
@@ -533,15 +533,16 @@ io.sockets.on('connection', function (socket) {
             info.voice = ""
             info.img = ""
             socket.room = data.user._id
+            logger.info("data", data)
 
             // socketIds[data._id] = socket.id;
-logger.info("socketIds[data.user._id]" ,socket.id )
-            logger.info("socket.id" ,socketIds[data.user._id] )
+            logger.info("socketIds[data.user._id]", socket.id)
+            logger.info("socket.id", socketIds[data.user._id])
 
-            if(socket.id == socketIds[data.user._id] ){
+            if (socket.id == socketIds[data.user._id]) {
                 info.sender = "student"
             }
-            else{
+            else {
                 info.sender = "tutor"
             }
             // socket.room = data.user._id
@@ -550,7 +551,7 @@ logger.info("socketIds[data.user._id]" ,socket.id )
                 // message.student = data.user
                 // message.tutor = data.tutor
                 // message.msg = data.msg
-                
+
                 io.to(socket.room).emit('updatePVchat', message);
                 if (socketIds[data.user._id])
                     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
@@ -635,7 +636,7 @@ logger.info("socketIds[data.user._id]" ,socket.id )
 
         socket.on('endChat', function (data) {
             if (typeof data == "string") {
-                data= JSON.parse(data)
+                data = JSON.parse(data)
             }
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 data.user.endChat = true
@@ -648,10 +649,9 @@ logger.info("socketIds[data.user._id]" ,socket.id )
         });
 
 
-
         // when the user disconnects.. perform this
         socket.on('disconnect', function (reason) {
-            console.log("disconnect" , socketIds[socket.id])
+            console.log("disconnect", socketIds[socket.id])
             let usrId = socketIds[socket.id]
             // delete socketIds[socket.id]
             // console.log("disconnect" , socketIds)
