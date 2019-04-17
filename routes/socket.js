@@ -444,9 +444,7 @@ io.sockets.on('connection', function (socket) {
             }
             let data = dat.data
             let info = {}
-            console.log("data of tutor", data)
             socketIds[data._id] = socket.id;
-            console.log("data of tutor", socketIds)
 
             info.msg = "you are connected now"
             io.sockets.connected[socketIds[data._id]].emit('connected', info)
@@ -458,7 +456,6 @@ io.sockets.on('connection', function (socket) {
                 data = JSON.parse(data)
             }
             let info = {}
-            console.log("data" , data)
             socketIds[data._id] = socket.id;
             socket.room = data._id
             socket.join(data._id);
@@ -499,7 +496,6 @@ io.sockets.on('connection', function (socket) {
                 dat= JSON.parse(dat)
             }
             let data = dat.data
-            console.log("dataacceptChat" , data)
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
                     database.getVIPUserMessages(data.user._id, (allMesssages)=> {
@@ -511,7 +507,7 @@ io.sockets.on('connection', function (socket) {
                         }
                         socket.room = data.user._id
                         socket.join(data.user._id);
-                        console.log("socket in acceptChat" , socket)
+                        logger.info("acceptChat SocketIds" , socketIds)
                         io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
                         if (socketIds[data.user._id] != undefined) {
@@ -539,7 +535,7 @@ io.sockets.on('connection', function (socket) {
             socket.room = data.user._id
 
             // socketIds[data._id] = socket.id;
-logger.info("socketIds[data.user._id]" ,socketIds[data.user._id] )
+logger.info("socketIds[data.user._id]" ,socket.id )
             logger.info("socket.id" ,socketIds[data.user._id] )
 
             if(socket.id == socketIds[data.user._id] ){
@@ -556,8 +552,8 @@ logger.info("socketIds[data.user._id]" ,socketIds[data.user._id] )
                 // message.msg = data.msg
                 
                 io.to(socket.room).emit('updatePVchat', message);
-                // if (socketIds[data.user._id])
-                //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                if (socketIds[data.user._id])
+                    io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
                 // if (socketIds[data.tutor._id])
                 //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
