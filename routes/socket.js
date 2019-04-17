@@ -154,7 +154,6 @@ io.sockets.on('connection', function (socket) {
                                         data.userCount = usernames.length
                                         // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                         // echo to room 1 that a person has connected to their room
-                                        logger.info("socketIds", socketIds)
 
                                         socket.emit('updateInfo', data)
                                     })
@@ -287,7 +286,6 @@ io.sockets.on('connection', function (socket) {
             }
             // we tell the client to execute 'updatechat' with 2 parameters
             let info = {}
-            logger.error("socket.userData", socket.userData)
             info.user = {}
             if (socket.userData.fname != undefined) {
                 info.user.fname = socket.userData.fname
@@ -530,8 +528,6 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            logger.info("dta in pvchat user" , data.user)
-            logger.info("dta in pvchat tutor" , data.tutor)
 
             let info = {}
             info.usrId = data.user._id;
@@ -540,6 +536,14 @@ io.sockets.on('connection', function (socket) {
             info.msg = data.msg
             info.voice = ""
             info.img = ""
+            // socketIds[data._id] = socket.id;
+
+            if(socket.id ==socketIds[data.user._id] ){
+                info.sender = "student"
+            }
+            else{
+                info.sender = "tutor"
+            }
             // socket.room = data.user._id
             database.addTutorMsg(info, (message)=> {
                 // logger.info("message" , message)
