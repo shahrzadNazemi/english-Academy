@@ -62,9 +62,11 @@ const file = {
         typeId: {type: "string"},
         lsnId: {type: "string"},
         description: {type: "string"},
+        order: {type: "string"},
+
 
     },
-    required: ["typeId", "lsnId"],
+    required: ["typeId", "lsnId" , "order"],
     additionalProperties: false
 };
 
