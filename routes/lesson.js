@@ -3099,7 +3099,7 @@ router.get('/file/:flId', (req, res)=> {
             })
         }
         else {
-            response.response('اطلاعات فایل', sound[0], (result)=> {
+            response.response('اطلاعات فایل', sound, (result)=> {
                 res.json(result)
             })
 
@@ -3107,7 +3107,7 @@ router.get('/file/:flId', (req, res)=> {
     })
 });
 
-router.get('file', (req, res)=> {
+router.get('/file', (req, res)=> {
     database.getAllFiles((sound)=> {
         if (sound == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -3131,18 +3131,25 @@ router.get('file', (req, res)=> {
                 }
                 sound = temp
             }
-            response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
-                let countPages = Math.ceil(sound.length / req.query.limit)
-                result1.totalPage = countPages
-                response.response('اطلاعات همه ی فایلها', result1, (result)=> {
+            if(req.query.page){
+                response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                    let countPages = Math.ceil(sound.length / req.query.limit)
+                    result1.totalPage = countPages
+                    response.response('اطلاعات همه ی فایلها', result1, (result)=> {
+                        res.json(result)
+                    })
+                })
+            }
+            else{
+                response.response('اطلاعات همه ی فایلها', sound, (result)=> {
                     res.json(result)
                 })
-            })
+
+            }
+
         }
     })
 });
-
-
 
 router.get('/:lsnId', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
@@ -3409,7 +3416,7 @@ router.get('/:lsnId/video', (req, res)=> {
 });
 
 router.get('/:lsnId/file', (req, res)=> {
-    database.getAllSound((sound)=> {
+    database.getFileByLessonId(req.params.lsnId ,(sound)=> {
         if (sound == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -3421,14 +3428,14 @@ router.get('/:lsnId/file', (req, res)=> {
             })
         }
         else {
-            let k = 0
-            let temp = []
-            for (var i = 0; i < sound.length; i++) {
-                if (sound[i].lsnId == req.params.lsnId) {
-                    temp[k] = sound[i]
-                }
-            }
-            sound = temp
+            // let k = 0
+            // let temp = []
+            // for (var i = 0; i < sound.length; i++) {
+            //     if (sound[i].lsnId == req.params.lsnId) {
+            //         temp[k] = sound[i]
+            //     }
+            // }
+            // sound = temp
             response.response('فایل مورد نظر یافت شد.', sound, (result)=> {
                 res.json(result)
 

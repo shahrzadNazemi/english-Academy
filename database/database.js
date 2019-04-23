@@ -1118,6 +1118,37 @@ module.exports.getFileById = (flId, cb)=> {
     })
 };
 
+module.exports.getFileByLessonId = (lsnId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/${lsnId}/file`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.getAllFiles = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/lesson/file`,
