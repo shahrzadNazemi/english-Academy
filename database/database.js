@@ -481,7 +481,6 @@ module.exports.addChatAdmin = (data, cb)=> {
     })
 };
 
-
 module.exports.getAdmins = (cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/admin`,
@@ -677,7 +676,6 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
     })
 };
 
-
 module.exports.delStudent = (stuId, cb)=> {
     console.log(stuId)
     request.delete({
@@ -736,7 +734,6 @@ module.exports.delChatAdmin = (caId, cb)=> {
         }
     })
 };
-
 
 module.exports.delCategory = (catId, cb)=> {
     request.delete({
@@ -853,6 +850,31 @@ module.exports.addSound = (soundInfo, cb)=> {
         url: `${config.databaseServer}/api/lesson/sound`,
         headers: {"content-Type": "application/json"},
         body: soundInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.addFile = (fileInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/lesson/file`,
+        headers: {"content-Type": "application/json"},
+        body: fileInfo,
         json: true
     }, function (err, response, body) {
         if (err) {
@@ -1035,6 +1057,67 @@ module.exports.updateText = (updateInfo, txtId, cb)=> {
     })
 };
 
+module.exports.updateFile = (updateInfo, flId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/lesson/file/${flId}`,
+        headers: {"content-Type": "application/json"},
+        body: updateInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getFileById = (flId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/file/${flId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 module.exports.updateTutor = (updateInfo, tId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/users/tutor/${tId}`,
@@ -1128,12 +1211,103 @@ module.exports.popUserFromOtherTutors = (updateInfo, cb)=> {
     })
 };
 
-
-module.exports.addTutorMsg = (data , cb)=> {
+module.exports.addTutorMsg = (data, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/message/tutor`,
         headers: {"content-Type": "application/json"},
         body: data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.addConversation = (convInfo, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/message/tutor/conversation`,
+        headers: {"content-Type": "application/json"},
+        body: convInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updateConversation = (convInfo, convId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/message/tutor/conversation/${convId}`,
+        headers: {"content-Type": "application/json"},
+        body: convInfo,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getOpenConversations = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/message/tutor/conversation/open`,
+        headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
         if (err) {
@@ -1220,7 +1394,6 @@ module.exports.getTutorByUser = (usrId, cb)=> {
     })
 };
 
-
 module.exports.getVIPUserMessages = (usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/message/user/vip/${usrId}`,
@@ -1281,7 +1454,7 @@ module.exports.getClosedChatsOfTutor = (trId, cb)=> {
     })
 };
 
-module.exports.getMsgByTutorStudent = (trId,usrId , cb)=> {
+module.exports.getMsgByTutorStudent = (trId, usrId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/message/tutor/${trId}/student/${usrId}`,
         headers: {"content-Type": "application/json"},
@@ -1310,7 +1483,6 @@ module.exports.getMsgByTutorStudent = (trId,usrId , cb)=> {
         }
     })
 };
-
 
 module.exports.getOpenChatsOfTutor = (trId, cb)=> {
     request.get({
@@ -1342,9 +1514,6 @@ module.exports.getOpenChatsOfTutor = (trId, cb)=> {
     })
 };
 
-
-
-
 module.exports.getTutorById = (tId, cb)=> {
     request.get({
         url: `${config.databaseServer}/api/users/tutor/${tId}`,
@@ -1374,8 +1543,6 @@ module.exports.getTutorById = (tId, cb)=> {
         }
     })
 };
-
-
 
 module.exports.delTutor = (tId, cb)=> {
     request.delete({
@@ -1467,7 +1634,6 @@ module.exports.addTutor = (updateInfo, cb)=> {
         }
     })
 };
-
 
 module.exports.updateNote = (updateInfo, ntId, cb)=> {
     request.put({
@@ -1759,6 +1925,152 @@ module.exports.delExam = (exId, cb)=> {
 module.exports.delVideo = (vdId, cb)=> {
     request.delete({
         url: `${config.databaseServer}/api/lesson/video/${vdId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.delFile = (flId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/lesson/file/${flId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.addPackage = (data, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/package`,
+        headers: {"content-Type": "application/json"},
+        body:data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updatePackage = (data ,pgId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/package/${pgId}`,
+        headers: {"content-Type": "application/json"},
+        body:data,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.delPackage = (pgId, cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/package/${pgId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getPackageById = (flId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/package/${flId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getAllPackages = ( cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/package`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -2515,7 +2827,6 @@ module.exports.resendVerification = (info, cb)=> {
         }
     })
 };
-
 
 
 module.exports.addTicket = (ticketInfo, cb)=> {

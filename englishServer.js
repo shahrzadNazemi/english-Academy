@@ -23,6 +23,8 @@ let certificate = require('./routes/certificate')
 let ticket = require('./routes/ticket')
 var io = require('./routes/socket')
 var chatroom = require('./routes/chatRoom')
+var package = require('./routes/package')
+
 
 
 
@@ -69,6 +71,8 @@ app.use('/api/dictionary', dictionary);
 app.use('/api/certificate', certificate);
 app.use('/api/ticket', ticket);
 app.use('/api/chatroom', chatroom);
+app.use('/api/package', package);
+
 
 
 

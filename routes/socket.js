@@ -445,9 +445,17 @@ io.sockets.on('connection', function (socket) {
             let data = dat.data
             let info = {}
             socketIds[data._id] = socket.id;
-
             info.msg = "you are connected now"
-            io.sockets.connected[socketIds[data._id]].emit('connected', info)
+            database.getOpenConversations((convInfo)=>{
+                if(convInfo != -1){
+                    info.conversations = convInfo
+                    if(convInfo ==0){
+                        info.conversations = []
+                    }
+                }
+                io.sockets.connected[socketIds[data._id]].emit('connected', info)
+
+            })
             // socket.emit('connected', info)
         });
 
@@ -460,32 +468,50 @@ io.sockets.on('connection', function (socket) {
             socket.room = data._id
             socket.join(data._id);
 
-            logger.info("room in chatrequest" , socket.room)
+            logger.info("room in chatrequest", socket.room)
             database.getlevelOfStudent(data._id, (level)=> {
                 if (level == 0 || level == -1) {
                     info.msg = "there is no tutor right now"
                     socket.emit('noTutor', info)
                 }
                 else {
-                    database.getTutorByLevel(level._id, (tutors)=> {
-                        if (tutors == -1 || tutors == 0) {
-                            info.msg = "there is no tutor right now"
-                            socket.emit('noTutor', info)
-                        }
-                        else {
-                            for (var i = 0; i < tutors.length; i++) {
-                                if (socketIds[tutors[i]._id] != undefined) {
-                                    let info = {}
-                                    info.fname = data.fname
-                                    info.lname = data.lname
-                                    info._id = data._id
-                                    info.avatarUrl = data.avatarUrl
-                                    info.score = data.score
-                                    info.time = new Date().getTime()
-                                    io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', info)
-                                }
+                    let convInfo = {}
+                    convInfo.startTime = new Date().getTime()
+                    convInfo.endTime = ""
+                    convInfo.tutorId = 0;
+                    convInfo.userId = data._id
+                    database.addConversation(convInfo, (conversation)=> {
+                        database.getTutorByLevel(level._id, (tutors)=> {
+                            if (tutors == -1 || tutors == 0) {
+                                info.msg = "there is no tutor right now"
+                                socket.emit('noTutor', info)
                             }
-                        }
+                            else {
+                                for (var i = 0; i < tutors.length; i++) {
+                                    if (socketIds[tutors[i]._id] != undefined) {
+                                        let info = {}
+                                        if (conversation != -1) {
+                                            info.convId = conversation._id
+                                        }
+                                        info.fname = data.fname
+                                        info.lname = data.lname
+                                        info._id = data._id
+                                        info.avatarUrl = data.avatarUrl
+                                        info.score = data.score
+                                        info.time = new Date().getTime()
+                                        io.sockets.connected[socketIds[tutors[i]._id]].emit('requested', info)
+
+                                    }
+                                }
+                                // if (conversation != -1) {
+                                //     let data ={}
+                                //     data.convId = conversation._id
+                                // }
+
+                                io.sockets.connected[socketIds[data._id]].emit('requested', conversation)
+
+                            }
+                        })
                     })
                 }
             })
@@ -500,22 +526,28 @@ io.sockets.on('connection', function (socket) {
             let data = dat.data
             database.popUserFromOtherTutors(data.user, (popoed)=> {
                 database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
-                    database.getVIPUserMessages(data.user._id, (allMesssages)=> {
-                        if (allMesssages == -1 || allMesssages == 0) {
-                            data.allMessages = []
-                        }
-                        else {
-                            data.allMessages = allMesssages
-                        }
-                        socket.room = data.user._id
-                        socket.join(data.user._id);
-                        logger.info("acceptChat room", socket.room)
-                        io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
+                    let convInfo = {}
+                    convInfo.tutorId = data.tutor._id
+                    convInfo.status = "acceptedByTutor"
 
-                        if (socketIds[data.user._id] != undefined) {
+                    database.updateConversation( convInfo,data.convId , (updateConv)=> {
+                        database.getVIPUserMessages(data.user._id, (allMesssages)=> {
+                            if (allMesssages == -1 || allMesssages == 0) {
+                                data.allMessages = []
+                            }
+                            else {
+                                data.allMessages = allMesssages
+                            }
+                            socket.room = data.user._id
+                            socket.join(data.user._id);
+                            logger.info("acceptChat room", data)
+                            io.sockets.connected[socketIds[data.tutor._id]].emit('accepted', data)
 
-                            io.sockets.connected[socketIds[data.user._id]].emit('chatAccepted', data)
-                        }
+                            if (socketIds[data.user._id] != undefined) {
+
+                                io.sockets.connected[socketIds[data.user._id]].emit('chatAccepted', data)
+                            }
+                        })
                     })
 
                 })
@@ -554,11 +586,11 @@ io.sockets.on('connection', function (socket) {
                 // message.tutor = data.tutor
                 // message.msg = data.msg
 
-                // io.to(socket.room).emit('updatePVchat', message);
-                if (socketIds[data.user._id])
-                    io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
-                if (socketIds[data.tutor._id])
-                    io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
+                io.to(socket.room).emit('updatePVchat', message);
+                // if (socketIds[data.user._id])
+                //     io.sockets.connected[socketIds[data.user._id]].emit('updatePVchat', message)
+                // if (socketIds[data.tutor._id])
+                //     io.sockets.connected[socketIds[data.tutor._id]].emit('updatePVchat', message)
             })
         });
 
@@ -585,6 +617,12 @@ io.sockets.on('connection', function (socket) {
                 msgInfo.tutorId = data.tutor._id
                 msgInfo.time = new Date().getTime()
                 msgInfo.voice = `${config.downloadPathVIPVoiceMsg}/${time}.mp3`
+                if (socket.id == socketIds[data.user._id]) {
+                    msgInfo.sender = "student"
+                }
+                else {
+                    msgInfo.sender = "tutor"
+                }
                 database.addTutorMsg(msgInfo, (newMsg)=> {
                     io.to(socket.room).emit('updatePVchat', newMsg);
 
@@ -617,11 +655,17 @@ io.sockets.on('connection', function (socket) {
                 // we tell the client to execute 'updatechat' with 2 parameters
                 let msgInfo = {}
                 msgInfo.msg = "";
-                msgInfo.img = "";
+                msgInfo.voice = "";
                 msgInfo.usrId = data.user._id
                 msgInfo.tutorId = data.tutor._id
                 msgInfo.time = new Date().getTime()
-                msgInfo.voice = `${config.downloadPathVIPImgMsg}/${time}.png`
+                msgInfo.img = `${config.downloadPathVIPImgMsg}/${time}.png`
+                if (socket.id == socketIds[data.user._id]) {
+                    msgInfo.sender = "student"
+                }
+                else {
+                    msgInfo.sender = "tutor"
+                }
                 database.addTutorMsg(msgInfo, (newMsg)=> {
                     io.to(socket.room).emit('updatePVchat', newMsg);
 
@@ -640,17 +684,16 @@ io.sockets.on('connection', function (socket) {
             if (typeof data == "string") {
                 data = JSON.parse(data)
             }
-            database.popUserFromOtherTutors(data.user, (popoed)=> {
-                data.user.endChat = true
-                database.addUserForTutor(data.user, data.tutor._id, (addedUser)=> {
-                    io.to(socket.room).emit('endedChat', data.user);
-                    socket.leave(data.user._id)
-                    // socket.emit("endedChat" , data.user)
-                })
+            let convInfo = {}
+            convInfo.endTime = new Date().getTime()
+            convInfo.status = "closed"
+            database.updateConversation(convInfo ,data.convId, (popoed)=> {
+                io.to(socket.room).emit('endedChat', data.user);
+                socket.leave(data.user._id)
+                // socket.emit("endedChat" , data.user)
             })
         });
-
-
+        
         // when the user disconnects.. perform this
         socket.on('disconnect', function (reason) {
             console.log("disconnect", socketIds[socket.id])
