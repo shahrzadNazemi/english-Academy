@@ -649,6 +649,8 @@ router.post('/supporter', (req, res)=> {
 });
 
 
+
+
 router.post('/chatAdmin', (req, res)=> {
     if (req.body.chatrooms) {
         if (typeof req.body.chatrooms == "string") {
@@ -1320,6 +1322,97 @@ router.get('/tutor/:tId', (req, res)=> {
         }
     })
 });
+
+
+router.post('/cp', (req, res)=> {
+    req.body.password = hashHelper.hash(req.body.password)
+
+    database.addCp(req.body, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  addedAdmin.password
+
+            response.responseCreated('اطلاعات با موفقیت ثبت شد.', addedAdmin, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.put('/cp/:cpId', (req, res) => {
+    req.body.password = hashHelper.hash(req.body.password)
+    database.updateCp(req.body, req.params.cpId, (Putresult)=> {
+        if (Putresult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (Putresult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  Putresult.password
+            response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/cp', (req, res) => {
+    database.getCps((getResult)=> {
+        if (getResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (getResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            for (var i = 0; i < getResult.length; i++) {
+                delete getResult[i].password
+            }
+            response.response('اطلاعات همه ی محتوا گذاران', getResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
+router.get('/cp/:cpId', (req, res)=> {
+    database.getCpById(req.params.cpId, (sup)=> {
+        if (sup == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sup == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete  sup.password
+            response.responseUpdated('اطلاعات کاربر مورد نظر', sup, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 
 router.post('/student/register', (req, res)=> {
@@ -2543,6 +2636,28 @@ router.delete('/tutor/:tId', (req, res) => {
         }
     })
 });
+
+router.delete('/cp/:cpId', (req, res) => {
+    database.delCp(req.params.cpId, (deleteResult)=> {
+        if (deleteResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (deleteResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.respondDeleted('اطلاعات مورد نظر حذف شد', deleteResult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+});
+
 
 router.delete('/student/:stdId', (req, res) => {
     database.getStudentById(req, params.stdId, (getResult)=> {

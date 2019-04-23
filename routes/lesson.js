@@ -3086,6 +3086,64 @@ router.get('/sound/:sndId', (req, res)=> {
     })
 });
 
+router.get('/file/:flId', (req, res)=> {
+    database.getFileById(req.params.flId, (sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('فایل مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            response.response('اطلاعات فایل', sound[0], (result)=> {
+                res.json(result)
+            })
+
+        }
+    })
+});
+
+router.get('file', (req, res)=> {
+    database.getAllFiles((sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('صداهای مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            if (req.query.lsnId) {
+                let k = 0
+                let temp = []
+                for (var i = 0; i < sound.length; i++) {
+                    if (sound[i].lsnId == req.query.lsnId) {
+                        temp[k] = sound[i]
+                        k++
+                    }
+                }
+                sound = temp
+            }
+            response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                let countPages = Math.ceil(sound.length / req.query.limit)
+                result1.totalPage = countPages
+                response.response('اطلاعات همه ی فایلها', result1, (result)=> {
+                    res.json(result)
+                })
+            })
+        }
+    })
+});
+
+
+
 router.get('/:lsnId', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
@@ -3350,6 +3408,36 @@ router.get('/:lsnId/video', (req, res)=> {
     })
 });
 
+router.get('/:lsnId/file', (req, res)=> {
+    database.getAllSound((sound)=> {
+        if (sound == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (sound == 0) {
+            response.respondNotFound('فایل مورد نظر یافت نشد.', [], (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let k = 0
+            let temp = []
+            for (var i = 0; i < sound.length; i++) {
+                if (sound[i].lsnId == req.params.lsnId) {
+                    temp[k] = sound[i]
+                }
+            }
+            sound = temp
+            response.response('فایل مورد نظر یافت شد.', sound, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+});
+
 router.get('/:lsnId/sound', (req, res)=> {
     database.getAllSound((sound)=> {
         if (sound == -1) {
@@ -3379,6 +3467,8 @@ router.get('/:lsnId/sound', (req, res)=> {
     })
 
 });
+
+
 
 router.get('/:lsnId/note', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];

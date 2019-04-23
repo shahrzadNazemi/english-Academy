@@ -80,6 +80,10 @@ module.exports.uploadPathVipFile = "/var/fileAccess/site/upload/vip/file"
 
 module.exports.downloadPathVipFile = "http://185.94.99.69:9000/upload/vip/file"
 
+module.exports.uploadPathCpAvatar = "/var/fileAccess/site/upload/cp/avatar"
+
+module.exports.downloadPathCpAvatar = "http://185.94.99.69:9000/upload/cp/avatar"
+
 
 
 module.exports.elasticHost = "http://localhost:9200"

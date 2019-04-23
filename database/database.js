@@ -1118,6 +1118,37 @@ module.exports.getFileById = (flId, cb)=> {
     })
 };
 
+module.exports.getAllFiles = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/lesson/file`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-3)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
 module.exports.updateTutor = (updateInfo, tId, cb)=> {
     request.put({
         url: `${config.databaseServer}/api/users/tutor/${tId}`,
@@ -4323,7 +4354,7 @@ module.exports.getMsgByChatRoom = (chId, cb)=> {
 
 module.exports.getChatroomByChatAdmin = (caId, cb)=> {
     request.get({
-        url: `${config.databaseServer}/api/chatroom/chatAdmin${caId}`,
+        url: `${config.databaseServer}/api/chatroom/chatAdmin/${caId}`,
         headers: {"content-Type": "application/json"},
         json: true
     }, function (err, response, body) {
@@ -4370,5 +4401,131 @@ module.exports.editMsg = (msgId, info, cb)=> {
         }
     })
 };
+
+
+
+
+module.exports.delCp = (cpId , cb)=> {
+    request.delete({
+        url: `${config.databaseServer}/api/users/cp/${cpId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getCpById = (cpId, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/cp/${cpId}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.getCps = (cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/cp`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.addCp = (info, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/cp`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.updateCp = (info, cpId, cb)=> {
+    request.put({
+        url: `${config.databaseServer}/api/users/cp/${cpId}`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
 
 
