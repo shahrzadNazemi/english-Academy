@@ -1448,7 +1448,10 @@ router.post('/student/register', (req, res)=> {
             if (req.body.passedLessonScore == undefined) {
                 req.body.passedLessonScore = 0
             }
+            req.body.password = hashHelper.ConvertToEnglish(req.body.password)
+
             req.body.password = hashHelper.hash(req.body.password);
+            req.body.mobile = hashHelper.ConvertToEnglish(req.body.mobile)
             if (req.files) {
                 if (req.files.file != null) {
                     // type file
@@ -1571,6 +1574,7 @@ router.post('/student/login', (req, res) => {
         })
     }
     else {
+        req.body.password = hashHelper.ConvertToEnglish(req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
         database.stuLogin(req.body, function (loginResult) {
             if (loginResult == -1) {
@@ -2048,7 +2052,13 @@ router.put('/student/:stdId', (req, res) => {
 
         })
     }
+        
     else {
+        req.body.password = hashHelper.ConvertToEnglish(req.body.password)
+if(req.body.mobile){
+    req.body.mobile = hashHelper.ConvertToEnglish(req.body.mobile)
+
+}
         if (!Object.keys(req.body.purchaseStatus).length == 0) {
             let purchase = req.body.purchaseStatus
             delete req.body.purchaseStatus
@@ -2089,6 +2099,7 @@ router.put('/student/:stdId/changePass', (req, res) => {
     }
     else {
         req.body.oldPassword = hashHelper.hash(req.body.oldPassword)
+        req.body.password = hashHelper.ConvertToEnglish(req.body.password)
         req.body.password = hashHelper.hash(req.body.newPassword)
         database.getStudentById(req.params.stdId, (student)=> {
             if (student == -1) {
