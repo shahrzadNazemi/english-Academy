@@ -1333,6 +1333,13 @@ router.post('/cp', (req, res)=> {
                 res.json(result)
             })
         }
+        else if (addedAdmin == -2) {
+            let errData = {"username": "نام کاربری نمیتواند تکراری باشد"}
+            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                res.json(result)
+            })
+        }
+
         else {
             delete  addedAdmin.password
 
@@ -1357,6 +1364,13 @@ router.put('/cp/:cpId', (req, res) => {
                 res.json(result)
             })
         }
+        else if (Putresult == -2) {
+            let errData = {"username": "نام کاربری نمیتواند تکراری باشد"}
+            response.validation('اطلاعات وارد شده صحیح نمی باشد', errData, "duplicated", (result)=> {
+                res.json(result)
+            })
+        }
+
         else {
             delete  Putresult.password
             response.responseUpdated('اطلاعات با موفقیت تغییر یافت.', Putresult, (result)=> {
