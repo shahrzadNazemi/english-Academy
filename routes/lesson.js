@@ -3102,11 +3102,15 @@ router.get('/:lsnId', (req, res) => {
                         max.push(lesson[0].sound.length)
                         max.push(lesson[0].text.length)
                         max.push(lesson[0].downloadFile.length)
-
-                        max.sort()
                         for (var k = 0; k < types.length; k++) {
                             types[k].video = []
                             types[k].sound = []
+                            types[k].downloadFile = []
+                            types[k].text = []
+                        }
+                        max.sort()
+                        for (var k = 0; k < types.length; k++) {
+
                             for (var i = 0; i < max[max.length - 1]; i++) {
                                 if (lesson[0].video[i] != undefined) {
                                     if (lesson[0].video[i].typeId == types[k]._id) {
@@ -3119,26 +3123,26 @@ router.get('/:lsnId', (req, res) => {
                                     }
                                 }
                                 if (lesson[0].text[i] != undefined) {
-                                    types[k].text = []
 
                                     if (lesson[0].text[i].typeId == types[k]._id) {
                                         types[k].text.push(lesson[0].text[i])
                                     }
                                 }
                                 if (lesson[0].downloadFile[i] != undefined) {
-                                    types[k].downloadFile = []
                                     logger.info("lesson[0.downloadFile" , lesson[0].downloadFile[i].typeId )
                                     logger.info("i" , i )
 
                                     logger.info("types[k]._id" , types[k]._id )
                                     logger.info("k" , k )
+                                    logger.info("lesson[0].downloadFile[i].typeId==types[k]._id" , lesson[0].downloadFile[i].typeId==types[k]._id)
 
                                     if (lesson[0].downloadFile[i].typeId==types[k]._id) {
                                         types[k].downloadFile.push(lesson[0].downloadFile[i])
                                         logger.info("types[k].downloadFile" , types[k].downloadFile )
-                                        logger.info("k" , k )
+                                        // logger.info("k" , k )
 
-                                        delete lesson[0].downloadFile[i].type
+
+                                        // delete lesson[0].downloadFile[i].type
                                     }
                                 }
 
