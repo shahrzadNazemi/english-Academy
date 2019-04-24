@@ -40,7 +40,10 @@ router.post('/admin/login', (req, res) => {
 });
 
 router.put('/admin/:admId', (req, res) => {
-    req.body.password = hashHelper.hash(req.body.password)
+    if(req.body.password){
+        req.body.password = hashHelper.hash(req.body.password)
+
+    }
     database.updateAdmin(req.body, req.params.admId, (Putresult)=> {
         if (Putresult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -1352,7 +1355,10 @@ router.post('/cp', (req, res)=> {
 });
 
 router.put('/cp/:cpId', (req, res) => {
-    req.body.password = hashHelper.hash(req.body.password)
+    if(req.body.password){
+        req.body.password = hashHelper.hash(req.body.password)
+
+    }
     database.updateCp(req.body, req.params.cpId, (Putresult)=> {
         if (Putresult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
