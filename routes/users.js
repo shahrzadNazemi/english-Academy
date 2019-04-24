@@ -1635,6 +1635,8 @@ router.post('/student/login', (req, res) => {
                                             delete lesson[0].video
                                             delete lesson[0].sound
                                             delete lesson[0].text
+                                            delete lesson[0].downloadFile
+
                                             data.lesson = lesson[0]
                                             data.jwt = jwt.signUser(loginResult.username)
                                             response.response('ورود با موفقیت انجام شد', data, (result)=> {
