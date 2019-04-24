@@ -611,7 +611,7 @@ router.post('/file', (req, res)=> {
                         req.body.lvlId = lesson.lvlId
                         var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                         var file = req.files.file.name.replace(`.${extension}`, '');
-                        var newFile = new Date().getTime() + '_' + extension;
+                        var newFile = new Date().getTime() + '.' + extension;
                         // path is Upload Directory
                         var dir = `${config.uploadPathVipFile}/${req.body.lvlId}/${req.body.lsnId}/`;
                         console.log("dir", dir)
@@ -2127,7 +2127,7 @@ router.put('/file/:flId', (req, res)=> {
 
                                             var extension = req.files.file.name.substring(req.files.file.name.lastIndexOf('.') + 1).toLowerCase();
                                             var file = req.files.file.name.replace(`.${extension}`, '');
-                                            var newFile = new Date().getTime() + '_' + extension;
+                                            var newFile = new Date().getTime() + '.' + extension;
                                             // path is Upload Directory
                                             var dir = `${config.uploadPathVipFile}/${req.body.lvlId}/${req.body.lsnId}/`;
                                             module.exports.addDir(dir, function (newPath) {
