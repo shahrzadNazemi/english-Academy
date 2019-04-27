@@ -17,6 +17,7 @@ const trim = require('../util/trimmer')
 
 
 router.post('/', (req, res)=> {
+    logger.info("package" , req.body)
     database.addPackage(req.body, (addResult)=> {
         if (addResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
