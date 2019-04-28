@@ -2081,14 +2081,7 @@ if(req.body.mobile){
     req.body.mobile = hashHelper.ConvertToEnglish(req.body.mobile)
 
 }
-        if (!Object.keys(req.body.purchaseStatus).length == 0) {
-            let purchase = req.body.purchaseStatus
-            delete req.body.purchaseStatus
-            req.body.purchaseStatus = {}
-            req.body.purchaseStatus.value = purchase.value
-            req.body.purchaseStatus.date = purchase.date
-            req.body.purchaseStatus.refId = purchase.refId
-        }
+
         database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
             if (Putresult == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2111,6 +2104,28 @@ if(req.body.mobile){
     }
 
 });
+
+router.put('/student/:stdId/purchaseRequest' , (req, res)=>{
+    database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
+        if (Putresult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (Putresult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            delete Putresult.password
+            response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                res.json(result)
+
+            })
+        }
+    });
+})
 
 router.put('/student/:stdId/changePass', (req, res) => {
     if (req.body.oldPassword == undefined) {
