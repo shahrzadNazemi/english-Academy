@@ -1625,6 +1625,8 @@ router.post('/student/login', (req, res) => {
                                     delete lesson[0].video
                                     delete lesson[0].sound
                                     delete lesson[0].text
+                                    delete lesson[0].downloadFile
+
                                     data.lesson = lesson[0]
                                     data.jwt = jwt.signUser(loginResult.username)
                                     response.response('ورود با موفقیت انجام شد', data, (result)=> {
@@ -1642,6 +1644,8 @@ router.post('/student/login', (req, res) => {
                                             delete lesson[0].video
                                             delete lesson[0].sound
                                             delete lesson[0].text
+                                            delete lesson[0].downloadFile
+
                                             data.lesson = lesson[0]
                                             data.jwt = jwt.signUser(loginResult.username)
                                             response.response('ورود با موفقیت انجام شد', data, (result)=> {
@@ -1656,7 +1660,7 @@ router.post('/student/login', (req, res) => {
                                             delete lesson[0].sound
                                             delete lesson[0].text
                                             delete lesson[0].downloadFile
-
+logger.info("leson" , lesson[0])
                                             data.lesson = lesson[0]
                                             data.jwt = jwt.signUser(loginResult.username)
                                             response.response('ورود با موفقیت انجام شد', data, (result)=> {
@@ -1812,6 +1816,10 @@ router.post('/refreshToken', function (req, res) {
                             if (lesson[0].text)
 
                                 delete lesson[0].text
+
+                            if (lesson[0].downloadFile)
+
+                                delete lesson[0].downloadFile
                             delete student[0].password
                             let data = student[0]
                             data.lesson = lesson[0]
@@ -1843,6 +1851,8 @@ router.post('/refreshToken', function (req, res) {
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
+                        delete lesson[0].downloadFile
+
                         delete student[0].password
                         let data = student[0]
                         data.lesson = lesson[0]
@@ -2387,6 +2397,8 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     delete lesson[0].video
                                     delete lesson[0].sound
                                     delete lesson[0].text
+                                    delete lesson[0].downloadFile
+
                                     let i = 0
                                     for (var k = 0; k < levelStu.length; k++) {
                                         levelStu[k].lesson = lesson[0]
@@ -2551,6 +2563,8 @@ router.get('/student/:stdId', (req, res) => {
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
+                        delete lesson[0].downloadFile
+
                         data.lesson = lesson[0]
                         response.response('ورود با موفقیت انجام شد', data, (result)=> {
                             res.json(result)
@@ -2567,6 +2581,8 @@ router.get('/student/:stdId', (req, res) => {
                                 delete lesson[0].video
                                 delete lesson[0].sound
                                 delete lesson[0].text
+                                delete lesson[0].downloadFile
+
                                 data.lesson = lesson[0]
                                 response.response('ورود با موفقیت انجام شد', data, (result)=> {
                                     res.json(result)
@@ -2579,6 +2595,8 @@ router.get('/student/:stdId', (req, res) => {
                                 delete lesson[0].video
                                 delete lesson[0].sound
                                 delete lesson[0].text
+                                delete lesson[0].downloadFile
+
                                 data.lesson = lesson[0]
                                 response.response('ورود با موفقیت انجام شد', data, (result)=> {
                                     res.json(result)
