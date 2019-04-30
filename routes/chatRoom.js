@@ -19,7 +19,7 @@ const trim = require('../util/trimmer')
 router.post('/', (req, res)=> {
     trim.expressTrimmer(req, (req)=> {
         logger.info("req.body", req.body)
-        if (req.body.lesson) {
+        if (req.body.lesson && typeof req.body.lesson == "string") {
             req.body.lesson = JSON.parse(req.body.lesson)
             req.body.level = {}
         }
@@ -525,6 +525,7 @@ router.get('/:chId', (req, res)=> {
 
 router.get('/', (req, res)=> {
     database.getAllChatrooms((chatroom)=> {
+        
         if (chatroom == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -544,8 +545,6 @@ router.get('/', (req, res)=> {
 
                 })
             })
-
-
         }
     })
 

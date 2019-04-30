@@ -12,6 +12,8 @@ io.sockets.on('connection', function (socket) {
     console.log("connected")
 
     database.getAllChatrooms((chatrooms)=> {
+        logger.info("chatrooms" , chatrooms)
+
         let rooms = []
         if (chatrooms[0] != undefined) {
             for (var i = 0; i < chatrooms.length; i++) {

@@ -2334,7 +2334,6 @@ router.get('/student/bestOfLevel', (req, res) => {
             var token = req.headers.authorization.split(" ")[1];
             var verify = jwt.verify(token);
             let username = verify.userID
-            if (username != "userAdmin") {
                 database.getStudentByUsername(username, (student)=> {
                     if (student == 0) {
                         response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
@@ -2450,7 +2449,6 @@ router.get('/student/bestOfLevel', (req, res) => {
                         })
                     }
                 })
-            }
         }
     })
 
@@ -2461,7 +2459,6 @@ router.get('/student/prCrNxtLesson', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if (username != "userAdmin") {
         database.getStudentByUsername(username, (student)=> {
             if (student == 0) {
                 response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
@@ -2535,7 +2532,6 @@ router.get('/student/prCrNxtLesson', (req, res) => {
 
             }
         })
-    }
 });
 
 router.get('/student/:stdId', (req, res) => {

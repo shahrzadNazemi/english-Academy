@@ -16,7 +16,6 @@ router.post('/', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if (username != "userAdmin") {
         trim.expressTrimmer(req , (req)=> {
             database.getStudentByUsername(username, (student)=> {
                 if (student == 0) {
@@ -127,7 +126,6 @@ router.post('/', (req, res)=> {
                 }
             })
         })
-    }
 
 
 
@@ -374,7 +372,6 @@ router.get('/student', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if (username != "userAdmin") {
         database.getStudentByUsername(username, (student)=> {
             if (student == 0) {
                 response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
@@ -405,7 +402,6 @@ router.get('/student', (req, res)=> {
 
             }
         })
-    }
 });
 
 router.get('/:certId', (req, res)=> {

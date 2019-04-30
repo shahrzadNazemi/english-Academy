@@ -364,12 +364,44 @@ router.get('/', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-    if(username != "userAdmin"){
         database.getStudentByUsername(username, (student)=> {
-            if (student == 0 || student == -1) {
+            if (student == -1) {
                 response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
                     res.json(result)
                 })
+            }
+                else if(student ==0){
+                database.getAllNotifications((notification)=> {
+                    if (notification == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (notification == 0) {
+                        response.respondNotFound('نوتیفیکیشن مورد نظر یافت نشد.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        if (req.query.page != undefined) {
+                            response.paginationClient(req.query.page, req.query.limit, notification, (result1)=> {
+                                let countPages = Math.ceil(notification.length / req.query.limit)
+                                result1.totalPage = countPages
+                                response.response('اطلاعات همه ی سوالات', result1, (result)=> {
+                                    res.json(result)
+                                })
+                            })
+
+                        }
+                        else {
+                            response.response('اطلاعات همه ی سوالات', notification, (result)=> {
+                                res.json(result)
+                            })
+                        }
+
+                    }
+                })
+
             }
             else {
                 database.getAllNotifications((notification)=> {
@@ -412,40 +444,7 @@ router.get('/', (req, res)=> {
                 })
             }
         })
-    }
-    else{
-        database.getAllNotifications((notification)=> {
-            if (notification == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (notification == 0) {
-                response.respondNotFound('نوتیفیکیشن مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                if (req.query.page != undefined) {
-                    response.paginationClient(req.query.page, req.query.limit, notification, (result1)=> {
-                        let countPages = Math.ceil(notification.length / req.query.limit)
-                        result1.totalPage = countPages
-                        response.response('اطلاعات همه ی سوالات', result1, (result)=> {
-                            res.json(result)
-                        })
-                    })
-
-                }
-                else {
-                    response.response('اطلاعات همه ی سوالات', notification, (result)=> {
-                        res.json(result)
-                    })
-                }
-
-            }
-        })
-        
-    }
+    
 
 });
 
