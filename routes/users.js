@@ -10,6 +10,7 @@ let lesson = require('./lesson')
 let fs = require('fs')
 let statistic = require('./statistic')
 const trim = require('../util/trimmer')
+// let csurf = require('../util/csurfHelper')
 
 
 router.post('/admin/login', (req, res) => {
@@ -30,7 +31,7 @@ router.post('/admin/login', (req, res) => {
             delete loginResult.password
             let data = loginResult
             data.jwt = jwt.signUser(loginResult.username)
-
+            // data.csrfToken= req.csrfToken()
             response.response('ورود با موفقیت انجام شد.', data, (result)=> {
                 res.json(result)
 

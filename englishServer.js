@@ -1,4 +1,7 @@
 var express = require('express');
+const helmet = require('helmet')
+const rateLimit = require("express-rate-limit");
+var cookieParser = require('cookie-parser')
 var path = require('path');
 var bodyParser = require('body-parser');
 var cors = require('cors')
@@ -8,7 +11,6 @@ const fileupload = require('express-fileupload');
 let jwt = require('./util/jwtHelper')
 let trimmer = require('express-trimmer')
 var debug = require('debug')('gokibitz');
-
 let user = require('./routes/users');
 let level = require('./routes/level');
 let lesson = require('./routes/lesson');
@@ -24,19 +26,20 @@ let ticket = require('./routes/ticket')
 var io = require('./routes/socket')
 var chatroom = require('./routes/chatRoom')
 var package = require('./routes/package')
-
-
-
-
-
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
 
 app.use(logger);
+app.use(helmet())
 app.use(bodyParser.json({limit:'50mb'}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileupload());
 app.use(trimmer)
+app.use(limiter);
 
 app.use(function (req, res, next) {
     if (req.path.includes('/login') || req.path.includes('/register') || req.path.includes('/refreshToken') || req.path.includes('/verification') || req.path.includes('/resendVerify')) {
@@ -57,6 +60,9 @@ app.use(function (req, res, next) {
     console.log("verification", verify);
     next();
 });
+
+// app.use(cookieParser);
+
 
 app.use('/api/users', user);
 app.use('/api/level', level);
