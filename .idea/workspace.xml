@@ -32,7 +32,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="users.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/users.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="260">
@@ -932,11 +932,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="englishServer.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="englishServer.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/englishServer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="920">
-              <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+            <state relative-caret-position="334">
+              <caret line="63" column="24" selection-start-line="63" selection-start-column="24" selection-end-line="63" selection-end-column="24" />
               <folding>
                 <element signature="e#1559#2248#0" expanded="false" />
               </folding>
@@ -1003,8 +1003,8 @@
         <option value="$PROJECT_DIR$/routes/certificate.js" />
         <option value="$PROJECT_DIR$/routes/notification.js" />
         <option value="$PROJECT_DIR$/util/csurfHelper.js" />
-        <option value="$PROJECT_DIR$/englishServer.js" />
         <option value="$PROJECT_DIR$/routes/users.js" />
+        <option value="$PROJECT_DIR$/englishServer.js" />
       </list>
     </option>
   </component>
@@ -1612,12 +1612,12 @@
       <workItem from="1556685895583" duration="8122000" />
       <workItem from="1556867851510" duration="1910000" />
       <workItem from="1556870566016" duration="605000" />
-      <workItem from="1556951698254" duration="1310000" />
+      <workItem from="1556951698254" duration="1467000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1185385000" />
+    <option name="totallyTimeSpent" value="1185542000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -2000,16 +2000,6 @@
         <state relative-caret-position="40">
           <caret line="2" column="53" selection-start-line="2" selection-start-column="53" selection-end-line="2" selection-end-column="53" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/englishServer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="920">
-          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding>
-            <element signature="e#1559#2248#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2905,6 +2895,16 @@
             <element signature="e#116954#117026#0" expanded="false" />
             <element signature="e#117075#117274#0" expanded="false" />
             <element signature="e#117178#117251#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/englishServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="63" column="24" selection-start-line="63" selection-start-column="24" selection-end-line="63" selection-end-column="24" />
+          <folding>
+            <element signature="e#1559#2248#0" expanded="false" />
           </folding>
         </state>
       </provider>
