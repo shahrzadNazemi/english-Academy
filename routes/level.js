@@ -17,7 +17,7 @@ let config = require('../util/config')
 const level = {
     type: "object",
     properties: {
-        title: {type: "string", minLength: 3, maxLength: 20},
+        title: {type: "string", minLength: 3, maxLength: 50},
         description: {type: "string"},
         order: {type: "string"}
     },
