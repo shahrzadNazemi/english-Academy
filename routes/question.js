@@ -538,7 +538,7 @@ router.get('/lesson/:lsnId', (req, res)=> {
 })
 
 router.post('/answer', (req, res)=> {
-    logger.info("body in answerQ" , req.body)
+    logger.info("body in answerQ" , typeof req.body.true)
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     req.body.username = verify.userID
