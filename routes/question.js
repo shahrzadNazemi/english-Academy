@@ -765,6 +765,7 @@ router.post('/answer', (req, res)=> {
                             logger.info("timePassed1" , result.timePassed)
 
                             database.answerQuestion(req.body, (question)=> {
+                               
                                 if (question == -1) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                         res.json(result)

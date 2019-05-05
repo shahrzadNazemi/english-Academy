@@ -2360,9 +2360,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     }
 
                                 }
-                                let temp = []
+                                let temp = allStudents
                                 let length = levelStu.length
                                 if (length <= 3) {
+                                    logger.info("leveleStu" , levelStu)
                                     database.getAllLessons((lessons)=> {
                                         for (var p = 0; p < levelStu.length; p++) {
                                             levelStu[p].lesson = lesson[0]
@@ -2553,7 +2554,6 @@ router.get('/student/:stdId', (req, res) => {
                     console.log("dsfsgfdfgldhkgjhdkgh", exam)
                         getResult.examPassed = exam
                     if (getResult.score == 0) {
-
                         delete getResult.password
                         let data = getResult
                         data.progress = 0
@@ -2561,7 +2561,6 @@ router.get('/student/:stdId', (req, res) => {
                         delete lesson[0].sound
                         delete lesson[0].text
                         delete lesson[0].downloadFile
-
                         data.lesson = lesson[0]
                         response.response('ورود با موفقیت انجام شد', data, (result)=> {
                             res.json(result)
