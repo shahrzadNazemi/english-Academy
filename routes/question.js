@@ -548,6 +548,9 @@ router.post('/answer', (req, res)=> {
     if(req.body.true && req.body.true == "false"){
         req.body.true = false
     }
+    if(req.body.score && typeof req.body.score == "string"){
+        req.body.score = parseInt(req.body.score)
+    }
     database.getStudentByUsername(req.body.username, (student)=> {
         if (student == 0) {
             response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
