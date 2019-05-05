@@ -542,6 +542,12 @@ router.post('/answer', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     req.body.username = verify.userID
+    if(req.body.true && req.body.true == "true"){
+        req.body.true = true
+    }
+    if(req.body.true && req.body.true == "false"){
+        req.body.true = false
+    }
     database.getStudentByUsername(req.body.username, (student)=> {
         if (student == 0) {
             response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
