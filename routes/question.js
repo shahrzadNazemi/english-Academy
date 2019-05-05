@@ -689,6 +689,7 @@ router.post('/answer', (req, res)=> {
                         if (typeof result.timePassed == "string") {
                             result.timePassed = parseInt(result.timePassed)
                         }
+                        logger.info("timePassed" , result.timePassed)
                         //answered before
                         if (result.timePassed) {
                             let pass = moment(result.timePassed).add(1, 'h')
