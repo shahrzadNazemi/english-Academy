@@ -2351,11 +2351,11 @@
       <file leaf-file-name="question.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/question.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-353">
-              <caret line="537" column="2" selection-start-line="537" selection-start-column="2" selection-end-line="537" selection-end-column="2" />
+            <state relative-caret-position="167">
+              <caret line="691" column="68" selection-start-line="691" selection-start-column="68" selection-end-line="691" selection-end-column="68" />
               <folding>
                 <element signature="e#23347#29726#0" expanded="false" />
-                <element signature="e#30628#33670#0" expanded="false" />
+                <element signature="e#30698#33740#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -2415,7 +2415,6 @@
         <option value="$PROJECT_DIR$/routes/ticket.js" />
         <option value="$PROJECT_DIR$/routes/trick.js" />
         <option value="$PROJECT_DIR$/util/logger.js" />
-        <option value="$PROJECT_DIR$/routes/question.js" />
         <option value="$PROJECT_DIR$/routes/dictionary.js" />
         <option value="$PROJECT_DIR$/routes/smsPanel.js" />
         <option value="$PROJECT_DIR$/util/config.js" />
@@ -2432,6 +2431,7 @@
         <option value="$PROJECT_DIR$/englishServer.js" />
         <option value="$PROJECT_DIR$/routes/level.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
+        <option value="$PROJECT_DIR$/routes/question.js" />
       </list>
     </option>
   </component>
@@ -3041,12 +3041,12 @@
       <workItem from="1556867851510" duration="1910000" />
       <workItem from="1556870566016" duration="605000" />
       <workItem from="1556951698254" duration="4289000" />
-      <workItem from="1557030789480" duration="6126000" />
+      <workItem from="1557030789480" duration="6452000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1194490000" />
+    <option name="totallyTimeSpent" value="1194816000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -3060,7 +3060,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935154" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2871795" sideWeight="0.4969743" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33509833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2786325" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2786325" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22919819" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -5713,11 +5713,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/question.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-353">
-          <caret line="537" column="2" selection-start-line="537" selection-start-column="2" selection-end-line="537" selection-end-column="2" />
+        <state relative-caret-position="167">
+          <caret line="691" column="68" selection-start-line="691" selection-start-column="68" selection-end-line="691" selection-end-column="68" />
           <folding>
             <element signature="e#23347#29726#0" expanded="false" />
-            <element signature="e#30628#33670#0" expanded="false" />
+            <element signature="e#30698#33740#0" expanded="false" />
           </folding>
         </state>
       </provider>

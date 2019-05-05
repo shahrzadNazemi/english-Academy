@@ -686,12 +686,12 @@ router.post('/answer', (req, res)=> {
 
                     }
                     else {
-                        if (typeof result.timePassed == "string") {
+                        if (typeof result.timePassed == "string" && result.timePassed != "") {
                             result.timePassed = parseInt(result.timePassed)
                         }
                         logger.info("timePassed" , result.timePassed)
                         //answered before
-                        if (result.timePassed) {
+                        if (result.timePassed != "") {
                             let pass = moment(result.timePassed).add(1, 'h')
                             let currentTime = new Date().getTime()
                             //if currently doing the exam
