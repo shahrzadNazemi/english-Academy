@@ -3787,6 +3787,7 @@ module.exports.createVideoThumbnail = function (path, destination, fileName, cb)
                 frame_rate: 10,
                 number: 1,
                 start_time: 20,
+                duration_time:2,
                 file_name: `${fileName}`
             }, function (error, files) {
                 if (!error) {
