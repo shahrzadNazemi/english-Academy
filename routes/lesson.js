@@ -3085,6 +3085,8 @@ router.get('/:lsnId', (req, res) => {
                                                         else {
                                                             // lesson[0].viewPermission = false
                                                             lesson[0].viewPermission = true
+                                                            lesson[0].quizPassedTime = result.timePassed
+                                                            lesson[0].examPassedTime = result.examTimePassed
 
                                                             lesson[0] = circJson.stringify(lesson[0])
                                                             response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
@@ -3102,6 +3104,9 @@ router.get('/:lsnId', (req, res) => {
                                                             })
                                                         }
                                                         else {
+                                                            lesson[0].quizPassedTime = result.timePassed
+                                                            lesson[0].examPassedTime = result.examTimePassed
+
                                                             lesson[0].viewPermission = true
                                                             lesson[0] = circJson.stringify(lesson[0])
                                                             response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
@@ -3120,6 +3125,9 @@ router.get('/:lsnId', (req, res) => {
                                                         })
                                                     }
                                                     else {
+                                                        lesson[0].quizPassedTime = result.timePassed
+                                                        lesson[0].examPassedTime = result.examTimePassed
+
                                                         lesson[0].viewPermission = view[0].viewPermission
                                                         lesson[0] = circJson.stringify(lesson[0])
                                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
@@ -3141,6 +3149,9 @@ router.get('/:lsnId', (req, res) => {
                                         })
                                     }
                                     else {
+                                        lesson[0].quizPassedTime = result.timePassed
+                                        lesson[0].examPassedTime = result.examTimePassed
+
                                         lesson[0].viewPermission = view[0].viewPermission
                                         lesson[0] = circJson.stringify(lesson[0])
                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
