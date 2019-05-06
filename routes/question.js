@@ -567,6 +567,7 @@ router.post('/answer', (req, res)=> {
             req.body.usrId = student[0]._id
             //answerExam
             if (req.body.lsnId == undefined && req.body.type == "exam") {
+                req.body.exaId = req.body.examId
                 database.getExamById(req.body.exaId, (exam)=> {
                     if (exam == 0 || exam == -1) {
                         response.respondNotFound('سوال مورد نظر یافت نشد.', {}, (result)=> {
