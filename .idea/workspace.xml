@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/englishServer.js" afterPath="$PROJECT_DIR$/englishServer.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,20 +32,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="englishServer.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="englishServer.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/englishServer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="35" column="18" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="18" />
+            <state relative-caret-position="260">
+              <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
               <folding>
-                <element signature="e#1575#2264#0" expanded="false" />
-                <element signature="e#1762#1792#0" expanded="false" />
-                <element signature="e#1829#1908#0" expanded="false" />
-                <element signature="e#1982#2061#0" expanded="false" />
-                <element signature="e#2131#2209#0" expanded="false" />
-                <element signature="e#2858#2921#0" expanded="false" />
-                <element signature="e#3022#3144#0" expanded="false" />
-                <element signature="e#3169#3211#0" expanded="false" />
+                <element signature="e#1574#2263#0" expanded="false" />
+                <element signature="e#1761#1791#0" expanded="false" />
+                <element signature="e#1828#1907#0" expanded="false" />
+                <element signature="e#1981#2060#0" expanded="false" />
+                <element signature="e#2130#2208#0" expanded="false" />
+                <element signature="e#2857#2920#0" expanded="false" />
+                <element signature="e#3021#3143#0" expanded="false" />
+                <element signature="e#3168#3210#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -82,11 +81,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="562">
-              <caret line="667" column="46" selection-start-line="667" selection-start-column="46" selection-end-line="667" selection-end-column="46" />
+            <state relative-caret-position="15">
+              <caret line="3792" column="28" selection-start-line="3792" selection-start-column="28" selection-end-line="3792" selection-end-column="28" />
               <folding>
                 <element signature="e#424#511#0" expanded="false" />
                 <element signature="e#777#1114#0" expanded="false" />
@@ -1308,13 +1307,6 @@
                 <element signature="e#207456#207489#0" expanded="false" />
                 <element signature="e#207994#208062#0" expanded="false" />
                 <element signature="e#208086#208147#0" expanded="false" />
-                <element signature="e#208234#209027#0" expanded="false" />
-                <element signature="e#208244#208934#0" expanded="false" />
-                <element signature="e#208324#208837#0" expanded="false" />
-                <element signature="e#208377#208557#0" expanded="false" />
-                <element signature="e#208583#208824#0" expanded="false" />
-                <element signature="e#208613#208703#0" expanded="false" />
-                <element signature="e#208725#208810#0" expanded="false" />
                 <element signature="e#208854#208926#0" expanded="false" />
                 <element signature="e#208945#209025#0" expanded="false" />
               </folding>
@@ -3981,6 +3973,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -4029,9 +4022,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -4573,12 +4565,13 @@
       <workItem from="1557481188829" duration="301000" />
       <workItem from="1557554487216" duration="6102000" />
       <workItem from="1557645929635" duration="2050000" />
-      <workItem from="1557728097162" duration="1623000" />
+      <workItem from="1557728097162" duration="2237000" />
+      <workItem from="1557743567640" duration="60000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1236643000" />
+    <option name="totallyTimeSpent" value="1237317000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -7489,10 +7482,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/englishServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
+          <folding>
+            <element signature="e#1574#2263#0" expanded="false" />
+            <element signature="e#1761#1791#0" expanded="false" />
+            <element signature="e#1828#1907#0" expanded="false" />
+            <element signature="e#1981#2060#0" expanded="false" />
+            <element signature="e#2130#2208#0" expanded="false" />
+            <element signature="e#2857#2920#0" expanded="false" />
+            <element signature="e#3021#3143#0" expanded="false" />
+            <element signature="e#3168#3210#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="562">
-          <caret line="667" column="46" selection-start-line="667" selection-start-column="46" selection-end-line="667" selection-end-column="46" />
+        <state relative-caret-position="15">
+          <caret line="3792" column="28" selection-start-line="3792" selection-start-column="28" selection-end-line="3792" selection-end-column="28" />
           <folding>
             <element signature="e#424#511#0" expanded="false" />
             <element signature="e#777#1114#0" expanded="false" />
@@ -8714,32 +8724,8 @@
             <element signature="e#207456#207489#0" expanded="false" />
             <element signature="e#207994#208062#0" expanded="false" />
             <element signature="e#208086#208147#0" expanded="false" />
-            <element signature="e#208234#209027#0" expanded="false" />
-            <element signature="e#208244#208934#0" expanded="false" />
-            <element signature="e#208324#208837#0" expanded="false" />
-            <element signature="e#208377#208557#0" expanded="false" />
-            <element signature="e#208583#208824#0" expanded="false" />
-            <element signature="e#208613#208703#0" expanded="false" />
-            <element signature="e#208725#208810#0" expanded="false" />
             <element signature="e#208854#208926#0" expanded="false" />
             <element signature="e#208945#209025#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/englishServer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="35" column="18" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="18" />
-          <folding>
-            <element signature="e#1575#2264#0" expanded="false" />
-            <element signature="e#1762#1792#0" expanded="false" />
-            <element signature="e#1829#1908#0" expanded="false" />
-            <element signature="e#1982#2061#0" expanded="false" />
-            <element signature="e#2131#2209#0" expanded="false" />
-            <element signature="e#2858#2921#0" expanded="false" />
-            <element signature="e#3022#3144#0" expanded="false" />
-            <element signature="e#3169#3211#0" expanded="false" />
           </folding>
         </state>
       </provider>
