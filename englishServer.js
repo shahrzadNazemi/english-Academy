@@ -33,8 +33,8 @@ const limiter = rateLimit({
 
 app.use(logger);
 app.use(helmet())
-app.use(express.json({limit:'50mb'}));
-app.use(express.urlencoded({extended: false , limit:'50mb'}));
+app.use(bodyParser.json({limit:'50mb'}));
+app.use(bodyParser.urlencoded({extended: true , limit:'50mb'}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
