@@ -89,6 +89,11 @@ module.exports.downloadPathCpAvatar = "https://academi.rahasahamrah.com/upload/c
 module.exports.elasticHost = "http://localhost:9200"
 
 
+module.exports.lastLessonChatrrom = "https://academi.rahasahamrah.com/upload/chatroom/LastLesson.png"
+module.exports.currentLessonChatrrom = "https://academi.rahasahamrah.com/upload/chatroom/currentLesson.png"
+module.exports.currentLevelChatrrom = "https://academi.rahasahamrah.com/upload/chatroom/currentLevel.png"
+
+
 
 
 

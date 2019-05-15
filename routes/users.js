@@ -11,6 +11,7 @@ let fs = require('fs')
 let statistic = require('./statistic')
 const trim = require('../util/trimmer')
 // let csurf = require('../util/csurfHelper')
+let chatRoom = require('./chatRoom')
 
 
 router.post('/admin/login', (req, res) => {
@@ -41,7 +42,7 @@ router.post('/admin/login', (req, res) => {
 });
 
 router.put('/admin/:admId', (req, res) => {
-    if(req.body.password){
+    if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
 
     }
@@ -132,8 +133,8 @@ router.post('/admin', (req, res)=> {
 
 
 router.put('/supporter/:supId', (req, res) => {
-    logger.info("body in update supporter" , req.body)
-    logger.info("file in update supporter" , req.files)
+    logger.info("body in update supporter", req.body)
+    logger.info("file in update supporter", req.files)
 
     if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
@@ -323,7 +324,7 @@ router.put('/changePass/:id', (req, res) => {
     else {
         req.body.oldPassword = hashHelper.hash(req.body.oldPassword)
         req.body.password = hashHelper.hash(req.body.newPassword)
-        if(req.body.role == "admin"){
+        if (req.body.role == "admin") {
             database.getAdminById(req.params.id, (student)=> {
                 if (student == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -368,7 +369,7 @@ router.put('/changePass/:id', (req, res) => {
             })
 
         }
-        else if(req.body.role == "chatAdmin"){
+        else if (req.body.role == "chatAdmin") {
             database.getChatAdminById(req.params.id, (student)=> {
                 if (student == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -413,7 +414,7 @@ router.put('/changePass/:id', (req, res) => {
             })
 
         }
-        else if(req.body.role == "supporter"){
+        else if (req.body.role == "supporter") {
             database.getSupporterById(req.params.id, (student)=> {
                 if (student == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -458,7 +459,7 @@ router.put('/changePass/:id', (req, res) => {
             })
 
         }
-        else if(req.body.role == "tutor"){
+        else if (req.body.role == "tutor") {
             database.getTutorById(req.params.id, (student)=> {
                 if (student == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -557,7 +558,7 @@ router.get('/supporter/:supId', (req, res)=> {
 });
 
 router.post('/supporter', (req, res)=> {
-    logger.info("postSupporter body" , req.body)
+    logger.info("postSupporter body", req.body)
     req.body.password = hashHelper.hash(req.body.password)
     if (req.files) {
         if (req.files.file != null) {
@@ -651,8 +652,6 @@ router.post('/supporter', (req, res)=> {
         })
     }
 });
-
-
 
 
 router.post('/chatAdmin', (req, res)=> {
@@ -761,8 +760,8 @@ router.post('/chatAdmin', (req, res)=> {
 });
 
 router.put('/chatAdmin/:caId', (req, res) => {
-    logger.info("body in update chatAdmin" , req.body)
-    logger.info("file in update chatAdmin" , req.files)
+    logger.info("body in update chatAdmin", req.body)
+    logger.info("file in update chatAdmin", req.files)
     if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
 
@@ -988,7 +987,7 @@ router.get('/chatAdmin/:caId', (req, res)=> {
 
 
 router.post('/tutor', (req, res)=> {
-    console.log("boy in add tutor" , req.body)
+    console.log("boy in add tutor", req.body)
     req.body.answered = 0;
     req.body.passed = 0
     if (req.body.users) {
@@ -1356,7 +1355,7 @@ router.post('/cp', (req, res)=> {
 });
 
 router.put('/cp/:cpId', (req, res) => {
-    if(req.body.password){
+    if (req.body.password) {
         req.body.password = hashHelper.hash(req.body.password)
 
     }
@@ -1433,7 +1432,6 @@ router.get('/cp/:cpId', (req, res)=> {
         }
     })
 });
-
 
 
 router.post('/student/register', (req, res)=> {
@@ -1609,80 +1607,81 @@ router.post('/student/login', (req, res) => {
                 })
             }
             else {
-                database.getViewUser(loginResult._id , (view)=>{
-                    if(view !=0 && view !=-1) {
-                        database.getLessonById(view[0].lsnId, (lesson)=> {
-                            database.getExamPassedCount(loginResult._id, (exam)=> {
-                                if (exam == -1 || exam == 0) {
-                                    loginResult.examPassed = 0
-                                }
-                                else {
-                                    loginResult.examPassed = exam.length
-                                }
-                                if (loginResult.score == 0) {
-                                    delete loginResult.password
-                                    let data = loginResult
-                                    data.progress = 0
-                                    delete lesson[0].video
-                                    delete lesson[0].sound
-                                    delete lesson[0].text
-                                    delete lesson[0].downloadFile
+                chatRoom.setAvatarUrl(loginResult.chatrooms, (newChatrrom)=> {
+                    loginResult.chatrooms = newChatrrom
+                    database.getViewUser(loginResult._id, (view)=> {
+                        if (view != 0 && view != -1) {
+                            database.getLessonById(view[0].lsnId, (lesson)=> {
+                                database.getExamPassedCount(loginResult._id, (exam)=> {
+                                    if (exam == -1 || exam == 0) {
+                                        loginResult.examPassed = 0
+                                    }
+                                    else {
+                                        loginResult.examPassed = exam.length
+                                    }
+                                    if (loginResult.score == 0) {
+                                        delete loginResult.password
+                                        let data = loginResult
+                                        data.progress = 0
+                                        delete lesson[0].video
+                                        delete lesson[0].sound
+                                        delete lesson[0].text
+                                        delete lesson[0].downloadFile
 
-                                    data.lesson = lesson[0]
-                                    data.jwt = jwt.signUser(loginResult.username)
-                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                        res.json(result)
+                                        data.lesson = lesson[0]
+                                        data.jwt = jwt.signUser(loginResult.username)
+                                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                            res.json(result)
 
-                                    })
+                                        })
 
-                                }
-                                else {
-                                    statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                                        if (progress != -1) {
-                                            delete loginResult.password
-                                            let data = loginResult
-                                            data.progress = progress
-                                            delete lesson[0].video
-                                            delete lesson[0].sound
-                                            delete lesson[0].text
-                                            delete lesson[0].downloadFile
+                                    }
+                                    else {
+                                        statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                                            if (progress != -1) {
+                                                delete loginResult.password
+                                                let data = loginResult
+                                                data.progress = progress
+                                                delete lesson[0].video
+                                                delete lesson[0].sound
+                                                delete lesson[0].text
+                                                delete lesson[0].downloadFile
 
-                                            data.lesson = lesson[0]
-                                            data.jwt = jwt.signUser(loginResult.username)
-                                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                                res.json(result)
+                                                data.lesson = lesson[0]
+                                                data.jwt = jwt.signUser(loginResult.username)
+                                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                                    res.json(result)
 
-                                            })
-                                        }
-                                        else {
-                                            delete loginResult.password
-                                            let data = loginResult
-                                            delete lesson[0].video
-                                            delete lesson[0].sound
-                                            delete lesson[0].text
-                                            delete lesson[0].downloadFile
-logger.info("leson" , lesson[0])
-                                            data.lesson = lesson[0]
-                                            data.jwt = jwt.signUser(loginResult.username)
-                                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                                res.json(result)
+                                                })
+                                            }
+                                            else {
+                                                delete loginResult.password
+                                                let data = loginResult
+                                                delete lesson[0].video
+                                                delete lesson[0].sound
+                                                delete lesson[0].text
+                                                delete lesson[0].downloadFile
+                                                logger.info("leson", lesson[0])
+                                                data.lesson = lesson[0]
+                                                data.jwt = jwt.signUser(loginResult.username)
+                                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                                    res.json(result)
 
-                                            })
-                                        }
-                                    })
+                                                })
+                                            }
+                                        })
 
-                                }
+                                    }
+                                })
+
+
                             })
-
-
-                        })
-                    }
-                    else{
-                        res.status(300).end('')
-                    }
-                }
-
-                )
+                        }
+                        else {
+                            res.status(300).end('')
+                        }
+                    })
+                })
             }
         })
     }
@@ -1690,60 +1689,63 @@ logger.info("leson" , lesson[0])
 });
 
 router.post('/student/verification', (req, res) => {
-    console.log("body in resend" , req.body)
+    console.log("body in resend", req.body)
 
-    database.getStudentById(req.body._id , (student)=>{
-    if (student == -1) {
-        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-            res.json(result)
-        })
-    }
-    else if (student == 0) {
-        response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-            res.json(result)
-        })
-    }
-    else{
-        req.body.mobile = student.mobile
-        database.verification(req.body, function (verifResult) {
-            if (verifResult == -1) {
-                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else if (verifResult == 0) {
-                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                let updateStu = {}
-                updateStu.verify = true
-                database.updateStudent(updateStu , req.body._id , (updated)=>{
-                    if (updated == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (updated == 0) {
-                        response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else{
-                        updated.jwt = jwt.signUser(updated.username)
-                        response.response('ورود با موفقیت انجام شد', updated, (result)=> {
-                            res.json(result)
+    database.getStudentById(req.body._id, (student)=> {
+        if (student == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (student == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            req.body.mobile = student.mobile
+            database.verification(req.body, function (verifResult) {
+                if (verifResult == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (verifResult == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    let updateStu = {}
+                    updateStu.verify = true
+                    database.updateStudent(updateStu, req.body._id, (updated)=> {
+                        if (updated == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (updated == 0) {
+                            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
+                                updated.chatrooms = newChatrrom
+                                updated.jwt = jwt.signUser(updated.username)
+                                response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                                    res.json(result)
 
-                        })
-                    }
-                })
+                                })
+                            })
 
-            }
-        })   
-    }
-})
+                        }
+                    })
 
+                }
+            })
+        }
+    })
 
 
 });
@@ -1763,7 +1765,7 @@ router.post('/student/resendVerify', (req, res) => {
         else {
             let updateStu = {}
             updateStu.verify = true
-            database.updateStudent(updateStu , req.body._id , (updated)=>{
+            database.updateStudent(updateStu, req.body._id, (updated)=> {
                 if (updated == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -1774,12 +1776,17 @@ router.post('/student/resendVerify', (req, res) => {
                         res.json(result)
                     })
                 }
-                else{
-                    updated.jwt = jwt.signUser(updated.username)
-                    response.response('ورود با موفقیت انجام شد', updated, (result)=> {
-                        res.json(result)
+                else {
+                    chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
+                        updated.chatrooms = newChatrrom
+                        updated.jwt = jwt.signUser(updated.username)
+                        response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                            res.json(result)
 
+                        })
                     })
+
+
                 }
             })
 
@@ -1787,17 +1794,16 @@ router.post('/student/resendVerify', (req, res) => {
     })
 
 
-
 });
 
 router.post('/student/forgetPass', (req, res) => {
-    database.getStuByMobile(req.body.mobile , (student)=>{
-        if(student == -1 || student ==0){
+    database.getStuByMobile(req.body.mobile, (student)=> {
+        if (student == -1 || student == 0) {
             response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
                 res.json(result)
             })
         }
-        else{
+        else {
             req.body._id = student._id
             database.forgetPass(req.body, function (verifResult) {
                 if (verifResult == -1) {
@@ -1813,7 +1819,7 @@ router.post('/student/forgetPass', (req, res) => {
                 else {
                     let updateStu = {}
                     updateStu.verify = false
-                    database.updateStudent(updateStu , req.body._id , (updated)=>{
+                    database.updateStudent(updateStu, req.body._id, (updated)=> {
                         if (updated == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
@@ -1824,7 +1830,7 @@ router.post('/student/forgetPass', (req, res) => {
                                 res.json(result)
                             })
                         }
-                        else{
+                        else {
                             // updated.jwt = jwt.signUser(updated.username)
                             delete updated.password
                             response.response('ارسال با موفقیت انجام شد', updated, (result)=> {
@@ -1856,7 +1862,7 @@ router.post('/student/forgetPass/verify', (req, res) => {
             let updateStu = {}
             req.body._id = verifResult.usrId
             updateStu.verify = true
-            database.updateStudent(updateStu , req.body._id , (updated)=>{
+            database.updateStudent(updateStu, req.body._id, (updated)=> {
                 if (updated == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                         res.json(result)
@@ -1867,7 +1873,7 @@ router.post('/student/forgetPass/verify', (req, res) => {
                         res.json(result)
                     })
                 }
-                else{
+                else {
                     // updated.jwt = jwt.signUser(updated.username)
                     delete updated.password
                     response.response('ورود با موفقیت انجام شد', updated, (result)=> {
@@ -1881,12 +1887,11 @@ router.post('/student/forgetPass/verify', (req, res) => {
     })
 
 
-
 });
 
 router.post('/student/forgetPass/send', (req, res) => {
     req.body.password = hashHelper.hash(req.body.password)
-    database.updateStudent(req.body , req.body._id , (updated)=>{
+    database.updateStudent(req.body, req.body._id, (updated)=> {
         if (updated == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -1897,19 +1902,19 @@ router.post('/student/forgetPass/send', (req, res) => {
                 res.json(result)
             })
         }
-        else{
-            updated.jwt = jwt.signUser(updated.username)
-            delete updated.password
+        else {
+            chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
+                updated.chatrooms = newChatrrom
+                updated.jwt = jwt.signUser(updated.username)
+                delete updated.password
 
-            response.response('تغییر با موفقیت انجام شد', updated, (result)=> {
-                res.json(result)
+                response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                    res.json(result)
 
+                })
             })
         }
     })
-
-
-
 });
 
 router.post('/refreshToken', function (req, res) {
@@ -1947,10 +1952,15 @@ router.post('/refreshToken', function (req, res) {
                             let data = student[0]
                             data.lesson = lesson[0]
                             data.jwt = jwt.signUser(userID)
-                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                res.json(result)
+                            chatRoom.setAvatarUrl(student.chatrooms, (newChatrrom)=> {
+                                student.chatrooms = newChatrrom
 
+                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                    res.json(result)
+
+                                })
                             })
+
                         })
 
                     }
@@ -1980,10 +1990,15 @@ router.post('/refreshToken', function (req, res) {
                         let data = student[0]
                         data.lesson = lesson[0]
                         data.jwt = jwt.signUser(userID)
-                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                            res.json(result)
+                        chatRoom.setAvatarUrl(student.chatrooms, (newChatrrom)=> {
+                            student.chatrooms = newChatrrom
 
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
+
+                            })
                         })
+
                     })
 
                 }
@@ -2178,9 +2193,13 @@ router.put('/student/:stdId', (req, res) => {
 
                                                 else {
                                                     delete Putresult.password
-                                                    response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
-                                                        res.json(result)
+                                                    chatRoom.setAvatarUrl(Putresult.chatrooms , (newChatrrom)=>{
+                                                        Putresult.chatrooms = newChatrrom
 
+                                                        response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                                                            res.json(result)
+
+                                                        })
                                                     })
                                                 }
                                             })
@@ -2207,13 +2226,13 @@ router.put('/student/:stdId', (req, res) => {
 
         })
     }
-        
+
     else {
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
-if(req.body.mobile){
-    req.body.mobile = hashHelper.ConvertToEnglish(req.body.mobile)
+        if (req.body.mobile) {
+            req.body.mobile = hashHelper.ConvertToEnglish(req.body.mobile)
 
-}
+        }
 
         database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
             if (Putresult == -1) {
@@ -2228,17 +2247,22 @@ if(req.body.mobile){
             }
             else {
                 delete Putresult.password
-                response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
-                    res.json(result)
+                chatRoom.setAvatarUrl(Putresult.chatrooms , (newChatrrom)=>{
+                    Putresult.chatrooms = newChatrrom
 
+                    response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+                        res.json(result)
+
+                    })
                 })
+
             }
         });
     }
 
 });
 
-router.put('/student/:stdId/purchaseRequest' , (req, res)=>{
+router.put('/student/:stdId/purchaseRequest', (req, res)=> {
     database.updateStudent(req.body, req.params.stdId, (Putresult)=> {
         if (Putresult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2457,122 +2481,122 @@ router.get('/student/bestOfLevel', (req, res) => {
             var token = req.headers.authorization.split(" ")[1];
             var verify = jwt.verify(token);
             let username = verify.userID
-                database.getStudentByUsername(username, (student)=> {
-                    if (student == 0) {
-                        response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        let lsnId = student[0].lastPassedLesson
-                        database.getLessonById(lsnId, (lesson)=> {
-                            if (lesson == 0 || lesson == 0) {
-                                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                                    res.json(result)
+            database.getStudentByUsername(username, (student)=> {
+                if (student == 0) {
+                    response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    let lsnId = student[0].lastPassedLesson
+                    database.getLessonById(lsnId, (lesson)=> {
+                        if (lesson == 0 || lesson == 0) {
+                            response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else {
+                            let levelStu = []
+                            let lvlId = lesson[0].lvlId
+                            for (var i = 0; i < allStudents.length; i++) {
+                                if (allStudents[i].lesson[0]) {
+                                    if (allStudents[i].lesson[0].lvlId == lvlId) {
+                                        levelStu.push(allStudents[i])
+                                    }
+                                }
+
+                            }
+                            let temp = allStudents
+                            let length = levelStu.length
+                            if (length <= 3) {
+                                logger.info("leveleStu", levelStu)
+                                database.getAllLessons((lessons)=> {
+                                    for (var p = 0; p < levelStu.length; p++) {
+                                        levelStu[p].lesson = lesson[0]
+                                        delete levelStu[p].level
+                                        let k = 0
+                                        if (levelStu[p].score == 0) {
+                                            levelStu[p].progress = 0
+                                        }
+                                        else {
+                                            for (var i = 0; i < lessons.length; i++) {
+                                                if (lessons[i]._id == temp[p].lesson._id) {
+                                                    k = i
+                                                }
+                                            }
+                                            let progress = (k + 1) / lessons.length
+
+                                            levelStu[p].progress = progress
+                                        }
+
+                                    }
+
+                                    response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
+                                        res.json(result)
+
+                                    })
+
                                 })
+
+
                             }
                             else {
-                                let levelStu = []
-                                let lvlId = lesson[0].lvlId
-                                for (var i = 0; i < allStudents.length; i++) {
-                                    if (allStudents[i].lesson[0]) {
-                                        if (allStudents[i].lesson[0].lvlId == lvlId) {
-                                            levelStu.push(allStudents[i])
+                                delete lesson[0].video
+                                delete lesson[0].sound
+                                delete lesson[0].text
+                                delete lesson[0].downloadFile
+
+                                let i = 0
+                                for (var k = 0; k < levelStu.length; k++) {
+                                    levelStu[k].lesson = lesson[0]
+                                    delete levelStu[k].level
+                                    if (levelStu[k]._id == student[0]._id) {
+                                        i = k
+                                    }
+                                }
+                                temp[0] = levelStu[length - 1]
+                                temp[0].rank = 1
+                                temp[1] = levelStu[i]
+                                temp[1].rank = i
+                                temp[2] = levelStu[0]
+                                temp[2].rank = levelStu.length
+                                if (temp[0] == temp[1]) {
+                                    temp.splice(0, 1);
+                                }
+                                if (temp[2] == temp[1]) {
+                                    temp.splice(2, 1);
+                                }
+                                database.getAllLessons((lessons)=> {
+                                    for (var p = 0; p < temp.length; p++) {
+                                        let k = 0
+                                        if (temp[p].score == 0) {
+                                            temp[p].progress = 0
                                         }
+                                        else {
+                                            for (var i = 0; i < lessons.length; i++) {
+                                                if (lessons[i]._id == temp[p].lesson._id) {
+                                                    k = i
+                                                }
+                                            }
+                                            let progress = (k + 1) / lessons.length
+
+                                            temp[p].progress = progress
+                                        }
+
                                     }
 
-                                }
-                                let temp = allStudents
-                                let length = levelStu.length
-                                if (length <= 3) {
-                                    logger.info("leveleStu" , levelStu)
-                                    database.getAllLessons((lessons)=> {
-                                        for (var p = 0; p < levelStu.length; p++) {
-                                            levelStu[p].lesson = lesson[0]
-                                            delete levelStu[p].level
-                                            let k = 0
-                                            if (levelStu[p].score == 0) {
-                                                levelStu[p].progress = 0
-                                            }
-                                            else {
-                                                for (var i = 0; i < lessons.length; i++) {
-                                                    if (lessons[i]._id == temp[p].lesson._id) {
-                                                        k = i
-                                                    }
-                                                }
-                                                let progress = (k + 1) / lessons.length
-
-                                                levelStu[p].progress = progress
-                                            }
-
-                                        }
-
-                                        response.response('اطلاعات بهترین دانش آموزان', levelStu, (result)=> {
-                                            res.json(result)
-
-                                        })
+                                    response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
+                                        res.json(result)
 
                                     })
 
+                                })
 
-                                }
-                                else {
-                                    delete lesson[0].video
-                                    delete lesson[0].sound
-                                    delete lesson[0].text
-                                    delete lesson[0].downloadFile
-
-                                    let i = 0
-                                    for (var k = 0; k < levelStu.length; k++) {
-                                        levelStu[k].lesson = lesson[0]
-                                        delete levelStu[k].level
-                                        if (levelStu[k]._id == student[0]._id) {
-                                            i = k
-                                        }
-                                    }
-                                    temp[0] = levelStu[length - 1]
-                                    temp[0].rank = 1
-                                    temp[1] = levelStu[i]
-                                    temp[1].rank = i
-                                    temp[2] = levelStu[0]
-                                    temp[2].rank = levelStu.length
-                                    if (temp[0] == temp[1]) {
-                                        temp.splice(0, 1);
-                                    }
-                                    if (temp[2] == temp[1]) {
-                                        temp.splice(2, 1);
-                                    }
-                                    database.getAllLessons((lessons)=> {
-                                        for (var p = 0; p < temp.length; p++) {
-                                            let k = 0
-                                            if (temp[p].score == 0) {
-                                                temp[p].progress = 0
-                                            }
-                                            else {
-                                                for (var i = 0; i < lessons.length; i++) {
-                                                    if (lessons[i]._id == temp[p].lesson._id) {
-                                                        k = i
-                                                    }
-                                                }
-                                                let progress = (k + 1) / lessons.length
-
-                                                temp[p].progress = progress
-                                            }
-
-                                        }
-
-                                        response.response('اطلاعات بهترین دانش آموزان', temp, (result)=> {
-                                            res.json(result)
-
-                                        })
-
-                                    })
-
-                                }
                             }
-                        })
-                    }
-                })
+                        }
+                    })
+                }
+            })
         }
     })
 
@@ -2583,79 +2607,79 @@ router.get('/student/prCrNxtLesson', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-        database.getStudentByUsername(username, (student)=> {
-            if (student == 0) {
-                response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-            else {
-                // let lsnId = student[0].lastPassedLesson
-                let usrId = student[0]._id
-                database.getViewUser(usrId, (view)=> {
-                    if (view == 0 || view == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
+    database.getStudentByUsername(username, (student)=> {
+        if (student == 0) {
+            response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            // let lsnId = student[0].lastPassedLesson
+            let usrId = student[0]._id
+            database.getViewUser(usrId, (view)=> {
+                if (view == 0 || view == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    let lsnId = view[0].lsnId
+                    if (lsnId == '0') {
+                        database.getFirstLesson((firstLesson)=> {
+                            if (firstLesson == 0 || firstLesson == -1) {
+                            }
+                            else {
+                                let lsnId = firstLesson._id
+                                database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                                    if (getResult == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else if (getResult == 0) {
+                                        response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                            res.json(result)
+                                        })
+                                    }
+                                    else {
+                                        response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                            res.json(result)
+
+                                        })
+                                    }
+                                })
+
+                            }
                         })
                     }
                     else {
-                        let lsnId = view[0].lsnId
-                        if (lsnId == '0') {
-                            database.getFirstLesson((firstLesson)=> {
-                                if (firstLesson == 0 || firstLesson == -1) {
-                                }
-                                else {
-                                    let lsnId = firstLesson._id
-                                    database.getPrCrNxtLesson(lsnId, (getResult)=> {
-                                        if (getResult == -1) {
-                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else if (getResult == 0) {
-                                            response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                res.json(result)
-                                            })
-                                        }
-                                        else {
-                                            response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                                res.json(result)
+                        database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                            if (getResult == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (getResult == 0) {
+                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                    res.json(result)
 
-                                            })
-                                        }
-                                    })
-
-                                }
-                            })
-                        }
-                        else {
-                            database.getPrCrNxtLesson(lsnId, (getResult)=> {
-                                if (getResult == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (getResult == 0) {
-                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                        res.json(result)
-
-                                    })
-                                }
-                            })
+                                })
+                            }
+                        })
 
 
-                        }
                     }
-                })
+                }
+            })
 
 
-            }
-        })
+        }
+    })
 });
 
 router.get('/student/:stdId', (req, res) => {
@@ -2674,55 +2698,60 @@ router.get('/student/:stdId', (req, res) => {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
                 database.getExamPassedCount(getResult._id, (exam)=> {
                     console.log("dsfsgfdfgldhkgjhdkgh", exam)
+                    chatRoom.setAvatarUrl(getResult.chatrooms , (newChatrrom)=>{
+                        getResult.chatrooms = newChatrrom
                         getResult.examPassed = exam
-                    if (getResult.score == 0) {
-                        delete getResult.password
-                        let data = getResult
-                        data.progress = 0
-                        delete lesson[0].video
-                        delete lesson[0].sound
-                        delete lesson[0].text
-                        delete lesson[0].downloadFile
-                        data.lesson = lesson[0]
-                        response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                            res.json(result)
+                        if (getResult.score == 0) {
+                            delete getResult.password
+                            let data = getResult
+                            data.progress = 0
+                            delete lesson[0].video
+                            delete lesson[0].sound
+                            delete lesson[0].text
+                            delete lesson[0].downloadFile
+                            data.lesson = lesson[0]
+                            response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                res.json(result)
 
-                        })
+                            })
 
-                    }
-                    else {
-                        statistic.calculateProgress(lesson[0]._id, (progress)=> {
-                            if (progress != -1) {
-                                let data = getResult
-                                data.progress = progress
-                                delete getResult.password
-                                delete lesson[0].video
-                                delete lesson[0].sound
-                                delete lesson[0].text
-                                delete lesson[0].downloadFile
+                        }
+                        else {
+                            statistic.calculateProgress(lesson[0]._id, (progress)=> {
+                                if (progress != -1) {
+                                    let data = getResult
+                                    data.progress = progress
+                                    delete getResult.password
+                                    delete lesson[0].video
+                                    delete lesson[0].sound
+                                    delete lesson[0].text
+                                    delete lesson[0].downloadFile
 
-                                data.lesson = lesson[0]
-                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                    res.json(result)
+                                    data.lesson = lesson[0]
+                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                        res.json(result)
 
-                                })
-                            }
-                            else {
-                                delete getResult.password
-                                let data = getResult
-                                delete lesson[0].video
-                                delete lesson[0].sound
-                                delete lesson[0].text
-                                delete lesson[0].downloadFile
+                                    })
+                                }
+                                else {
+                                    delete getResult.password
+                                    let data = getResult
+                                    delete lesson[0].video
+                                    delete lesson[0].sound
+                                    delete lesson[0].text
+                                    delete lesson[0].downloadFile
 
-                                data.lesson = lesson[0]
-                                response.response('ورود با موفقیت انجام شد', data, (result)=> {
-                                    res.json(result)
+                                    data.lesson = lesson[0]
+                                    response.response('ورود با موفقیت انجام شد', data, (result)=> {
+                                        res.json(result)
 
-                                })
-                            }
-                        })
-                    }
+                                    })
+                                }
+                            })
+                        }
+
+                    })
+
                 })
             })
         }

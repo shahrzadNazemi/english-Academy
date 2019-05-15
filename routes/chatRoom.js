@@ -552,3 +552,19 @@ router.get('/', (req, res)=> {
 
 
 module.exports = router
+
+module.exports.setAvatarUrl = (chatRoom , cb)=>{
+    for(var i=0;i<chatRoom.length;i++){
+        if(chatRoom[i].position == "lastLesson"){
+            chatRoom[i].avatarUrl = config.lastLessonChatrrom
+        }
+        if(chatRoom[i].position == "currentLesson"){
+            chatRoom[i].avatarUrl = config.currentLessonChatrrom
+        }
+        if(chatRoom[i].position == "currentLevel"){
+            chatRoom[i].avatarUrl = config.currentLevelChatrrom
+        }
+    }
+    cb(chatRoom)
+}
+
