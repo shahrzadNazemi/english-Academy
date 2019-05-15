@@ -143,6 +143,10 @@ module.exports.addType = (typeInfo, cb)=> {
         else if (response.statusCode == 403) {
             cb(-3)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
+
 
         else {
             logger.info("response body", body)
@@ -2890,6 +2894,64 @@ module.exports.resendVerification = (info, cb)=> {
     })
 };
 
+module.exports.forgetPassVerify = (info, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/student/forgetPassVerify`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+module.exports.forgetPass = (info, cb)=> {
+    request.post({
+        url: `${config.databaseServer}/api/users/student/forgetPass`,
+        headers: {"content-Type": "application/json"},
+        body: info,
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else if (response.statusCode == 403) {
+            cb(-2)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+};
+
+
+
 
 module.exports.addTicket = (ticketInfo, cb)=> {
     request.post({
@@ -3028,6 +3090,32 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 
 };
+
+module.exports.getStuByMobile = (mobile, cb)=> {
+    request.get({
+        url: `${config.databaseServer}/api/users/student/mobile/${mobile}`,
+        headers: {"content-Type": "application/json"},
+        json: true
+    }, function (err, response, body) {
+        if (err) {
+            console.log('err in sending data to database')
+            cb(-1)
+        }
+        else if (response.statusCode == 500) {
+            console.log('err in db')
+            cb(-1)
+        }
+        else if (response.statusCode == 404) {
+            cb(0)
+        }
+        else {
+            logger.info("response body", body)
+            cb(body)
+        }
+    })
+
+};
+
 
 module.exports.getStudentByUsername = (username, cb)=> {
     request.get({
@@ -3552,7 +3640,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
         }
 
         else {
-            logger.info("response body", body)
+            logger.info("response body updateStu", body)
             cb(body)
         }
     })

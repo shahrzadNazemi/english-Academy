@@ -1790,6 +1790,128 @@ router.post('/student/resendVerify', (req, res) => {
 
 });
 
+router.post('/student/forgetPass', (req, res) => {
+    database.getStuByMobile(req.body.mobile , (student)=>{
+        if(student == -1 || student ==0){
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else{
+            req.body._id = student._id
+            database.forgetPass(req.body, function (verifResult) {
+                if (verifResult == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (verifResult == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    let updateStu = {}
+                    updateStu.verify = false
+                    database.updateStudent(updateStu , req.body._id , (updated)=>{
+                        if (updated == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (updated == 0) {
+                            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else{
+                            // updated.jwt = jwt.signUser(updated.username)
+                            delete updated.password
+                            response.response('ارسال با موفقیت انجام شد', updated, (result)=> {
+                                res.json(result)
+
+                            })
+                        }
+                    })
+
+                }
+            })
+        }
+    })
+});
+
+router.post('/student/forgetPass/verify', (req, res) => {
+    database.forgetPassVerify(req.body, function (verifResult) {
+        if (verifResult == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (verifResult == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else {
+            let updateStu = {}
+            req.body._id = verifResult.usrId
+            updateStu.verify = true
+            database.updateStudent(updateStu , req.body._id , (updated)=>{
+                if (updated == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (updated == 0) {
+                    response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else{
+                    // updated.jwt = jwt.signUser(updated.username)
+                    delete updated.password
+                    response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+
+        }
+    })
+
+
+
+});
+
+router.post('/student/forgetPass/send', (req, res) => {
+    req.body.password = hashHelper.hash(req.body.password)
+    database.updateStudent(req.body , req.body._id , (updated)=>{
+        if (updated == -1) {
+            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (updated == 0) {
+            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else{
+            updated.jwt = jwt.signUser(updated.username)
+            delete updated.password
+
+            response.response('تغییر با موفقیت انجام شد', updated, (result)=> {
+                res.json(result)
+
+            })
+        }
+    })
+
+
+
+});
+
 router.post('/refreshToken', function (req, res) {
     if (!req.headers.authorization) {
         logger.error('there is no token', 0)
@@ -2136,7 +2258,7 @@ router.put('/student/:stdId/purchaseRequest' , (req, res)=>{
             })
         }
     });
-})
+});
 
 router.put('/student/:stdId/changePass', (req, res) => {
     if (req.body.oldPassword == undefined) {
@@ -2719,7 +2841,6 @@ router.delete('/cp/:cpId', (req, res) => {
         }
     })
 });
-
 
 router.delete('/student/:stdId', (req, res) => {
     database.getStudentById(req, params.stdId, (getResult)=> {

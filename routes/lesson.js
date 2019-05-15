@@ -40,9 +40,10 @@ const type = {
     type: "object",
     properties: {
         title: {type: "string"},
+        order: {type: "number"},
         category: {type: ["object", "array"]}
     },
-    required: ["title"],
+    required: ["title","order"],
     additionalProperties: false
 };
 const video = {
@@ -962,6 +963,14 @@ router.post('/type', (req, res)=> {
 
                 })
             }
+            else if (type == -2) {
+                let data = {"order": "ترتیب نباید تکراری باشد"}
+                response.validation('اطلاعات وارد شده اشتباه است.', data, 'duplicated', (result)=> {
+                    res.json(result)
+
+                })
+            }
+
             else {
                 response.responseCreated('اطلاعات مورد نظر ثبت شد.', type, (result)=> {
                     res.json(result)
@@ -2612,6 +2621,8 @@ router.get('/type', (req, res)=> {
                 temp[i] = {}
                 temp[i].label = type[i].title;
                 temp[i].value = type[i]._id
+                temp[i].order = type[i].order
+
             }
             response.response('اطلاعات انواع فایل', temp, (result1)=> {
                 res.json(result1)
