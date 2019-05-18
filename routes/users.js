@@ -1899,7 +1899,6 @@ router.post('/student/forgetPass/verify', (req, res) => {
 });
 
 router.post('/student/forgetPass/send', (req, res) => {
-    logger.info("requestBody send forgetPass" , req.body)
     req.body.password = hashHelper.hash(req.body.password)
     database.updateStudent(req.body, req.body._id, (updated)=> {
         if (updated == -1) {
@@ -1913,13 +1912,16 @@ router.post('/student/forgetPass/send', (req, res) => {
             })
         }
         else {
+            chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
+                updated.chatrooms = newChatrrom
                 updated.jwt = jwt.signUser(updated.username)
                 delete updated.password
-                response.response('تغییرات با موفقیت انجام شد', updated, (result)=> {
+
+                response.response('ورود با موفقیت انجام شد', updated, (result)=> {
                     res.json(result)
 
                 })
-            
+            })
         }
     })
 });
@@ -1959,8 +1961,8 @@ router.post('/refreshToken', function (req, res) {
                             let data = student[0]
                             data.lesson = lesson[0]
                             data.jwt = jwt.signUser(userID)
-                            chatRoom.setAvatarUrl(student.chatrooms, (newChatrrom)=> {
-                                student.chatrooms = newChatrrom
+                            chatRoom.setAvatarUrl(student[0].chatrooms, (newChatrrom)=> {
+                                student[0].chatrooms = newChatrrom
 
                                 response.response('ورود با موفقیت انجام شد', data, (result)=> {
                                     res.json(result)
