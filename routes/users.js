@@ -1593,12 +1593,6 @@ router.post('/student/login', (req, res) => {
         })
     }
     else {
-        // let  ip=req.connection.remoteAddress
-        let  ip=req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-        console.log("ip" , ip)
-        req.body.IP = ip.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
-        console.log(req.body)
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
         database.stuLogin(req.body, function (loginResult) {
@@ -1633,7 +1627,6 @@ router.post('/student/login', (req, res) => {
                                         delete lesson[0].sound
                                         delete lesson[0].text
                                         delete lesson[0].downloadFile
-
                                         data.lesson = lesson[0]
                                         data.jwt = jwt.signUser(loginResult.username)
                                         response.response('ورود با موفقیت انجام شد', data, (result)=> {

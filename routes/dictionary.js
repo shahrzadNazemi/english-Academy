@@ -9,6 +9,7 @@ var client = new es.Client({
     host: config.elasticHost,
     log: "trace"
 });
+let database = require('../database/database')
 
 
 router.post('/', (req, res)=> {
@@ -40,6 +41,7 @@ router.post('/', (req, res)=> {
 
     });
 });
+
 
 router.get('/', (req, res)=> {
 
@@ -100,3 +102,20 @@ router.get('/', (req, res)=> {
 
 
 module.exports = router
+
+module.exports.addDataToDictionary=()=>{
+    // let str = req.body.search
+    fs.readFile('./util/tbl_content.json', 'utf8', (err, data)=> {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            var result = [];
+            data = JSON.parse(data)
+            database.addDataToDict(data, (result)=> {
+                console.log("ok")
+            })
+        }
+})
+}
+

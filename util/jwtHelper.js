@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const secret = "N*BISECrEt";
 module.exports.signUser = function (userID) {
-    return jwt.sign({userID: userID}, secret, {expiresIn: 60});
+    return jwt.sign({userID: userID}, secret, {expiresIn: 8*60*60});
 };
 module.exports.verify = function (token) {
     try {
