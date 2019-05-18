@@ -35,7 +35,7 @@ app.use(logger);
 app.use(helmet())
 app.use(bodyParser.json({limit:'50mb'}));
 app.use(bodyParser.urlencoded({extended: true , limit:'50mb'}));
-
+app.set('trust proxy', 'loopback');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileupload());

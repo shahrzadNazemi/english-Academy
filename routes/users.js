@@ -1593,6 +1593,12 @@ router.post('/student/login', (req, res) => {
         })
     }
     else {
+        // let  ip=req.connection.remoteAddress
+        let  ip=req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        console.log("ip" , ip)
+        req.body.IP = ip.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;
+        console.log(req.body)
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
         database.stuLogin(req.body, function (loginResult) {
@@ -1906,16 +1912,13 @@ router.post('/student/forgetPass/send', (req, res) => {
             })
         }
         else {
-            chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
-                updated.chatrooms = newChatrrom
                 updated.jwt = jwt.signUser(updated.username)
                 delete updated.password
-
                 response.response('ورود با موفقیت انجام شد', updated, (result)=> {
                     res.json(result)
 
                 })
-            })
+            
         }
     })
 });
