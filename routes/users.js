@@ -1899,6 +1899,7 @@ router.post('/student/forgetPass/verify', (req, res) => {
 });
 
 router.post('/student/forgetPass/send', (req, res) => {
+    logger.info("requestBody send forgetPass" , req.body)
     req.body.password = hashHelper.hash(req.body.password)
     database.updateStudent(req.body, req.body._id, (updated)=> {
         if (updated == -1) {
@@ -1914,7 +1915,7 @@ router.post('/student/forgetPass/send', (req, res) => {
         else {
                 updated.jwt = jwt.signUser(updated.username)
                 delete updated.password
-                response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                response.response('تغییرات با موفقیت انجام شد', updated, (result)=> {
                     res.json(result)
 
                 })
