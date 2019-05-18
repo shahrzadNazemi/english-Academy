@@ -1847,6 +1847,9 @@ router.post('/student/forgetPass', (req, res) => {
 });
 
 router.post('/student/forgetPass/verify', (req, res) => {
+    if(typeof req.body.verifyCode == "string"){
+        req.body.verifyCode = parseInt(req.body.verifyCode)
+    }
     database.forgetPassVerify(req.body, function (verifResult) {
         if (verifResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

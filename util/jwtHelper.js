@@ -20,5 +20,4 @@ module.exports.verify = function (token) {
 module.exports.verifyExpireToken = function (token, cb) {
     const payload = jwt.verify(token, secret, {ignoreExpiration: true});
     cb(module.exports.signUser(payload.userID))
-
 };
