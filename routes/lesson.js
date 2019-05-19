@@ -937,7 +937,7 @@ router.post('/sound', (req, res) => {
 });
 
 router.post('/type', (req, res)=> {
-    // req.body.order = 3
+    req.body.order = 4
     let valid = ajv.validate(type, req.body);
     if (!valid) {
         let errorData
