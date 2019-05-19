@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/lesson.js" afterPath="$PROJECT_DIR$/routes/lesson.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,8 +53,8 @@
       <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="939" column="22" selection-start-line="939" selection-start-column="22" selection-end-line="939" selection-end-column="22" />
+            <state relative-caret-position="255">
+              <caret line="3332" column="48" selection-start-line="3332" selection-start-column="48" selection-end-line="3332" selection-end-column="48" />
               <folding>
                 <element signature="e#424#511#0" expanded="false" />
                 <element signature="e#777#1114#0" expanded="false" />
@@ -999,8 +998,6 @@
                 <element signature="e#170867#171017#0" expanded="false" />
                 <element signature="e#170945#171001#0" expanded="false" />
                 <element signature="e#171077#186574#0" expanded="false" />
-                <element signature="e#171265#186571#0" expanded="false" />
-                <element signature="e#171297#172097#0" expanded="false" />
                 <element signature="e#171367#172081#0" expanded="false" />
                 <element signature="e#171407#171620#0" expanded="false" />
                 <element signature="e#171525#171597#0" expanded="false" />
@@ -1111,18 +1108,12 @@
                 <element signature="e#190074#190138#0" expanded="false" />
                 <element signature="e#190179#190349#0" expanded="false" />
                 <element signature="e#190265#190330#0" expanded="false" />
-                <element signature="e#190418#194793#0" expanded="false" />
-                <element signature="e#190606#194790#0" expanded="false" />
                 <element signature="e#190639#190791#0" expanded="false" />
                 <element signature="e#190720#190776#0" expanded="false" />
-                <element signature="e#190828#192336#0" expanded="false" />
-                <element signature="e#190883#192316#0" expanded="false" />
                 <element signature="e#190926#191155#0" expanded="false" />
                 <element signature="e#191048#191128#0" expanded="false" />
                 <element signature="e#191201#191404#0" expanded="false" />
                 <element signature="e#191297#191377#0" expanded="false" />
-                <element signature="e#191434#192294#0" expanded="false" />
-                <element signature="e#191484#192019#0" expanded="false" />
                 <element signature="e#191596#191988#0" expanded="false" />
                 <element signature="e#191857#191953#0" expanded="false" />
                 <element signature="e#192053#192266#0" expanded="false" />
@@ -4461,16 +4452,16 @@
       <workItem from="1558154437572" duration="4902000" />
       <workItem from="1558176876594" duration="953000" />
       <workItem from="1558179197348" duration="1510000" />
-      <workItem from="1558249697708" duration="1307000" />
+      <workItem from="1558249697708" duration="2237000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1269464000" />
+    <option name="totallyTimeSpent" value="1270394000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -4480,7 +4471,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935154" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37094018" sideWeight="0.4969743" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33509833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.278157" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.278157" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22919819" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -7272,8 +7263,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="939" column="22" selection-start-line="939" selection-start-column="22" selection-end-line="939" selection-end-column="22" />
+        <state relative-caret-position="255">
+          <caret line="3332" column="48" selection-start-line="3332" selection-start-column="48" selection-end-line="3332" selection-end-column="48" />
           <folding>
             <element signature="e#424#511#0" expanded="false" />
             <element signature="e#777#1114#0" expanded="false" />
@@ -8217,8 +8208,6 @@
             <element signature="e#170867#171017#0" expanded="false" />
             <element signature="e#170945#171001#0" expanded="false" />
             <element signature="e#171077#186574#0" expanded="false" />
-            <element signature="e#171265#186571#0" expanded="false" />
-            <element signature="e#171297#172097#0" expanded="false" />
             <element signature="e#171367#172081#0" expanded="false" />
             <element signature="e#171407#171620#0" expanded="false" />
             <element signature="e#171525#171597#0" expanded="false" />
@@ -8329,18 +8318,12 @@
             <element signature="e#190074#190138#0" expanded="false" />
             <element signature="e#190179#190349#0" expanded="false" />
             <element signature="e#190265#190330#0" expanded="false" />
-            <element signature="e#190418#194793#0" expanded="false" />
-            <element signature="e#190606#194790#0" expanded="false" />
             <element signature="e#190639#190791#0" expanded="false" />
             <element signature="e#190720#190776#0" expanded="false" />
-            <element signature="e#190828#192336#0" expanded="false" />
-            <element signature="e#190883#192316#0" expanded="false" />
             <element signature="e#190926#191155#0" expanded="false" />
             <element signature="e#191048#191128#0" expanded="false" />
             <element signature="e#191201#191404#0" expanded="false" />
             <element signature="e#191297#191377#0" expanded="false" />
-            <element signature="e#191434#192294#0" expanded="false" />
-            <element signature="e#191484#192019#0" expanded="false" />
             <element signature="e#191596#191988#0" expanded="false" />
             <element signature="e#191857#191953#0" expanded="false" />
             <element signature="e#192053#192266#0" expanded="false" />

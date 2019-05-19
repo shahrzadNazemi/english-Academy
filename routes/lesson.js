@@ -3335,6 +3335,7 @@ router.get('/', (req, res)=> {
                                     let countPages = Math.ceil(sound.length / req.query.limit)
                                     result1.totalPage = countPages
                                     response.response('اطلاعات همه ی درسها', result1, (result)=> {
+                                        logger.info("AllLesson" , result)
                                         res.json(result)
                                     })
                                 })
