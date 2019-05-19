@@ -434,10 +434,6 @@ router.get('/tutor/:trId/student/:usrId', (req, res)=> {
 });
 
 
-
-
-
-
 router.get('/chatAdmin/:caId', (req, res)=> {
     database.getChatroomByChatAdmin(req.params.caId, (chatroom)=> {
         if (chatroom == -1) {
