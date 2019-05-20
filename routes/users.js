@@ -1593,8 +1593,13 @@ router.post('/student/login', (req, res) => {
         })
     }
     else {
+        logger.info("loginInfo firsyt" , req.body)
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
+        logger.info("loginInfo convert" , req.body)
+
         req.body.password = hashHelper.hash(req.body.password)
+        logger.info("loginInfo hash" , req.body)
+
         database.stuLogin(req.body, function (loginResult) {
             if (loginResult == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
