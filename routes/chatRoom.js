@@ -96,6 +96,7 @@ router.post('/', (req, res)=> {
             }
         }
         else {
+            req.body.avatarUrl = ""
             database.addChatroom(req.body, (addResult)=> {
                 if (addResult == -1) {
                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
