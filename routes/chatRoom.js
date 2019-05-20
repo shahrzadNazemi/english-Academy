@@ -96,6 +96,7 @@ router.post('/', (req, res)=> {
             }
         }
         else {
+            delete req.body.file
             req.body.avatarUrl = ""
             database.addChatroom(req.body, (addResult)=> {
                 if (addResult == -1) {

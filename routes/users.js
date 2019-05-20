@@ -16,7 +16,6 @@ let chatRoom = require('./chatRoom')
 
 router.post('/admin/login', (req, res) => {
     req.body.password = hashHelper.hash(req.body.password)
-    console.log("req.body", req.body)
     database.adminLogin(req.body, function (loginResult) {
         if (loginResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -167,7 +166,6 @@ router.put('/supporter/:supId', (req, res) => {
                                 var newFile = new Date().getTime() + '.' + extension;
                                 // path is Upload Directory
                                 var dir = `${config.uploadPathSupporterImage}/${req.params.supId}/`;
-                                console.log("dir", dir)
                                 lesson.addDir(dir, function (newPath) {
                                     var path = dir + newFile;
                                     req.files.file.mv(path, function (err) {
@@ -987,7 +985,6 @@ router.get('/chatAdmin/:caId', (req, res)=> {
 
 
 router.post('/tutor', (req, res)=> {
-    console.log("boy in add tutor", req.body)
     req.body.answered = 0;
     req.body.passed = 0
     if (req.body.users) {
@@ -1436,9 +1433,7 @@ router.get('/cp/:cpId', (req, res)=> {
 
 router.post('/student/register', (req, res)=> {
     trim.expressTrimmer(req, (req)=> {
-        console.log("body:", req.body)
         if (req.files)
-            console.log("file:", req.files.file)
         if (req.body.password == undefined || req.body.username == undefined || req.body.mobile == undefined) {
             let errData = {"password": "پسورد را وارد کنید"}
             response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
@@ -1693,7 +1688,6 @@ router.post('/student/login', (req, res) => {
 });
 
 router.post('/student/verification', (req, res) => {
-    console.log("body in verification", req.body)
 
     database.getStudentById(req.body._id, (student)=> {
         if (student == -1) {
@@ -2030,7 +2024,6 @@ router.post('/refreshToken', function (req, res) {
 router.post('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
-    console.log(req.body)
     req.body.lsnId = req.body._id
     req.body.username = verify.userID
     if (req.body.lsnId == undefined) {
@@ -2086,7 +2079,6 @@ router.post('/student/placement', (req, res)=> {
 router.get('/student/placement', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
-    console.log(req.body)
     req.body.lsnId = req.body._id
     req.body.username = verify.userID
 
@@ -2123,7 +2115,6 @@ router.get('/student/placement', (req, res)=> {
 });
 
 router.put('/student/:stdId', (req, res) => {
-    console.log(req.body, "body before done")
     if (req.body.password == "")
         delete req.body.password
     if (req.body.password)
@@ -2154,7 +2145,6 @@ router.put('/student/:stdId', (req, res) => {
     }
     if (req.files || req.files == "") {
         trim.expressTrimmer(req, (req)=> {
-            console.log(req.body, "body after done")
 
             database.getStudentById(req.params.stdId, (student)=> {
                 if (student == -1) {
@@ -2716,7 +2706,6 @@ router.get('/student/:stdId', (req, res) => {
         else {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
                 database.getExamPassedCount(getResult._id, (exam)=> {
-                    console.log("dsfsgfdfgldhkgjhdkgh", exam)
                     chatRoom.setAvatarUrl(getResult.chatrooms, (newChatrrom)=> {
                         getResult.chatrooms = newChatrrom
                         getResult.examPassed = exam.length
@@ -2779,7 +2768,6 @@ router.get('/student/:stdId', (req, res) => {
 
 
 router.delete('/admin/:admId', (req, res) => {
-    console.log("adminFDelete")
     database.delAdmin(req.params.admId, (deleteResult)=> {
         if (deleteResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -2806,7 +2794,6 @@ router.delete('/admin/:admId', (req, res) => {
 });
 
 router.delete('/supporter/:supId', (req, res) => {
-    console.log("supDelete")
     database.delSupporter(req.params.supId, (deleteResult)=> {
         if (deleteResult == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
