@@ -1896,7 +1896,11 @@ router.post('/student/forgetPass/verify', (req, res) => {
 });
 
 router.post('/student/forgetPass/send', (req, res) => {
+    logger.info("forgetPass" , req.body.password)
+    req.body.password = hashHelper.ConvertToEnglish(req.body.password)
     req.body.password = hashHelper.hash(req.body.password)
+    logger.info("forgetPass hash" , req.body.password)
+
     database.updateStudent(req.body, req.body._id, (updated)=> {
         if (updated == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
