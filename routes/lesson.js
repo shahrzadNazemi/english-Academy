@@ -3114,7 +3114,6 @@ router.get('/:lsnId', (req, res) => {
                     delete lesson[0].sound
                     delete lesson[0].text
                     delete lesson[0].downloadFile
-                    user.CheckPaid()
                     database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
