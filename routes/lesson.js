@@ -3150,7 +3150,7 @@ router.get('/:lsnId', (req, res) => {
                                             }
                                         }
                                         if (result.timePassed) {
-                                            let pass = moment(result.timePassed).add(1, 'h')
+                                            let pass = moment(result.timePassed).add(1, 'h').format('x')
                                             let timeStamp = new Date(pass).getTime()
                                             let currentTime = new Date().getTime()
                                             if (pass > currentTime) {

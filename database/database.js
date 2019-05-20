@@ -4,6 +4,8 @@ var logger = require("../util/logger");
 var config = require('../util/config');
 var util = require('util')
 let fs = require('fs')
+let moment = require('moment')
+
 
 
 module.exports.adminLogin = (loginData, cb)=> {
@@ -2961,11 +2963,29 @@ module.exports.checkPaid = (usrId, cb)=> {
                 cb(false)
             }
             else{
-                for(var i=0;i<student.purchaseStatus.length;i++){
-                    if(student.purchaseStatus.package.type == "subscribe"){
-                        cb((moment(student.purchaseStatus[i].package.date).add(student.purchaseStatus[i].package.days, 'days')) == new Date().getTime())
+                module.exports.getAllPackages((packages)=>{
+                    if(packages== 0 || packages == -1){
+                        cb(false)
                     }
-                }
+                    else{
+                        let paid = false
+                        for(var k=0;k<packages.length;k++){
+                            for(var i=0;i<student.purchaseStatus.length;i++){
+                            if(student.purchaseStatus[i].pgId == packages[k]._id && packages[k].type == "subscribe") {
+                                packages[k].days = parseInt(packages[k].days)
+                                logger.info("add" , (moment(student.purchaseStatus[i].date *1000).add(packages[k].days, 'days')).format('x'))
+                                logger.info("now" , new Date().getTime())
+                                paid = !((moment(student.purchaseStatus[i].date*1000).add(packages[k].days, 'days')).format('x') <= new Date().getTime())
+                            }
+
+                            }
+                        }
+                        logger.info("paid" , paid)
+                        cb(paid)
+                    }
+
+
+                })
             }
 
         }
