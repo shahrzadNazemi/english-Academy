@@ -2285,7 +2285,7 @@ router.put('/student/:stdId/purchaseRequest', (req, res)=> {
         }
         else {
             delete Putresult.password
-            response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
+            response.response('اطلاعات تغییر یافت', Putresult[0], (result)=> {
                 res.json(result)
 
             })
