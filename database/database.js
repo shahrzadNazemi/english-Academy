@@ -2951,6 +2951,26 @@ module.exports.forgetPass = (info, cb)=> {
 };
 
 
+module.exports.checkPaid = (usrId, cb)=> {
+    module.exports.getStudentById(usrId , (student)=>{
+        if(student == 0 || student == -1){
+            cb(false)
+        }
+        else{
+            if(student.purchaseStatus.length == 0){
+                cb(false)
+            }
+            else{
+                for(var i=0;i<student.purchaseStatus.length;i++){
+                    if(student.purchaseStatus.package.type == "subscribe"){
+                        cb((moment(student.purchaseStatus[i].package.date).add(student.purchaseStatus[i].package.days, 'days')) == new Date().getTime())
+                    }
+                }
+            }
+
+        }
+    })
+};
 
 
 module.exports.addTicket = (ticketInfo, cb)=> {

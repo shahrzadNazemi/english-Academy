@@ -1688,7 +1688,7 @@ router.post('/student/login', (req, res) => {
 });
 
 router.post('/student/verification', (req, res) => {
-    console.log("body in resend", req.body)
+    console.log("body in verification", req.body)
 
     database.getStudentById(req.body._id, (student)=> {
         if (student == -1) {
@@ -1737,7 +1737,6 @@ router.post('/student/verification', (req, res) => {
 
                                 })
                             })
-
                         }
                     })
 
@@ -1846,7 +1845,7 @@ router.post('/student/forgetPass', (req, res) => {
 });
 
 router.post('/student/forgetPass/verify', (req, res) => {
-    if(typeof req.body.verifyCode == "string"){
+    if (typeof req.body.verifyCode == "string") {
         req.body.verifyCode = parseInt(req.body.verifyCode)
     }
     database.forgetPassVerify(req.body, function (verifResult) {
@@ -2195,7 +2194,7 @@ router.put('/student/:stdId', (req, res) => {
 
                                                 else {
                                                     delete Putresult.password
-                                                    chatRoom.setAvatarUrl(Putresult.chatrooms , (newChatrrom)=>{
+                                                    chatRoom.setAvatarUrl(Putresult.chatrooms, (newChatrrom)=> {
                                                         Putresult.chatrooms = newChatrrom
 
                                                         response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
@@ -2249,7 +2248,7 @@ router.put('/student/:stdId', (req, res) => {
             }
             else {
                 delete Putresult.password
-                chatRoom.setAvatarUrl(Putresult.chatrooms , (newChatrrom)=>{
+                chatRoom.setAvatarUrl(Putresult.chatrooms, (newChatrrom)=> {
                     Putresult.chatrooms = newChatrrom
 
                     response.response('اطلاعات تغییر یافت', Putresult, (result)=> {
@@ -2700,7 +2699,7 @@ router.get('/student/:stdId', (req, res) => {
             database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
                 database.getExamPassedCount(getResult._id, (exam)=> {
                     console.log("dsfsgfdfgldhkgjhdkgh", exam)
-                    chatRoom.setAvatarUrl(getResult.chatrooms , (newChatrrom)=>{
+                    chatRoom.setAvatarUrl(getResult.chatrooms, (newChatrrom)=> {
                         getResult.chatrooms = newChatrrom
                         getResult.examPassed = exam
                         if (getResult.score == 0) {
@@ -2936,4 +2935,7 @@ router.delete('/student/:stdId', (req, res) => {
 
 
 module.exports = router
+
+
+
 

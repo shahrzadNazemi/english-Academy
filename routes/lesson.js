@@ -21,6 +21,9 @@ var ffmpeg = require('ffmpeg');
 let jwt = require('../util/jwtHelper')
 let _ = require('underscore')
 let hashhelper = require('../util/hashHelper')
+let userRoute = require('./users')
+// let chatRoom = require('./chatRoom')
+
 
 
 const lesson = {
@@ -43,7 +46,7 @@ const type = {
         order: {type: "number"},
         category: {type: ["object", "array"]}
     },
-    required: ["title" , "order"],
+    required: ["title", "order"],
     additionalProperties: false
 };
 const video = {
@@ -1709,6 +1712,7 @@ router.put('/video/:vdId', (req, res) => {
 });
 
 router.put('/sound/:sndId', (req, res) => {
+    logger.info("body in updateSound" , req.body)
     let valid = ajv.validate(sound, req.body);
     if (!valid) {
         let errorData
@@ -2250,262 +2254,70 @@ router.get('/level/:lvlId', (req, res) => {
         }
         else {
             let usrId = student[0]._id
-            database.getViewUser(usrId, (view)=> {
-                if (view == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else if (view == 0) {
-                    response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    database.getLessonByLvlId(req.params.lvlId, (lessons)=> {
-                        if (lessons == -1) {
-                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else if (lessons == 0) {
-                            response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                res.json(result)
-                            })
-                        }
-                        else {
-                            database.getViewUser(usrId, (view)=> {
-                                if (view == 0 || view == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    let usrLsnId = view[0].lsnId
-                                    if (usrLsnId == '0') {
-                                        database.getFirstLesson((firstLesson)=> {
-                                            if (firstLesson == 0 || firstLesson == -1) {
-                                            }
-                                            else {
-                                                let updateInfo = {}
-                                                updateInfo.lsnId = firstLesson._id
-
-                                                            for (var i = 0; i < lessons.length; i++) {
-                                                                lessons[i].status = "locked"
-                                                                if (lessons[i]._id == view[0].lsnId) {
-                                                                    lessons[i].status = "current"
-                                                                    if (i != 0) {
-                                                                        lessons[i - 1].status = "passed"
-
-                                                                    }
-                                                                }
-                                                            }
-                                                            if (req.query.cli == 1) {
-                                                                if (lessons == -1) {
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else if (lessons == 0) {
-                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    if (req.query.offset && req.query.limit) {
-                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
-                                                                            res.json(result)
-                                                                        })
-                                                                    }
-                                                                    else {
-                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                            res.json(result)
-                                                                        })
-                                                                    }
-
-                                                                }
-                                                            }
-                                                            else {
-                                                                if (lessons == -1) {
-                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else if (lessons == 0) {
-                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else {
-
-                                                                    if (req.query.offset && req.query.limit) {
-                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
-                                                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
-                                                                                res.json(resp)
-                                                                            })
-                                                                        })
-                                                                    }
-                                                                    else {
-                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                            res.json(result)
-                                                                        })
-                                                                    }
-                                                                }
-                                                            }
-
-
-
-                                            }
+            database.checkPaid(usrId, (checkPaid)=> {
+                database.getViewUser(usrId, (view)=> {
+                    if (view == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (view == 0) {
+                        response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        database.getLessonByLvlId(req.params.lvlId, (lessons)=> {
+                            if (lessons == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (lessons == 0) {
+                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                database.getViewUser(usrId, (view)=> {
+                                    if (view == 0 || view == -1) {
+                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                            res.json(result)
                                         })
                                     }
                                     else {
-                                        database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
-                                            if (resultInfo == -1 || resultInfo == 0) {
-                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                    res.json(result)
-                                                })
-                                            }
-                                            else {
-                                                if (resultInfo.timePassed != "") {
-                                                    if (typeof resultInfo.timePassed == 'string')
-                                                        resultInfo.timePassed = parseInt(resultInfo.timePassed)
-                                                    let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
-                                                    let currentTime = new Date().getTime()
-                                                    if (currentTime < pass) {
-                                                        for (var i = 0; i < lessons.length; i++) {
-                                                            lessons[i].status = "locked"
-                                                            if (lessons[i]._id == view[0].lsnId) {
-                                                                lessons[i].status = "locked"
-                                                            }
-                                                        }
-                                                        if (req.query.cli == 1) {
-                                                            if (lessons == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else if (lessons == 0) {
-                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else {
-                                                                if (req.query.offset && req.query.limit) {
-                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-
-                                                            }
-                                                        }
-                                                        else {
-                                                            if (lessons == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else if (lessons == 0) {
-                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else {
-
-                                                                if (req.query.offset && req.query.limit) {
-                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
-                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
-                                                                            res.json(resp)
-                                                                        })
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    else {
-                                                        for (var i = 0; i < lessons.length; i++) {
-                                                            lessons[i].status = "locked"
-                                                            if (lessons[i]._id == view[0].lsnId) {
-                                                                lessons[i].status = "current"
-                                                                if (i != 0) {
-                                                                    lessons[i - 1].status = "passed"
-
-                                                                }
-                                                            }
-                                                        }
-                                                        if (req.query.cli == 1) {
-                                                            if (lessons == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else if (lessons == 0) {
-                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else {
-                                                                if (req.query.offset && req.query.limit) {
-                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-
-                                                            }
-                                                        }
-                                                        else {
-                                                            if (lessons == -1) {
-                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else if (lessons == 0) {
-                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                                                    res.json(result)
-                                                                })
-                                                            }
-                                                            else {
-
-                                                                if (req.query.offset && req.query.limit) {
-                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
-                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
-                                                                            res.json(resp)
-                                                                        })
-                                                                    })
-                                                                }
-                                                                else {
-                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                                                                        res.json(result)
-                                                                    })
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+                                        let usrLsnId = view[0].lsnId
+                                        if (usrLsnId == '0') {
+                                            database.getFirstLesson((firstLesson)=> {
+                                                if (firstLesson == 0 || firstLesson == -1) {
                                                 }
                                                 else {
-                                                    for (var i = 0; i < lessons.length; i++) {
-                                                        lessons[i].status = "locked"
-                                                        if (lessons[i]._id == view[0].lsnId) {
-                                                            lessons[i].status = "current"
-                                                            if (i != 0) {
-                                                                lessons[i - 1].status = "passed"
+                                                    let updateInfo = {}
+                                                    updateInfo.lsnId = firstLesson._id
+                                                    if(checkPaid){
+                                                        for (var i = 0; i < lessons.length; i++) {
+                                                            lessons[i].status = "locked"
+                                                            for (var k = 0; k < view.length; k++) {
+                                                                if (lessons[i]._id == view[k].lsnId) {
+                                                                    lessons[i].status = "passed"
+                                                                }
+                                                                if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                    lessons[i].status = "current"
 
+                                                                }
                                                             }
                                                         }
+                                                    }
+                                                    else{
+                                                        for (var i = 0; i < lessons.length; i++) {
+                                                            lessons[i].status = "locked"
+                                                            for (var k = 0; k < view.length; k++) {
+                                                                if (lessons[i]._id == view[0].lsnId) {
+                                                                    lessons[i].status = "first"
+                                                                }
+                                                            }
+                                                        }
+
                                                     }
                                                     if (req.query.cli == 1) {
                                                         if (lessons == -1) {
@@ -2559,17 +2371,272 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
                                                         }
                                                     }
+
+
                                                 }
+                                            })
+                                        }
+                                        else {
+                                            database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
+                                                if (resultInfo == -1 || resultInfo == 0) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    if (resultInfo.timePassed != "") {
+                                                        if (typeof resultInfo.timePassed == 'string')
+                                                            resultInfo.timePassed = parseInt(resultInfo.timePassed)
+                                                        let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
+                                                        let currentTime = new Date().getTime()
+                                                        if (currentTime < pass) {
+                                                            if(checkPaid){
+                                                                for (var i = 0; i < lessons.length; i++) {
+                                                                    lessons[i].status = "locked"
+                                                                    for (var k = 0; k < view.length; k++) {
+                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                            lessons[i].status = "passed"
+
+                                                                        }
+                                                                        if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                            lessons[i].status = "locked"
+
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            }
+                                                            else{
+                                                                for (var i = 0; i < lessons.length; i++) {
+                                                                    lessons[i].status = "locked"
+                                                                    for (var k = 0; k < view.length; k++) {
+                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                            lessons[i].status = "first"
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            }
+                                                            if (req.query.cli == 1) {
+                                                                if (lessons == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else if (lessons == 0) {
+                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    if (req.query.offset && req.query.limit) {
+                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+
+                                                                }
+                                                            }
+                                                            else {
+                                                                if (lessons == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else if (lessons == 0) {
+                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else {
+
+                                                                    if (req.query.offset && req.query.limit) {
+                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
+                                                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
+                                                                                res.json(resp)
+                                                                            })
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        else {
+                                                            for (var i = 0; i < lessons.length; i++) {
+                                                                lessons[i].status = "locked"
+                                                                for (var k = 0; k < view.length; k++) {
+                                                                    if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                        lessons[i].status = "current"
+                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                            lessons[i].status = "passed"
+
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            }
+
+                                                            if (req.query.cli == 1) {
+                                                                if (lessons == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else if (lessons == 0) {
+                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    if (req.query.offset && req.query.limit) {
+                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+
+                                                                }
+                                                            }
+                                                            else {
+                                                                if (lessons == -1) {
+                                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else if (lessons == 0) {
+                                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else {
+
+                                                                    if (req.query.offset && req.query.limit) {
+                                                                        response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
+                                                                            response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
+                                                                                res.json(resp)
+                                                                            })
+                                                                        })
+                                                                    }
+                                                                    else {
+                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                            res.json(result)
+                                                                        })
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else {
+                                                        if(checkPaid){
+                                                            for (var i = 0; i < lessons.length; i++) {
+                                                                lessons[i].status = "locked"
+                                                                for (var k = 0; k < view.length; k++) {
+                                                                    if (lessons[i]._id == view[k].lsnId) {
+                                                                        lessons[i].status = "passed"
+
+                                                                    }
+                                                                    if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                        lessons[i].status = "current"
+
+                                                                    }
+                                                                }
+
+                                                            }
+
+                                                        }
+                                                        else{
+                                                            for (var i = 0; i < lessons.length; i++) {
+                                                                lessons[i].status = "locked"
+                                                                for (var k = 0; k < view.length; k++) {
+                                                                    if (lessons[i]._id == view[k].lsnId) {
+                                                                        lessons[i].status = "first"
+
+                                                                    }
+                                                                }
+
+                                                            }
+
+                                                        }
+                                                        if (req.query.cli == 1) {
+                                                            if (lessons == -1) {
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else if (lessons == 0) {
+                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else {
+                                                                if (req.query.offset && req.query.limit) {
+                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+
+                                                            }
+                                                        }
+                                                        else {
+                                                            if (lessons == -1) {
+                                                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else if (lessons == 0) {
+                                                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                                    res.json(result)
+                                                                })
+                                                            }
+                                                            else {
+
+                                                                if (req.query.offset && req.query.limit) {
+                                                                    response.pagination(req.query.offset, req.query.limit, lessons, (resp)=> {
+                                                                        response.response('اطلاعات مورد نظر یافت شد', lessons, (resp)=> {
+                                                                            res.json(resp)
+                                                                        })
+                                                                    })
+                                                                }
+                                                                else {
+                                                                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                                                                        res.json(result)
+                                                                    })
+                                                                }
+                                                            }
+                                                        }
+                                                    }
 
 
-                                            }
-                                        })
+                                                }
+                                            })
+                                        }
                                     }
-                                }
-                            })
-                        }
-                    })
-                }
+                                })
+                            }
+                        })
+                    }
+                })
+
             })
         }
     })
@@ -2908,226 +2975,205 @@ router.get('/:lsnId', (req, res) => {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-        database.getStudentByUsername(username, (student)=> {
-            if (student == 0) {
-                database.getLessonById(req.params.lsnId, (lesson)=> {
-                    if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
+    database.getStudentByUsername(username, (student)=> {
+        if (student == 0) {
+            database.getLessonById(req.params.lsnId, (lesson)=> {
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == 0) {
+                    response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
+                        res.json(result)
+
+                    })
+                }
+            })
+
+        }
+        else {
+            let usrId = student[0]._id
+            database.getLessonById(req.params.lsnId, (lesson)=> {
+                if (lesson == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lesson == 0) {
+                    response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+
+                    let types = []
+                    for (var i = 0; i < lesson[0].video.length; i++) {
+                        types.push(lesson[0].video[i].type)
                     }
-                    else if (lesson == 0) {
-                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
+                    for (var i = 0; i < lesson[0].sound.length; i++) {
+                        types.push(lesson[0].sound[i].type)
+
                     }
-                    else {
-                        response.response('درس مورد نظر یافت شد.', lesson[0], (result)=> {
-                            res.json(result)
+                    for (var i = 0; i < lesson[0].text.length; i++) {
+                        types.push(lesson[0].text[i].type)
 
-                        })
                     }
-                })
-
-            }
-            else {
-                let usrId = student[0]._id
-                database.getLessonById(req.params.lsnId, (lesson)=> {
-                    if (lesson == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
+                    for (var i = 0; i < lesson[0].downloadFile.length; i++) {
+                        types.push(lesson[0].downloadFile[i].type)
                     }
-                    else if (lesson == 0) {
-                        response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
+
+                    // let index = []
+                    // for (var i = 0; i < types.length; i++) {
+                    //     index.push(types[i]._id)
+                    // }
+                    // index.sort();
+                    // logger.info("index" , index)
+                    // let tmp = []
+                    // for (var i = 0; i < index.length; i++) {
+                    //     if (index[i] == index[i + 1]) {
+                    //         tmp.push(index[i])
+                    //     }
+                    // }
+                    // for (var i = 0; i < types.length; i++) {
+                    //     for (var k = 0; k < tmp.length; k++) {
+                    //         if (tmp[k] == types[i]._id) {
+                    //             types.splice(i, 1);
+                    //         }
+                    //     }
+                    //
+                    // }
+                    // for (var i = 0; i < index.length; i++) {
+                    //     if (index[i] == index[i + 1]) {
+                    //         tmp.push(index[i])
+                    //     }
+                    // }
+                    // logger.info("types" , types)
+                    let typesUniquie = []
+
+                    typesUniquie = hashhelper.arrUnique(types)
+                    types = typesUniquie
+                    let max = [];
+                    max.push(lesson[0].video.length)
+                    max.push(lesson[0].sound.length)
+                    max.push(lesson[0].text.length)
+                    max.push(lesson[0].downloadFile.length)
+                    for (var k = 0; k < types.length; k++) {
+                        types[k].video = []
+                        types[k].sound = []
+                        types[k].downloadFile = []
+                        types[k].text = []
                     }
-                    else {
+                    max.sort()
+                    for (var k = 0; k < types.length; k++) {
 
-                        let types = []
-                        for (var i = 0; i < lesson[0].video.length; i++) {
-                            types.push(lesson[0].video[i].type)
-                        }
-                        for (var i = 0; i < lesson[0].sound.length; i++) {
-                            types.push(lesson[0].sound[i].type)
-
-                        }
-                        for (var i = 0; i < lesson[0].text.length; i++) {
-                            types.push(lesson[0].text[i].type)
-
-                        }
-                        for (var i = 0; i < lesson[0].downloadFile.length; i++) {
-                            types.push(lesson[0].downloadFile[i].type)
-                        }
-
-                        // let index = []
-                        // for (var i = 0; i < types.length; i++) {
-                        //     index.push(types[i]._id)
-                        // }
-                        // index.sort();
-                        // logger.info("index" , index)
-                        // let tmp = []
-                        // for (var i = 0; i < index.length; i++) {
-                        //     if (index[i] == index[i + 1]) {
-                        //         tmp.push(index[i])
-                        //     }
-                        // }
-                        // for (var i = 0; i < types.length; i++) {
-                        //     for (var k = 0; k < tmp.length; k++) {
-                        //         if (tmp[k] == types[i]._id) {
-                        //             types.splice(i, 1);
-                        //         }
-                        //     }
-                        //
-                        // }
-                        // for (var i = 0; i < index.length; i++) {
-                        //     if (index[i] == index[i + 1]) {
-                        //         tmp.push(index[i])
-                        //     }
-                        // }
-                        // logger.info("types" , types)
-                        let typesUniquie = []
-
-                        typesUniquie = hashhelper.arrUnique(types)
-                        types = typesUniquie
-                        let max = [];
-                        max.push(lesson[0].video.length)
-                        max.push(lesson[0].sound.length)
-                        max.push(lesson[0].text.length)
-                        max.push(lesson[0].downloadFile.length)
-                        for (var k = 0; k < types.length; k++) {
-                            types[k].video = []
-                            types[k].sound = []
-                            types[k].downloadFile = []
-                            types[k].text = []
-                        }
-                        max.sort()
-                        for (var k = 0; k < types.length; k++) {
-
-                            for (var i = 0; i < max[max.length - 1]; i++) {
-                                if (lesson[0].video[i] != undefined) {
-                                    if (lesson[0].video[i].typeId == types[k]._id) {
-                                        types[k].video.push(lesson[0].video[i])
-                                    }
+                        for (var i = 0; i < max[max.length - 1]; i++) {
+                            if (lesson[0].video[i] != undefined) {
+                                if (lesson[0].video[i].typeId == types[k]._id) {
+                                    types[k].video.push(lesson[0].video[i])
                                 }
-                                if (lesson[0].sound[i] != undefined) {
-                                    if (lesson[0].sound[i].typeId == types[k]._id) {
-                                        types[k].sound.push(lesson[0].sound[i])
-                                    }
-                                }
-                                if (lesson[0].text[i] != undefined) {
-
-                                    if (lesson[0].text[i].typeId == types[k]._id) {
-                                        types[k].text.push(lesson[0].text[i])
-                                    }
-                                }
-                                if (lesson[0].downloadFile[i] != undefined) {
-                                    logger.info("lesson[0.downloadFile" , lesson[0].downloadFile[i].typeId )
-                                    logger.info("i" , i )
-
-                                    logger.info("types[k]._id" , types[k]._id )
-                                    logger.info("k" , k )
-                                    logger.info("lesson[0].downloadFile[i].typeId==types[k]._id" , lesson[0].downloadFile[i].typeId==types[k]._id)
-
-                                    if (lesson[0].downloadFile[i].typeId==types[k]._id) {
-                                        types[k].downloadFile.push(lesson[0].downloadFile[i])
-                                        logger.info("types[k].downloadFile" , types[k].downloadFile )
-                                        // logger.info("k" , k )
-
-
-                                        // delete lesson[0].downloadFile[i].type
-                                    }
-                                }
-
                             }
-                        }
-                        lesson[0].type = types
-                        delete lesson[0].video
-                        delete lesson[0].sound
-                        delete lesson[0].text
-                        delete lesson[0].downloadFile
-
-                        database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
-                            if (result == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                    res.json(result)
-                                })
+                            if (lesson[0].sound[i] != undefined) {
+                                if (lesson[0].sound[i].typeId == types[k]._id) {
+                                    types[k].sound.push(lesson[0].sound[i])
+                                }
                             }
-                            else if (result != 0) {
-                                database.getAllTypes((typeList)=> {
-                                    if (typeList == -1 || typeList == 0) {
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            res.json(result)
-                                        })
+                            if (lesson[0].text[i] != undefined) {
 
-                                    }
-                                    else {
-                                        database.getAllNotes(lesson[0]._id, usrId, (notes)=> {
-                                            if (notes == 0 || notes == -1) {
-                                                notes = []
+                                if (lesson[0].text[i].typeId == types[k]._id) {
+                                    types[k].text.push(lesson[0].text[i])
+                                }
+                            }
+                            if (lesson[0].downloadFile[i] != undefined) {
+                                logger.info("lesson[0.downloadFile", lesson[0].downloadFile[i].typeId)
+                                logger.info("i", i)
+
+                                logger.info("types[k]._id", types[k]._id)
+                                logger.info("k", k)
+                                logger.info("lesson[0].downloadFile[i].typeId==types[k]._id", lesson[0].downloadFile[i].typeId == types[k]._id)
+
+                                if (lesson[0].downloadFile[i].typeId == types[k]._id) {
+                                    types[k].downloadFile.push(lesson[0].downloadFile[i])
+                                    logger.info("types[k].downloadFile", types[k].downloadFile)
+                                    // logger.info("k" , k )
+
+
+                                    // delete lesson[0].downloadFile[i].type
+                                }
+                            }
+
+                        }
+                    }
+                    lesson[0].type = types
+                    delete lesson[0].video
+                    delete lesson[0].sound
+                    delete lesson[0].text
+                    delete lesson[0].downloadFile
+                    user.CheckPaid()
+                    database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
+                        if (result == -1) {
+                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                res.json(result)
+                            })
+                        }
+                        else if (result != 0) {
+                            database.getAllTypes((typeList)=> {
+                                if (typeList == -1 || typeList == 0) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+
+                                }
+                                else {
+                                    database.getAllNotes(lesson[0]._id, usrId, (notes)=> {
+                                        if (notes == 0 || notes == -1) {
+                                            notes = []
+                                        }
+                                        let exam = result.exam
+                                        for (var i = 0; i < typeList.length; i++) {
+                                            if (typeList[i].title == "quiz") {
+                                                typeList[i].quizData = result.quiz
+                                                types.push(typeList[i])
                                             }
-                                            let exam = result.exam
-                                            for (var i = 0; i < typeList.length; i++) {
-                                                if (typeList[i].title == "quiz") {
-                                                    typeList[i].quizData = result.quiz
-                                                    types.push(typeList[i])
-                                                }
-                                                // if (typeList[i].title == "exam") {
-                                                //     typeList[i].examData = result.exam
-                                                //     types.push(typeList[i])
-                                                // }
-                                                if (typeList[i].title == "note") {
-                                                    logger.info("here in title = note", typeList[i])
-                                                    typeList[i].noteData = notes
-                                                    types.push(typeList[i])
-                                                }
+                                            // if (typeList[i].title == "exam") {
+                                            //     typeList[i].examData = result.exam
+                                            //     types.push(typeList[i])
+                                            // }
+                                            if (typeList[i].title == "note") {
+                                                logger.info("here in title = note", typeList[i])
+                                                typeList[i].noteData = notes
+                                                types.push(typeList[i])
                                             }
-                                            if (result.timePassed) {
-                                                let pass = moment(result.timePassed).add(1, 'h')
-                                                let timeStamp = new Date(pass).getTime()
-                                                let currentTime = new Date().getTime()
-                                                if (pass > currentTime) {
-                                                    database.getViewUser(usrId, (view)=> {
-                                                        if (view == -1) {
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else {
-                                                            // lesson[0].viewPermission = false
-                                                            lesson[0].viewPermission = true
-                                                            lesson[0].quizPassedTime = result.timePassed
-                                                            lesson[0].examPassedTime = result.examTimePassed
+                                        }
+                                        if (result.timePassed) {
+                                            let pass = moment(result.timePassed).add(1, 'h')
+                                            let timeStamp = new Date(pass).getTime()
+                                            let currentTime = new Date().getTime()
+                                            if (pass > currentTime) {
+                                                database.getViewUser(usrId, (view)=> {
+                                                    if (view == -1) {
+                                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                            res.json(result)
+                                                        })
+                                                    }
+                                                    else {
+                                                        // lesson[0].viewPermission = false
+                                                        lesson[0].viewPermission = true
+                                                        lesson[0].quizPassedTime = result.timePassed
+                                                        lesson[0].examPassedTime = result.examTimePassed
 
-                                                            lesson[0] = circJson.stringify(lesson[0])
-                                                            response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                                                res.json(result)
+                                                        lesson[0] = circJson.stringify(lesson[0])
+                                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                                            res.json(result)
 
-                                                            })
-                                                        }
-                                                    })
-                                                }
-                                                else {
-                                                    database.getViewUser(usrId, (view)=> {
-                                                        if (view == -1) {
-                                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                                                res.json(result)
-                                                            })
-                                                        }
-                                                        else {
-                                                            lesson[0].quizPassedTime = result.timePassed
-                                                            lesson[0].examPassedTime = result.examTimePassed
-
-                                                            lesson[0].viewPermission = true
-                                                            lesson[0] = circJson.stringify(lesson[0])
-                                                            response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                                                res.json(result)
-
-                                                            })
-                                                        }
-                                                    })
-                                                }
+                                                        })
+                                                    }
+                                                })
                                             }
                                             else {
                                                 database.getViewUser(usrId, (view)=> {
@@ -3140,7 +3186,7 @@ router.get('/:lsnId', (req, res) => {
                                                         lesson[0].quizPassedTime = result.timePassed
                                                         lesson[0].examPassedTime = result.examTimePassed
 
-                                                        lesson[0].viewPermission = view[0].viewPermission
+                                                        lesson[0].viewPermission = true
                                                         lesson[0] = circJson.stringify(lesson[0])
                                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                             res.json(result)
@@ -3149,36 +3195,57 @@ router.get('/:lsnId', (req, res) => {
                                                     }
                                                 })
                                             }
-                                        })
-                                    }
-                                })
-                            }
-                            else {
-                                database.getViewUser(usrId, (view)=> {
-                                    if (view == -1) {
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else {
-                                        lesson[0].quizPassedTime = result.timePassed
-                                        lesson[0].examPassedTime = result.examTimePassed
+                                        }
+                                        else {
+                                            database.getViewUser(usrId, (view)=> {
+                                                if (view == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    lesson[0].quizPassedTime = result.timePassed
+                                                    lesson[0].examPassedTime = result.examTimePassed
 
-                                        lesson[0].viewPermission = view[0].viewPermission
-                                        lesson[0] = circJson.stringify(lesson[0])
-                                        response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
-                                            res.json(result)
+                                                    lesson[0].viewPermission = view[0].viewPermission
+                                                    lesson[0] = circJson.stringify(lesson[0])
+                                                    response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                                        res.json(result)
 
-                                        })
-                                    }
-                                })
-                            }
-                        })
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        else {
+                            database.getViewUser(usrId, (view)=> {
+                                if (view == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    lesson[0].quizPassedTime = result.timePassed
+                                    lesson[0].examPassedTime = result.examTimePassed
 
-                    }
-                })
-            }
-        })
+                                    lesson[0].viewPermission = view[0].viewPermission
+                                    lesson[0] = circJson.stringify(lesson[0])
+                                    response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
+                                        res.json(result)
+
+                                    })
+                                }
+                            })
+                        }
+                    })
+
+                }
+            })
+        }
+    })
 });
 
 router.get('/:lsnId/video', (req, res)=> {
@@ -3311,98 +3378,98 @@ router.get('/', (req, res)=> {
     var token = req.headers.authorization.split(" ")[1];
     var verify = jwt.verify(token);
     let username = verify.userID
-        database.getStudentByUsername(username, (student)=> {
-            if (student == -1) {
-                response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
-                    res.json(result)
-                })
-            }
-                else if(student ==0){
-                    database.getAllLessons((sound)=> {
-                        if (sound == -1) {
+    database.getStudentByUsername(username, (student)=> {
+        if (student == -1) {
+            response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+                res.json(result)
+            })
+        }
+        else if (student == 0) {
+            database.getAllLessons((sound)=> {
+                if (sound == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (sound == 0) {
+                    response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    if (req.query.page) {
+                        response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
+                            let countPages = Math.ceil(sound.length / req.query.limit)
+                            result1.totalPage = countPages
+                            response.response('اطلاعات همه ی درسها', result1, (result)=> {
+                                logger.info("AllLesson", result)
+                                res.json(result)
+                            })
+                        })
+                    }
+                    else {
+                        response.response('اطلاعات همه ی درسها', sound, (result)=> {
+                            res.json(result)
+                        })
+
+                    }
+
+
+                }
+            })
+
+        }
+
+        else {
+            let usrId = student[0]._id
+            database.getViewUser(usrId, (view)=> {
+                if (view == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (view == 0) {
+                    response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    database.getAllLessons((lessons)=> {
+                        if (lessons == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
-                        else if (sound == 0) {
+                        else if (lessons == 0) {
                             response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
                         else {
-                            if (req.query.page) {
-                                response.paginationClient(req.query.page, req.query.limit, sound, (result1)=> {
-                                    let countPages = Math.ceil(sound.length / req.query.limit)
-                                    result1.totalPage = countPages
-                                    response.response('اطلاعات همه ی درسها', result1, (result)=> {
-                                        logger.info("AllLesson" , result)
-                                        res.json(result)
-                                    })
-                                })
+                            for (var i = 0; i < lessons.length; i++) {
+                                lessons[i].status = "locked"
+                                if (lessons[i]._id == view[0].lsnId) {
+                                    lessons[i].status = "current"
+                                    if (i != 0) {
+                                        lessons[i - 1].status = "passed"
+
+                                    }
+                                }
                             }
-                            else {
-                                response.response('اطلاعات همه ی درسها', sound, (result)=> {
+                            response.paginationClient(req.query.page, req.query.limit, lessons, (result1)=> {
+                                let countPages = Math.ceil(lessons.length / req.query.limit)
+                                result1.totalPage = countPages
+                                response.response('اطلاعات همه ی درسها', result1, (result)=> {
                                     res.json(result)
                                 })
-
-                            }
-
+                            })
 
                         }
                     })
-
                 }
-            
-            else {
-                let usrId = student[0]._id
-                database.getViewUser(usrId, (view)=> {
-                    if (view == -1) {
-                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else if (view == 0) {
-                        response.respondNotFound(' مورد نظر یافت نشد.', {}, (result)=> {
-                            res.json(result)
-                        })
-                    }
-                    else {
-                        database.getAllLessons((lessons)=> {
-                            if (lessons == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else if (lessons == 0) {
-                                response.respondNotFound('درس مورد نظر یافت نشد.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else {
-                                for (var i = 0; i < lessons.length; i++) {
-                                    lessons[i].status = "locked"
-                                    if (lessons[i]._id == view[0].lsnId) {
-                                        lessons[i].status = "current"
-                                        if (i != 0) {
-                                            lessons[i - 1].status = "passed"
-
-                                        }
-                                    }
-                                }
-                                response.paginationClient(req.query.page, req.query.limit, lessons, (result1)=> {
-                                    let countPages = Math.ceil(lessons.length / req.query.limit)
-                                    result1.totalPage = countPages
-                                    response.response('اطلاعات همه ی درسها', result1, (result)=> {
-                                        res.json(result)
-                                    })
-                                })
-
-                            }
-                        })
-                    }
-                })
-            }
-        })
+            })
+        }
+    })
 });
 
 
@@ -3800,7 +3867,7 @@ module.exports.createVideoThumbnail = function (path, destination, fileName, cb)
                 frame_rate: 1,
                 number: 1,
                 start_time: 20,
-                duration_time:2,
+                duration_time: 2,
                 file_name: `${fileName}`
             }, function (error, files) {
                 if (!error) {
