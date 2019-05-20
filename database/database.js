@@ -3021,7 +3021,7 @@ module.exports.addTicket = (ticketInfo, cb)=> {
     })
 };
 
-module.exports.addDataToDict = (data, cb)=> {
+module.exports.serachDictionary = (data, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/dictionary`,
         headers: {"content-Type": "application/json"},
