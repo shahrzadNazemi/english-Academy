@@ -2701,7 +2701,7 @@ router.get('/student/:stdId', (req, res) => {
                     console.log("dsfsgfdfgldhkgjhdkgh", exam)
                     chatRoom.setAvatarUrl(getResult.chatrooms, (newChatrrom)=> {
                         getResult.chatrooms = newChatrrom
-                        getResult.examPassed = exam
+                        getResult.examPassed = exam.length
                         if (getResult.score == 0) {
                             delete getResult.password
                             let data = getResult
