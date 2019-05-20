@@ -1896,35 +1896,44 @@ router.post('/student/forgetPass/verify', (req, res) => {
 });
 
 router.post('/student/forgetPass/send', (req, res) => {
-    logger.info("forgetPass" , req.body.password)
-    req.body.password = hashHelper.ConvertToEnglish(req.body.password)
-    req.body.password = hashHelper.hash(req.body.password)
-    logger.info("forgetPass hash" , req.body.password)
+    if (req.body.password == undefined) {
+        let errData = {"password": "پسورد را وارد کنید"}
+        response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
+            res.json(result)
+        })
+    }
+else{
+        logger.info("forgetPass" , req.body.password)
+        req.body.password = hashHelper.ConvertToEnglish(req.body.password)
+        req.body.password = hashHelper.hash(req.body.password)
+        logger.info("forgetPass hash" , req.body.password)
 
-    database.updateStudent(req.body, req.body._id, (updated)=> {
-        if (updated == -1) {
-            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else if (updated == 0) {
-            response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
-                res.json(result)
-            })
-        }
-        else {
-            chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
-                updated.chatrooms = newChatrrom
-                updated.jwt = jwt.signUser(updated.username)
-                delete updated.password
-
-                response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+        database.updateStudent(req.body, req.body._id, (updated)=> {
+            if (updated == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
-
                 })
-            })
-        }
-    })
+            }
+            else if (updated == 0) {
+                response.respondNotFound('کاربر مورد نظر یافت نشد.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else {
+                chatRoom.setAvatarUrl(updated.chatrooms, (newChatrrom)=> {
+                    updated.chatrooms = newChatrrom
+                    updated.jwt = jwt.signUser(updated.username)
+                    delete updated.password
+
+                    response.response('ورود با موفقیت انجام شد', updated, (result)=> {
+                        res.json(result)
+
+                    })
+                })
+            }
+        })
+    }
+   
 });
 
 router.post('/refreshToken', function (req, res) {
