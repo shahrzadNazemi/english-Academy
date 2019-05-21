@@ -119,7 +119,13 @@ router.post('/admin', (req, res)=> {
                 res.json(result)
             })
         }
-            
+        else if (addedAdmin == -2) {
+            response.validation('نام کاربری نمیتواند تکراری باشد', {}, 422, (result)=> {
+                res.json(result)
+            })
+        }
+
+
         else {
             delete  addedAdmin.password
 

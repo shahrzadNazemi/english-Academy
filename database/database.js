@@ -455,6 +455,9 @@ module.exports.addSupporer = (data, cb)=> {
         else if (response.statusCode == 404) {
             cb(0)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
         else {
             logger.info("response body", body)
             cb(body)
@@ -479,6 +482,9 @@ module.exports.addChatAdmin = (data, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
         }
         else {
             logger.info("response body", body)
@@ -647,6 +653,9 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
             console.log('err in db')
             cb(-1)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
         else if (response.statusCode == 404) {
             cb(0)
         }
@@ -674,6 +683,9 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
         }
         else {
             logger.info("response body", body)
@@ -4680,6 +4692,9 @@ module.exports.addCp = (info, cb)=> {
             console.log('err in db')
             cb(-1)
         }
+        else if (response.statusCode == 402) {
+            cb(-2)
+        }
         else if (response.statusCode == 404) {
             cb(0)
         }
@@ -4707,6 +4722,9 @@ module.exports.updateCp = (info, cpId, cb)=> {
         }
         else if (response.statusCode == 404) {
             cb(0)
+        }
+        else if (response.statusCode == 402) {
+            cb(-2)
         }
         else {
             logger.info("response body", body)
