@@ -414,7 +414,7 @@ router.get('/tutor/:trId/open', (req, res)=> {
 });
 
 router.get('/tutor/:trId/student/:usrId', (req, res)=> {
-    database.getMsgByTutorStudent(req.params.trId,req.params.usrId , (chatroom)=> {
+    database.getMsgByTutorStudent(req.params.trId, req.params.usrId, (chatroom)=> {
         if (chatroom == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -523,7 +523,7 @@ router.get('/:chId', (req, res)=> {
 
 router.get('/', (req, res)=> {
     database.getAllChatrooms((chatroom)=> {
-        
+
         if (chatroom == -1) {
             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                 res.json(result)
@@ -551,18 +551,59 @@ router.get('/', (req, res)=> {
 
 module.exports = router
 
-module.exports.setAvatarUrl = (chatRoom , cb)=>{
-    for(var i=0;i<chatRoom.length;i++){
-        if(chatRoom[i].position == "lastLesson"){
-            chatRoom[i].avatarUrl = config.lastLessonChatrrom
+module.exports.setAvatarUrl = (chatRoom, cb)=> {
+    var newChatroom = chatRoom.filter(value => Object.keys(value).length !== 0);
+    let temp = []
+
+    for (var i = 0; i < newChatroom.length; i++) {
+        if (newChatroom[i].position == "lastLesson") {
+            newChatroom[i].avatarUrl = config.lastLessonChatrrom
+            temp.push(newChatroom[i].position)
+
         }
-        if(chatRoom[i].position == "currentLesson"){
-            chatRoom[i].avatarUrl = config.currentLessonChatrrom
+        if (newChatroom[i].position == "currentLesson") {
+            newChatroom[i].avatarUrl = config.currentLessonChatrrom
+            temp.push(newChatroom[i].position)
+
         }
-        if(chatRoom[i].position == "currentLevel"){
-            chatRoom[i].avatarUrl = config.currentLevelChatrrom
+        if (newChatroom[i].position == "currentLevel") {
+            newChatroom[i].avatarUrl = config.currentLevelChatrrom
+            temp.push(newChatroom[i].position)
+
         }
     }
-    cb(chatRoom)
+    if (temp.length <= 3) {
+        logger.info("temp" , temp.indexOf('currentLesson') > -1)
+        if (!(temp.indexOf('lastLesson') > -1)) {
+            let tmp = {}
+            tmp.title = ""
+            tmp.position = "lastLesson"
+            tmp.avatarUrl = config.lastLessonChatrrom
+            newChatroom.push(tmp)
+            logger.info("temp lastLesson" , newChatroom)
+
+        }
+        if (!(temp.indexOf('currentLesson') > -1)) {
+            let tmp = {}
+            tmp.title = ""
+            tmp.position = "currentLesson"
+            tmp.avatarUrl = config.currentLessonChatrrom
+            newChatroom.push(tmp)
+            logger.info("temp currentLesson" , newChatroom)
+
+        }
+        if (!(temp.indexOf('currentLevel') > -1)) {
+            let tmp = {}
+            tmp.title = ""
+            tmp.position = "currentLevel"
+            tmp.avatarUrl = config.currentLevelChatrrom
+            newChatroom.push(tmp)
+            logger.info("temp currentLevel" , newChatroom)
+
+        }
+    }
+
+        cb(newChatroom)
+
 }
 
