@@ -119,6 +119,7 @@ router.post('/admin', (req, res)=> {
                 res.json(result)
             })
         }
+            
         else {
             delete  addedAdmin.password
 

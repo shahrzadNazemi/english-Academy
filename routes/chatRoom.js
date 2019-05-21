@@ -573,7 +573,6 @@ module.exports.setAvatarUrl = (chatRoom, cb)=> {
         }
     }
     if (temp.length <= 3) {
-        logger.info("temp" , temp.indexOf('currentLesson') > -1)
         if (!(temp.indexOf('lastLesson') > -1)) {
             let tmp = {}
             tmp.title = ""
