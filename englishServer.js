@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileupload());
 app.use(trimmer)
-app.use(limiter);
+// app.use(limiter);
 
 app.use(function (req, res, next) {
     if (req.path.includes('/login') || req.path.includes('/register') || req.path.includes('/refreshToken') || req.path.includes('/verification') || req.path.includes('/resendVerify')|| req.path.includes('/forgetPass')) {
