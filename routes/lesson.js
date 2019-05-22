@@ -25,7 +25,6 @@ let userRoute = require('./users')
 // let chatRoom = require('./chatRoom')
 
 
-
 const lesson = {
     type: "object",
     properties: {
@@ -1712,7 +1711,7 @@ router.put('/video/:vdId', (req, res) => {
 });
 
 router.put('/sound/:sndId', (req, res) => {
-    logger.info("body in updateSound" , req.body)
+    logger.info("body in updateSound", req.body)
     let valid = ajv.validate(sound, req.body);
     if (!valid) {
         let errorData
@@ -2247,10 +2246,38 @@ router.get('/level/:lvlId', (req, res) => {
     var verify = jwt.verify(token);
     let username = verify.userID
     database.getStudentByUsername(username, (student)=> {
-        if (student == 0 || student == -1) {
+        if (student == -1) {
             response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
                 res.json(result)
             })
+        }
+        else if (student == 0) {
+            database.getLessonByLvlId(req.params.lvlId, (lessons)=> {
+                if (lessons == -1) {
+                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                        res.json(result)
+                    })
+                }
+                else if (lessons == 0) {
+                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                        res.json(result)
+                    })
+                }
+                else {
+                    // if (req.query.offset && req.query.limit) {
+                    //     response.pagination(req.query.offset, req.query.limit, lessons, (result)=> {
+                    //         res.json(result)
+                    //     })
+                    // }
+                    // else {
+                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                            res.json(result)
+                        })
+                    // }
+
+                }
+            })
+
         }
         else {
             let usrId = student[0]._id
@@ -2294,7 +2321,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                 else {
                                                     let updateInfo = {}
                                                     updateInfo.lsnId = firstLesson._id
-                                                    if(checkPaid){
+                                                    if (checkPaid) {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].status = "locked"
                                                             for (var k = 0; k < view.length; k++) {
@@ -2308,7 +2335,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
                                                         }
                                                     }
-                                                    else{
+                                                    else {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].status = "locked"
                                                             for (var k = 0; k < view.length; k++) {
@@ -2390,7 +2417,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
                                                         let currentTime = new Date().getTime()
                                                         if (currentTime < pass) {
-                                                            if(checkPaid){
+                                                            if (checkPaid) {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
                                                                     for (var k = 0; k < view.length; k++) {
@@ -2407,7 +2434,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                                 }
 
                                                             }
-                                                            else{
+                                                            else {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
                                                                     for (var k = 0; k < view.length; k++) {
@@ -2542,7 +2569,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         }
                                                     }
                                                     else {
-                                                        if(checkPaid){
+                                                        if (checkPaid) {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
                                                                 for (var k = 0; k < view.length; k++) {
@@ -2559,7 +2586,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
 
                                                         }
-                                                        else{
+                                                        else {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
                                                                 for (var k = 0; k < view.length; k++) {
