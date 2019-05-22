@@ -3865,7 +3865,7 @@ module.exports.createVideoThumbnail = function (path, destination, fileName, cb)
             video.fnExtractFrameToJPG(destination, {
                 frame_rate: 1,
                 number: 1,
-                start_time: "0:07:00",
+                start_time: "00:00:15",
                 duration_time: 1,
                 file_name: `${fileName}`
             }, function (error, files) {
