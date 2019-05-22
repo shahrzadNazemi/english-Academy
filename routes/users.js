@@ -2029,10 +2029,12 @@ router.post('/refreshToken', function (req, res) {
 });
 
 router.post('/student/placement', (req, res)=> {
-    var token = req.headers.authorization.split(" ")[1];
-    var verify = jwt.verify(token);
     req.body.lsnId = req.body._id
-    req.body.username = verify.userID
+    if(req.body.username == undefined){
+        var token = req.headers.authorization.split(" ")[1];
+        var verify = jwt.verify(token);
+        req.body.username = verify.userID
+    }
     if (req.body.lsnId == undefined) {
         let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
         response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
