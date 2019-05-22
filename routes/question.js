@@ -590,11 +590,11 @@ router.post('/answer', (req, res)=> {
 
                             }
                             else {
-                                if (typeof result.examTimePassed == "string") {
+                                if (typeof result.examTimePassed == "string"&& result.examTimePassed != "0") {
                                     result.examTimePassed = parseInt(result.examTimePassed)
                                 }
                                 //examed before
-                                    if (result.examTimePassed) {
+                                    if (result.examTimePassed !="0") {
                                         let pass = moment(result.examTimePassed).add(1, 'h')
                                         let currentTime = new Date().getTime()
                                         if (currentTime < moment(result.examTimePassed).add(result.exam.time, 'm')) {
