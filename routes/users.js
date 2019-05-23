@@ -2127,8 +2127,11 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
-                                    res.json(result)
+                                database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
+                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                        res.json(result)
+                                    })
+
                                 })
                             }
 
@@ -2147,8 +2150,11 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                    res.json(result)
+                                database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
+                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                        res.json(result)
+                                    })
+
                                 })
                             }
                         })
