@@ -1439,7 +1439,7 @@ router.get('/cp/:cpId', (req, res)=> {
 
 
 router.post('/student/register', (req, res)=> {
-    logger.info("resister" , req.body)
+    logger.info("resister", req.body)
     trim.expressTrimmer(req, (req)=> {
         if (req.body.password == undefined || req.body.username == undefined || req.body.mobile == undefined) {
             let errData = {"password": "پسورد را وارد کنید"}
@@ -1595,12 +1595,12 @@ router.post('/student/login', (req, res) => {
         })
     }
     else {
-        logger.info("loginInfo firsyt" , req.body)
+        logger.info("loginInfo firsyt", req.body)
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
-        logger.info("loginInfo convert" , req.body)
+        logger.info("loginInfo convert", req.body)
 
         req.body.password = hashHelper.hash(req.body.password)
-        logger.info("loginInfo hash" , req.body)
+        logger.info("loginInfo hash", req.body)
 
         database.stuLogin(req.body, function (loginResult) {
             if (loginResult == -1) {
@@ -1624,7 +1624,7 @@ router.post('/student/login', (req, res) => {
                                         loginResult.examPassed = 0
                                     }
                                     else {
-                                        logger.info("examCount" , exam)
+                                        logger.info("examCount", exam)
                                         loginResult.examPassed = exam.length
                                     }
                                     if (loginResult.score == 0) {
@@ -1904,11 +1904,11 @@ router.post('/student/forgetPass/send', (req, res) => {
             res.json(result)
         })
     }
-else{
-        logger.info("forgetPass" , req.body.password)
+    else {
+        logger.info("forgetPass", req.body.password)
         req.body.password = hashHelper.ConvertToEnglish(req.body.password)
         req.body.password = hashHelper.hash(req.body.password)
-        logger.info("forgetPass hash" , req.body.password)
+        logger.info("forgetPass hash", req.body.password)
 
         database.updateStudent(req.body, req.body._id, (updated)=> {
             if (updated == -1) {
@@ -1935,7 +1935,7 @@ else{
             }
         })
     }
-   
+
 });
 
 router.post('/refreshToken', function (req, res) {
@@ -2031,15 +2031,15 @@ router.post('/refreshToken', function (req, res) {
 
 router.post('/student/placement', (req, res)=> {
 
-    if(req.body.lsnId == undefined){
+    if (req.body.lsnId == undefined) {
         req.body.lsnId = req.body._id
 
     }
-    if(req.body.usrId == undefined){
+    if (req.body.usrId == undefined) {
         var token = req.headers.authorization.split(" ")[1];
         var verify = jwt.verify(token);
         req.body.username = verify.userID
-        logger.info("placeInfo" , req.body)
+        logger.info("placeInfo", req.body)
 
         if (req.body.lsnId == undefined) {
             let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
@@ -2090,9 +2090,9 @@ router.post('/student/placement', (req, res)=> {
             }
         }
     }
-    else{
+    else {
 
-        database.getStudentById(req.body.usrId , (stu)=>{
+        database.getStudentById(req.body.usrId, (stu)=> {
             if (stu == -1) {
                 response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                     res.json(result)
@@ -2103,9 +2103,9 @@ router.post('/student/placement', (req, res)=> {
                     res.json(result)
                 })
             }
-            else{
+            else {
                 req.body.username = stu.username
-                logger.info("placeInfo" , req.body)
+                logger.info("placeInfo", req.body)
 
                 if (req.body.lsnId == undefined) {
                     let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
@@ -2128,13 +2128,20 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                    res.json(result)
-                                })
+                                if (req.body.lsnId != "0") {
+                                    database.deleteResultNotLessonUser(req.body.lsnId, req.body.usrId, (deleted)=> {
+                                        response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                            res.json(result)
+                                        })
+                                    })
 
-                                // database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
-                                //
-                                // })
+                                }
+                                else{
+                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+
                             }
 
                         })
@@ -2152,16 +2159,22 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                    res.json(result)
-                                })
 
-                                // database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
-                                //     response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                //         res.json(result)
-                                //     })
-                                //
-                                // })
+                                if (req.body.lsnId != "0") {
+                                    database.deleteResultNotLessonUser(req.body.lsnId, req.body.usrId, (deleted)=> {
+                                        response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                            res.json(result)
+                                        })
+                                    })
+
+                                }
+                                else{
+                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+
+
                             }
                         })
                     }
