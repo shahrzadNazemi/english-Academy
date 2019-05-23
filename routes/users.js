@@ -1624,6 +1624,7 @@ router.post('/student/login', (req, res) => {
                                         loginResult.examPassed = 0
                                     }
                                     else {
+                                        logger.info("examCount" , exam)
                                         loginResult.examPassed = exam.length
                                     }
                                     if (loginResult.score == 0) {
@@ -2127,12 +2128,13 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
-                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                        res.json(result)
-                                    })
-
+                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                    res.json(result)
                                 })
+
+                                // database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
+                                //
+                                // })
                             }
 
                         })
@@ -2150,12 +2152,16 @@ router.post('/student/placement', (req, res)=> {
                                 })
                             }
                             else {
-                                database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
-                                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                                        res.json(result)
-                                    })
-
+                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                    res.json(result)
                                 })
+
+                                // database.deleteResultNotLessonUser(req.body.lsnId , req.body.usrId , (deleted)=>{
+                                //     response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                //         res.json(result)
+                                //     })
+                                //
+                                // })
                             }
                         })
                     }
