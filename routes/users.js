@@ -2136,12 +2136,11 @@ router.post('/student/placement', (req, res)=> {
                                     })
 
                                 }
-                                else{
+                                else {
                                     response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
                                         res.json(result)
                                     })
                                 }
-
                             }
 
                         })
@@ -2168,7 +2167,7 @@ router.post('/student/placement', (req, res)=> {
                                     })
 
                                 }
-                                else{
+                                else {
                                     response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
                                         res.json(result)
                                     })
@@ -2624,10 +2623,15 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 }
 
                             }
+                            allStudents = hashHelper.arrUnique(allStudents)
+                            levelStu = hashHelper.arrUnique(levelStu)
+
                             let temp = allStudents
+
                             let length = levelStu.length
                             if (length <= 3) {
                                 logger.info("leveleStu", levelStu)
+
                                 database.getAllLessons((lessons)=> {
                                     for (var p = 0; p < levelStu.length; p++) {
                                         levelStu[p].lesson = lesson[0]
@@ -2664,26 +2668,40 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 delete lesson[0].text
                                 delete lesson[0].downloadFile
 
+
                                 let i = 0
                                 for (var k = 0; k < levelStu.length; k++) {
                                     levelStu[k].lesson = lesson[0]
                                     delete levelStu[k].level
+                                    logger.info("leveleStu", levelStu[k]._id)
+                                    logger.info("leveleStu9", student[0]._id)
+
+
                                     if (levelStu[k]._id == student[0]._id) {
                                         i = k
                                     }
                                 }
+                                logger.info("leveleStukol", levelStu)
+
+                                logger.info("leveleStu", levelStu[length - 1])
+
                                 temp[0] = levelStu[length - 1]
                                 temp[0].rank = 1
-                                temp[1] = levelStu[i]
-                                temp[1].rank = i
+                                if(i!= 0){
+                                    temp[1] = levelStu[i]
+                                    temp[1].rank = i
+                                }
+                                else{
+                                    temp[1] = levelStu[1]
+                                    temp[1].rank = 1
+                                }
+
                                 temp[2] = levelStu[0]
                                 temp[2].rank = levelStu.length
-                                if (temp[0] == temp[1]) {
-                                    temp.splice(0, 1);
-                                }
-                                if (temp[2] == temp[1]) {
-                                    temp.splice(2, 1);
-                                }
+
+
+                                temp = hashHelper.arrUnique(temp)
+
                                 database.getAllLessons((lessons)=> {
                                     for (var p = 0; p < temp.length; p++) {
                                         let k = 0
