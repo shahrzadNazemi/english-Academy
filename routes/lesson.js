@@ -3890,9 +3890,9 @@ module.exports.createVideoThumbnail = function (path, destination, fileName, cb)
         var process = new ffmpeg(path);
         process.then(function (video) {
             video.fnExtractFrameToJPG(destination, {
-                frame_rate: 1,
+                frame_rate: 30,
                 number: 1,
-                start_time: "00:00:15",
+                start_time: 420,
                 duration_time: 1,
                 file_name: `${fileName}`
             }, function (error, files) {
