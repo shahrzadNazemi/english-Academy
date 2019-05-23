@@ -2029,60 +2029,135 @@ router.post('/refreshToken', function (req, res) {
 });
 
 router.post('/student/placement', (req, res)=> {
-    req.body.lsnId = req.body._id
-    if(req.body.username == undefined){
+
+    if(req.body.lsnId == undefined){
+        req.body.lsnId = req.body._id
+
+    }
+    if(req.body.usrId == undefined){
         var token = req.headers.authorization.split(" ")[1];
         var verify = jwt.verify(token);
         req.body.username = verify.userID
-    }
-    if (req.body.lsnId == undefined) {
-        let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
-        response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
-            res.json(result)
-        })
-    }
-    else {
-        if (req.body.lsnId == "0") {
-            req.body.lsnId = parseInt(req.body.lsnId)
-            database.stuPlacement(req.body, (lesson)=> {
-                if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
-                        res.json(result)
-                    })
-                }
-                else if (lesson == 0) {
-                    response.respondNotFound('درسی ثبت نشده است.', {}, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
-                        res.json(result)
-                    })
-                }
+        logger.info("placeInfo" , req.body)
 
+        if (req.body.lsnId == undefined) {
+            let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
+            response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
+                res.json(result)
             })
         }
         else {
-            database.stuPlacement(req.body, (lesson)=> {
-                if (lesson == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else if (lesson == 0) {
-                    response.respondNotFound('چنین درسی ثبت نشده است.', {}, (result)=> {
+            if (req.body.lsnId == "0") {
+                req.body.lsnId = parseInt(req.body.lsnId)
+                database.stuPlacement(req.body, (lesson)=> {
+                    if (lesson == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == 0) {
+                        response.respondNotFound('درسی ثبت نشده است.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
+                            res.json(result)
+                        })
+                    }
+
+                })
+            }
+            else {
+                database.stuPlacement(req.body, (lesson)=> {
+                    if (lesson == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else if (lesson == 0) {
+                        response.respondNotFound('چنین درسی ثبت نشده است.', {}, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                    else {
+                        response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                            res.json(result)
+                        })
+                    }
+                })
+            }
+        }
+    }
+    else{
+
+        database.getStudentById(req.body.usrId , (stu)=>{
+            if (stu == -1) {
+                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else if (stu == 0) {
+                response.respondNotFound('چنین کاربری ثبت نشده است.', {}, (result)=> {
+                    res.json(result)
+                })
+            }
+            else{
+                req.body.username = stu.username
+                logger.info("placeInfo" , req.body)
+
+                if (req.body.lsnId == undefined) {
+                    let errData = {"_id": "وارد کردن شناسه ی درس ضروری است."}
+                    response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
                         res.json(result)
                     })
                 }
                 else {
-                    response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
-                        res.json(result)
-                    })
+                    if (req.body.lsnId == "0") {
+                        req.body.lsnId = parseInt(req.body.lsnId)
+                        database.stuPlacement(req.body, (lesson)=> {
+                            if (lesson == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', '', (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (lesson == 0) {
+                                response.respondNotFound('درسی ثبت نشده است.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                response.response('اطلاعات مربوط به درس اول:', lesson, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+
+                        })
+                    }
+                    else {
+                        database.stuPlacement(req.body, (lesson)=> {
+                            if (lesson == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else if (lesson == 0) {
+                                response.respondNotFound('چنین درسی ثبت نشده است.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                response.response('اطلاعات مربوط به درس :', lesson, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                        })
+                    }
                 }
-            })
-        }
+            }
+        })
     }
+
 });
 
 router.get('/student/placement', (req, res)=> {

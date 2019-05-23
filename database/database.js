@@ -4414,7 +4414,7 @@ module.exports.getExamResultUsr = (usrId, cb)=> {
 
 };
 
-module.exports.stuPlacement = (placeInfo, cb)=> {
+    module.exports.stuPlacement = (placeInfo, cb)=> {
     request.post({
         url: `${config.databaseServer}/api/users/student/placement`,
         headers: {"content-Type": "application/json"},
