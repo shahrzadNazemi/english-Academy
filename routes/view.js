@@ -19,7 +19,6 @@ router.get('/', (req, res)=> {
         else {
             let userId = student[0]._id
             if (req.query.vdId) {
-                
                 database.updateViewToSetTrue(req.query.vdId,userId ,'video',(result)=> {
                     if (result == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {

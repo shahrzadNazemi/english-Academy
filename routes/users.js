@@ -1439,8 +1439,8 @@ router.get('/cp/:cpId', (req, res)=> {
 
 
 router.post('/student/register', (req, res)=> {
+    logger.info("resister" , req.body)
     trim.expressTrimmer(req, (req)=> {
-        if (req.files)
         if (req.body.password == undefined || req.body.username == undefined || req.body.mobile == undefined) {
             let errData = {"password": "پسورد را وارد کنید"}
             response.validation('اطلاعات وارد شده صحیح نمیباشد', errData, "required", (result)=> {
