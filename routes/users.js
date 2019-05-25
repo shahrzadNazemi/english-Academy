@@ -2619,7 +2619,6 @@ router.get('/student/bestOfLevel', (req, res) => {
                     let lsnId = student[0].view.lsnId
                     if(student[0].view.lsnId == 0){
                         lsnId = student[0].lastPassedLesson
-
                     }
                     database.getLessonById(lsnId, (lesson)=> {
                         if (lesson == 0 || lesson == 0) {
@@ -2688,18 +2687,10 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 for (var k = 0; k < levelStu.length; k++) {
                                     levelStu[k].lesson = lesson[0]
                                     delete levelStu[k].level
-                                    logger.info("leveleStu", levelStu[k]._id)
-                                    logger.info("leveleStu9", student[0]._id)
-
-
                                     if (levelStu[k]._id == student[0]._id) {
                                         i = k
                                     }
                                 }
-                                logger.info("leveleStukol", levelStu)
-
-                                logger.info("leveleStu", levelStu[length - 1])
-
                                 temp[0] = levelStu[length - 1]
                                 temp[0].rank = 1
                                 if(i!= 0){
@@ -2708,7 +2699,7 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 }
                                 else{
                                     temp[1] = levelStu[1]
-                                    temp[1].rank = 1
+                                    temp[1].rank = 2
                                 }
 
                                 temp[2] = levelStu[0]
