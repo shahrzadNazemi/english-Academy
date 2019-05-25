@@ -1956,7 +1956,14 @@ router.post('/refreshToken', function (req, res) {
 
                     }
                     else {
-                        database.getLessonById(student[0].lastPassedLesson, (lesson)=> {
+                        if(student[0].view.lsnId != 0){
+                            let lsnId = student[0].view.lsnId
+
+                        }
+                        else{
+                            let lsnId = student[0].lastPassedLesson
+                        }
+                        database.getLessonById(lsnId, (lesson)=> {
                             if (lesson[0].video)
                                 delete lesson[0].video
                             if (lesson[0].sound)
@@ -2001,7 +2008,13 @@ router.post('/refreshToken', function (req, res) {
 
                 }
                 else {
-                    database.getLessonById(student[0].lastPassedLesson, (lesson)=> {
+                    let lsnId = student[0].view.lsnId
+                    if(student[0].view.lsnId == 0){
+                        lsnId = student[0].lastPassedLesson
+
+                    }
+                    
+                    database.getLessonById(lsnId, (lesson)=> {
                         delete lesson[0].video
                         delete lesson[0].sound
                         delete lesson[0].text
@@ -2605,7 +2618,11 @@ router.get('/student/bestOfLevel', (req, res) => {
                     })
                 }
                 else {
-                    let lsnId = student[0].lastPassedLesson
+                    let lsnId = student[0].view.lsnId
+                    if(student[0].view.lsnId == 0){
+                        lsnId = student[0].lastPassedLesson
+
+                    }
                     database.getLessonById(lsnId, (lesson)=> {
                         if (lesson == 0 || lesson == 0) {
                             response.respondNotFound('دانش آموز مورد نظر یافت نشد.', {}, (result)=> {
@@ -2831,7 +2848,12 @@ router.get('/student/:stdId', (req, res) => {
             })
         }
         else {
-            database.getLessonById(getResult.lastPassedLesson, (lesson)=> {
+            let lsnId = getResult.view.lsnId
+            if(getResult.view.lsnId == 0){
+                lsnId = getResult.lastPassedLesson
+
+            }
+            database.getLessonById(lsnId, (lesson)=> {
                 database.getExamPassedCount(getResult._id, (exam)=> {
                     chatRoom.setAvatarUrl(getResult.chatrooms, (newChatrrom)=> {
                         getResult.chatrooms = newChatrrom
