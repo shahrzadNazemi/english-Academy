@@ -1956,12 +1956,10 @@ router.post('/refreshToken', function (req, res) {
 
                     }
                     else {
-                        if(student[0].view.lsnId != 0){
-                            let lsnId = student[0].view.lsnId
+                        let lsnId = student[0].view.lsnId
+                        if(student[0].view.lsnId == 0){
+                            student[0].lastPassedLesson
 
-                        }
-                        else{
-                            let lsnId = student[0].lastPassedLesson
                         }
                         database.getLessonById(lsnId, (lesson)=> {
                             if (lesson[0].video)

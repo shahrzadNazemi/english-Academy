@@ -10,7 +10,6 @@ let socketIds = {};
 
 io.sockets.on('connection', function (socket) {
     console.log("connected")
-
     database.getAllChatrooms((chatrooms)=> {
         logger.info("chatrooms" , chatrooms)
 
