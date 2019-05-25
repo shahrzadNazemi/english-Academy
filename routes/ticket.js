@@ -30,6 +30,18 @@ router.post('/', (req, res)=> {
                 res.json(result)
             })
         }
+        if (req.body.usrId == undefined || req.body.usrId == "") {
+            let errData = {"usrId": "وارد کردن شناسه ی یورز ضروری است."}
+            response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
+                res.json(result)
+            })
+        }
+        if (req.body.msg == undefined || req.body.msg == "") {
+            let errData = {"msg": "وارد کردن   متن ضروری است."}
+            response.validation('اطلاعات وارد شده صحیح نیست.', errData, "required", (result)=> {
+                res.json(result)
+            })
+        }
         else {
             if (req.files) {
                 if (req.files.img != null) {
