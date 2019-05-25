@@ -3176,7 +3176,7 @@ router.get('/:lsnId', (req, res) => {
                                                 types.push(typeList[i])
                                             }
                                         }
-                                        if (result.timePassed) {
+                                        if (result.timePassed !="0") {
                                             let pass = moment(result.timePassed).add(1, 'h').format('x')
                                             let timeStamp = new Date(pass).getTime()
                                             let currentTime = new Date().getTime()
