@@ -1957,7 +1957,7 @@ router.post('/refreshToken', function (req, res) {
                     }
                     else {
                         let lsnId = student[0].view.lsnId
-                        if(student[0].view.lsnId == 0){
+                        if (student[0].view.lsnId == 0) {
                             student[0].lastPassedLesson
 
                         }
@@ -2007,11 +2007,11 @@ router.post('/refreshToken', function (req, res) {
                 }
                 else {
                     let lsnId = student[0].view.lsnId
-                    if(student[0].view.lsnId == 0){
+                    if (student[0].view.lsnId == 0) {
                         lsnId = student[0].lastPassedLesson
 
                     }
-                    
+
                     database.getLessonById(lsnId, (lesson)=> {
                         delete lesson[0].video
                         delete lesson[0].sound
@@ -2617,7 +2617,7 @@ router.get('/student/bestOfLevel', (req, res) => {
                 }
                 else {
                     let lsnId = student[0].view.lsnId
-                    if(student[0].view.lsnId == 0){
+                    if (student[0].view.lsnId == 0) {
                         lsnId = student[0].lastPassedLesson
                     }
                     database.getLessonById(lsnId, (lesson)=> {
@@ -2693,13 +2693,20 @@ router.get('/student/bestOfLevel', (req, res) => {
                                 }
                                 temp[0] = levelStu[length - 1]
                                 temp[0].rank = 1
-                                if(i!= 0){
+                                if (i != 0 && i != length - 1) {
                                     temp[1] = levelStu[i]
                                     temp[1].rank = i
                                 }
-                                else{
-                                    temp[1] = levelStu[1]
-                                    temp[1].rank = 2
+                                else {
+                                    if(i==0){
+                                        temp[1] = levelStu[1]
+                                        temp[1].rank = levelStu.length -1
+                                    }
+                                    else if(i == length -1){
+                                        temp[1] = levelStu[length -2]
+                                        temp[1].rank = 2
+                                    }
+
                                 }
 
                                 temp[2] = levelStu[0]
@@ -2838,7 +2845,7 @@ router.get('/student/:stdId', (req, res) => {
         }
         else {
             let lsnId = getResult.view.lsnId
-            if(getResult.view.lsnId == 0){
+            if (getResult.view.lsnId == 0) {
                 lsnId = getResult.lastPassedLesson
 
             }
