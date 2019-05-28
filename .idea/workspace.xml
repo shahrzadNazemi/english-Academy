@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/users.js" afterPath="$PROJECT_DIR$/routes/users.js" />
-    </list>
+    <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="" />
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -1814,8 +1811,8 @@
       <file leaf-file-name="users.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/users.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="2693" column="62" selection-start-line="2693" selection-start-column="62" selection-end-line="2693" selection-end-column="62" />
+            <state relative-caret-position="170">
+              <caret line="2697" column="52" selection-start-line="2697" selection-start-column="52" selection-end-line="2697" selection-end-column="52" />
               <folding>
                 <element signature="e#593#1426#0" expanded="false" />
                 <element signature="e#711#1423#0" expanded="false" />
@@ -3749,12 +3746,12 @@
       <workItem from="1558587771841" duration="14693000" />
       <workItem from="1558761198518" duration="10099000" />
       <workItem from="1558846030294" duration="253000" />
-      <workItem from="1558859674287" duration="2521000" />
+      <workItem from="1558859674287" duration="3784000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1353574000" />
+    <option name="totallyTimeSpent" value="1354837000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
@@ -3768,7 +3765,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935154" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4369085" sideWeight="0.4969743" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33509833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28641573" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="-8" y="245" width="1382" height="214" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28641573" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" x="-8" y="245" width="1382" height="214" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23676248" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -6161,8 +6158,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="2693" column="62" selection-start-line="2693" selection-start-column="62" selection-end-line="2693" selection-end-column="62" />
+        <state relative-caret-position="170">
+          <caret line="2697" column="52" selection-start-line="2697" selection-start-column="52" selection-end-line="2697" selection-end-column="52" />
           <folding>
             <element signature="e#593#1426#0" expanded="false" />
             <element signature="e#711#1423#0" expanded="false" />

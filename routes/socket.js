@@ -20,6 +20,7 @@ io.sockets.on('connection', function (socket) {
             }
         }
         socket.on('getChatInfo', function (user) {
+            logger.info("userSent in getChatInfo" , user)
             var usernames = [];
 
             if (typeof user == "string") {
