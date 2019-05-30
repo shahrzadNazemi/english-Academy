@@ -2325,10 +2325,10 @@ router.get('/level/:lvlId', (req, res) => {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].status = "locked"
                                                             for (var k = 0; k < view.length; k++) {
-                                                                if (lessons[i]._id == view[k].lsnId) {
+                                                                if (lessons[i]._id == resultOfUser[k].lsnId) {
                                                                     lessons[i].status = "passed"
                                                                 }
-                                                                if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                if (lessons[i]._id == resultOfUser[resultOfUser.length - 1].lsnId) {
                                                                     lessons[i].status = "current"
 
                                                                 }
@@ -2418,12 +2418,12 @@ router.get('/level/:lvlId', (req, res) => {
                                                             if (checkPaid) {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
-                                                                    for (var k = 0; k < view.length; k++) {
-                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                    for (var k = 0; k < resultOfUser.length; k++) {
+                                                                        if (lessons[i]._id == resultOfUser[k].lsnId) {
                                                                             lessons[i].status = "passed"
 
                                                                         }
-                                                                        if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                        if (lessons[i]._id == resultOfUser[resultOfUser.length - 1].lsnId) {
                                                                             lessons[i].status = "locked"
 
                                                                         }
@@ -2496,12 +2496,13 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
                                                         }
                                                         else {
+
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
-                                                                for (var k = 0; k < view.length; k++) {
-                                                                    if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                for (var k = 0; k < resultOfUser.length; k++) {
+                                                                    if (lessons[i]._id == resultOfUser[resultOfUser.length - 1].lsnId) {
                                                                         lessons[i].status = "current"
-                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                        if (lessons[i]._id == resultOfUser[k].lsnId) {
                                                                             lessons[i].status = "passed"
 
                                                                         }
@@ -2569,12 +2570,12 @@ router.get('/level/:lvlId', (req, res) => {
                                                         if (checkPaid) {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
-                                                                for (var k = 0; k < view.length; k++) {
-                                                                    if (lessons[i]._id == view[k].lsnId) {
+                                                                for (var k = 0; k < resultOfUser.length; k++) {
+                                                                    if (lessons[i]._id == resultOfUser[k].lsnId) {
                                                                         lessons[i].status = "passed"
 
                                                                     }
-                                                                    if (lessons[i]._id == view[view.length - 1].lsnId) {
+                                                                    if (lessons[i]._id == resultOfUser[resultOfUser.length - 1].lsnId) {
                                                                         lessons[i].status = "current"
 
                                                                     }
