@@ -597,7 +597,7 @@ router.post('/answer', (req, res)=> {
                                     if (result.examTimePassed !="0") {
                                         let pass = moment(result.examTimePassed).add(1, 'h')
                                         let currentTime = new Date().getTime()
-                                        if (currentTime < moment(result.examTimePassed).add(result.exam.time, 'm')) {
+                                        if (currentTime < moment(result.examTimePassed).add(result.exam.time, 's')) {
                                             database.answerQuestion(req.body, (question)=> {
                                                 if (question == -1) {
                                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -707,7 +707,7 @@ router.post('/answer', (req, res)=> {
                             let pass = moment(result.timePassed).add(1, 'h')
                             let currentTime = new Date().getTime()
                             //if currently doing the exam
-                            if (currentTime < moment(result.timePassed).add(result.quiz.time, 'm')) {
+                            if (currentTime < moment(result.timePassed).add(result.quiz.time, 's')) {
                                 database.answerQuestion(req.body, (question)=> {
                                     if (question == -1) {
                                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
