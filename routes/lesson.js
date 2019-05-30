@@ -3033,7 +3033,6 @@ router.get('/:lsnId', (req, res) => {
                     })
                 }
                 else {
-
                     let types = []
                     for (var i = 0; i < lesson[0].video.length; i++) {
                         types.push(lesson[0].video[i].type)
@@ -3183,8 +3182,8 @@ router.get('/:lsnId', (req, res) => {
                                                         })
                                                     }
                                                     else {
-                                                        // lesson[0].viewPermission = false
-                                                        lesson[0].viewPermission = true
+                                                        lesson[0].viewPermission = false
+                                                        // lesson[0].viewPermission = true
                                                         lesson[0].quizPassedTime = result.timePassed
                                                         lesson[0].examPassedTime = result.examTimePassed
 
