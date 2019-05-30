@@ -2270,9 +2270,9 @@ router.get('/level/:lvlId', (req, res) => {
                     //     })
                     // }
                     // else {
-                        response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
-                            res.json(result)
-                        })
+                    response.response('اطلاعات مورد نظر یافت شد', lessons, (result)=> {
+                        res.json(result)
+                    })
                     // }
 
                 }
@@ -2338,8 +2338,8 @@ router.get('/level/:lvlId', (req, res) => {
                                                     else {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].status = "locked"
-                                                                if (lessons[i]._id == resultOfUser[0].lsnId) {
-                                                                    lessons[i].status = "first"
+                                                            if (lessons[i]._id == resultOfUser[0].lsnId) {
+                                                                lessons[i].status = "first"
                                                             }
                                                         }
 
@@ -2435,9 +2435,9 @@ router.get('/level/:lvlId', (req, res) => {
                                                             else {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
-                                                                        if (lessons[i]._id == resultOfUser[0].lsnId) {
-                                                                            lessons[i].status = "first"
-                                                                        }
+                                                                    if (lessons[i]._id == resultOfUser[0].lsnId) {
+                                                                        lessons[i].status = "first"
+                                                                    }
 
                                                                 }
 
@@ -2566,7 +2566,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         }
                                                     }
                                                     else {
-                                                        logger.info("checkPaid" , checkPaid)
+                                                        logger.info("checkPaid", checkPaid)
                                                         if (checkPaid) {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
@@ -2587,8 +2587,8 @@ router.get('/level/:lvlId', (req, res) => {
                                                         else {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
-                                                                    if (lessons[i]._id == resultOfUser[0].lsnId) {
-                                                                        lessons[i].status = "first"
+                                                                if (lessons[i]._id == resultOfUser[0].lsnId) {
+                                                                    lessons[i].status = "first"
                                                                 }
 
                                                             }
@@ -3136,13 +3136,14 @@ router.get('/:lsnId', (req, res) => {
                     delete lesson[0].text
                     delete lesson[0].downloadFile
                     database.getResultUsrLsn(usrId, req.params.lsnId, (result)=> {
+
                         if (result == -1) {
                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                 res.json(result)
                             })
                         }
                         else if (result != 0) {
-                            logger.info("result is here " , result)
+                            logger.info("result is here ", result)
                             database.getAllTypes((typeList)=> {
                                 if (typeList == -1 || typeList == 0) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -3156,6 +3157,7 @@ router.get('/:lsnId', (req, res) => {
                                             notes = []
                                         }
                                         let exam = result.exam
+                                        
                                         for (var i = 0; i < typeList.length; i++) {
                                             if (typeList[i].title == "quiz") {
                                                 typeList[i].quizData = result.quiz
@@ -3171,12 +3173,12 @@ router.get('/:lsnId', (req, res) => {
                                                 types.push(typeList[i])
                                             }
                                         }
-                                        if (result.timePassed !="0") {
+                                        if (result.timePassed != "0") {
                                             let pass = moment(result.timePassed).add(1, 'h').format('x')
                                             // let timeStamp = new Date(pass).getTime()
-                                            logger.info("pass" , pass)
+                                            logger.info("pass", pass)
                                             let currentTime = new Date().getTime()
-                                            logger.info("cure" , currentTime)
+                                            logger.info("cure", currentTime)
 
                                             if (pass > currentTime) {
                                                 database.getViewUser(usrId, (view)=> {
@@ -3209,8 +3211,13 @@ router.get('/:lsnId', (req, res) => {
                                                     else {
                                                         lesson[0].quizPassedTime = result.timePassed
                                                         lesson[0].examPassedTime = result.examTimePassed
+                                                        if (view[0].lsnId != req.params.lsnId) {
+                                                            lesson[0].viewPermission = false
+                                                        }
+                                                        else {
+                                                            lesson[0].viewPermission = view[0].viewPermission
 
-                                                        lesson[0].viewPermission = view[0].viewPermission
+                                                        }
                                                         lesson[0] = circJson.stringify(lesson[0])
                                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                             res.json(result)
@@ -3254,8 +3261,13 @@ router.get('/:lsnId', (req, res) => {
                                 else {
                                     lesson[0].quizPassedTime = result.timePassed
                                     lesson[0].examPassedTime = result.examTimePassed
+                                    if (view[0].lsnId != req.params.lsnId) {
+                                        lesson[0].viewPermission = false
+                                    }
+                                    else {
+                                        lesson[0].viewPermission = view[0].viewPermission
 
-                                    lesson[0].viewPermission = view[0].viewPermission
+                                    }
                                     lesson[0] = circJson.stringify(lesson[0])
                                     response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                         res.json(result)
@@ -3265,7 +3277,6 @@ router.get('/:lsnId', (req, res) => {
                             })
                         }
                     })
-
                 }
             })
         }
