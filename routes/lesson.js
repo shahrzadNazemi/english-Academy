@@ -3142,6 +3142,7 @@ router.get('/:lsnId', (req, res) => {
                             })
                         }
                         else if (result != 0) {
+                            logger.info("result is here " , result)
                             database.getAllTypes((typeList)=> {
                                 if (typeList == -1 || typeList == 0) {
                                     response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
@@ -3172,8 +3173,11 @@ router.get('/:lsnId', (req, res) => {
                                         }
                                         if (result.timePassed !="0") {
                                             let pass = moment(result.timePassed).add(1, 'h').format('x')
-                                            let timeStamp = new Date(pass).getTime()
+                                            // let timeStamp = new Date(pass).getTime()
+                                            logger.info("pass" , pass)
                                             let currentTime = new Date().getTime()
+                                            logger.info("cure" , currentTime)
+
                                             if (pass > currentTime) {
                                                 database.getViewUser(usrId, (view)=> {
                                                     if (view == -1) {
@@ -3206,7 +3210,7 @@ router.get('/:lsnId', (req, res) => {
                                                         lesson[0].quizPassedTime = result.timePassed
                                                         lesson[0].examPassedTime = result.examTimePassed
 
-                                                        lesson[0].viewPermission = true
+                                                        lesson[0].viewPermission = view[0].viewPermission
                                                         lesson[0] = circJson.stringify(lesson[0])
                                                         response.response('درس مورد نظر یافت شد.', JSON.parse(lesson[0]), (result)=> {
                                                             res.json(result)
