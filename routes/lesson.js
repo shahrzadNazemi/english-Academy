@@ -2282,13 +2282,13 @@ router.get('/level/:lvlId', (req, res) => {
         else {
             let usrId = student[0]._id
             database.checkPaid(usrId, (checkPaid)=> {
-                database.getViewUser(usrId, (view)=> {
-                    if (view == -1) {
+                database.getResultUsr(usrId, (resultOfUser)=> {
+                    if (resultOfUser == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
                     }
-                    else if (view == 0) {
+                    else if (resultOfUser == 0) {
                         response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
                             res.json(result)
                         })
@@ -2338,10 +2338,8 @@ router.get('/level/:lvlId', (req, res) => {
                                                     else {
                                                         for (var i = 0; i < lessons.length; i++) {
                                                             lessons[i].status = "locked"
-                                                            for (var k = 0; k < view.length; k++) {
-                                                                if (lessons[i]._id == view[0].lsnId) {
+                                                                if (lessons[i]._id == resultOfUser[0].lsnId) {
                                                                     lessons[i].status = "first"
-                                                                }
                                                             }
                                                         }
 
@@ -2437,11 +2435,9 @@ router.get('/level/:lvlId', (req, res) => {
                                                             else {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
-                                                                    for (var k = 0; k < view.length; k++) {
-                                                                        if (lessons[i]._id == view[k].lsnId) {
+                                                                        if (lessons[i]._id == resultOfUser[0].lsnId) {
                                                                             lessons[i].status = "first"
                                                                         }
-                                                                    }
 
                                                                 }
 
@@ -2569,6 +2565,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                         }
                                                     }
                                                     else {
+                                                        logger.info("checkPaid" , checkPaid)
                                                         if (checkPaid) {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
@@ -2589,11 +2586,8 @@ router.get('/level/:lvlId', (req, res) => {
                                                         else {
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
-                                                                for (var k = 0; k < view.length; k++) {
-                                                                    if (lessons[i]._id == view[k].lsnId) {
+                                                                    if (lessons[i]._id == resultOfUser[0].lsnId) {
                                                                         lessons[i].status = "first"
-
-                                                                    }
                                                                 }
 
                                                             }

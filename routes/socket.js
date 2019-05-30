@@ -11,8 +11,6 @@ let socketIds = {};
 io.sockets.on('connection', function (socket) {
     console.log("connected")
     database.getAllChatrooms((chatrooms)=> {
-        logger.info("chatrooms" , chatrooms)
-
         let rooms = []
         if (chatrooms[0] != undefined) {
             for (var i = 0; i < chatrooms.length; i++) {
@@ -175,7 +173,6 @@ io.sockets.on('connection', function (socket) {
                                     }
                                 }
                                 database.getChatAdminByChatRoom(user.chatroom._id, (chatAdmins)=> {
-                                    logger.info("chatAdmins", chatAdmins)
                                     if (chatAdmins != 0 && chatAdmins != -1) {
                                         for (var k = 0; k < chatAdmins.length; k++) {
                                             if (chatAdmins[k] != undefined) {
@@ -216,8 +213,6 @@ io.sockets.on('connection', function (socket) {
                                             // socket.emit('updateChat', 'SERVER', `you have connected to ${socket.room}`);
                                             // echo to room 1 that a person has connected to their room
                                             // io.to(socket).emit('updateInfo', data);
-                                            logger.info("warn io", socketIds)
-
                                             socket.emit('updateInfo', data)
                                             // socket.emit('updateRooms', rooms, socket.room);
                                         })
