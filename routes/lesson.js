@@ -2412,7 +2412,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                     if (resultInfo.timePassed != "0") {
                                                         if (typeof resultInfo.timePassed == 'string')
                                                             resultInfo.timePassed = parseInt(resultInfo.timePassed)
-                                                        let pass = moment(resultInfo.timePassed) + 60 * 60 * 24 * 1000;
+                                                        let pass = moment(resultInfo.timePassed).add(24, 'h').format('x')
                                                         let currentTime = new Date().getTime()
                                                         if (currentTime < pass) {
                                                             if (checkPaid) {
