@@ -2799,7 +2799,7 @@ router.get('/student/prCrNxtLesson', (req, res) => {
                                             for(var i=0;i<getResult.length;i++){
                                                 if(getResult[i].position == "current"){
                                                     if(!checkPaid){
-                                                        getResult[i].position = "notPaid"
+                                                        getResult[i].position = "locked"
                                                     }
                                                 }
                                             }
@@ -2829,7 +2829,7 @@ router.get('/student/prCrNxtLesson', (req, res) => {
                                     for(var i=0;i<getResult.length;i++){
                                         if(getResult[i].position == "current"){
                                             if(!checkPaid){
-                                                getResult[i].position = "notPaid"
+                                                getResult[i].position = "locked"
                                             }
                                         }
                                     }
