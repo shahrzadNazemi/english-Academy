@@ -2496,7 +2496,6 @@ router.get('/level/:lvlId', (req, res) => {
                                                             }
                                                         }
                                                         else {
-
                                                             for (var i = 0; i < lessons.length; i++) {
                                                                 lessons[i].status = "locked"
                                                                 for (var k = 0; k < resultOfUser.length; k++) {

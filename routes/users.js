@@ -2765,65 +2765,85 @@ router.get('/student/prCrNxtLesson', (req, res) => {
         else {
             // let lsnId = student[0].lastPassedLesson
             let usrId = student[0]._id
-            database.getViewUser(usrId, (view)=> {
-                if (view == 0 || view == -1) {
-                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                        res.json(result)
-                    })
-                }
-                else {
-                    let lsnId = view[0].lsnId
-                    if (lsnId == '0') {
-                        database.getFirstLesson((firstLesson)=> {
-                            if (firstLesson == 0 || firstLesson == -1) {
-                            }
-                            else {
-                                let lsnId = firstLesson._id
-                                database.getPrCrNxtLesson(lsnId, (getResult)=> {
-                                    if (getResult == -1) {
-                                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else if (getResult == 0) {
-                                        response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                            res.json(result)
-                                        })
-                                    }
-                                    else {
-                                        response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                            res.json(result)
-
-                                        })
-                                    }
-                                })
-
-                            }
+            database.checkPaid(usrId , (checkPaid)=>{
+                database.getViewUser(usrId, (view)=> {
+                    if (view == 0 || view == -1) {
+                        response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                            res.json(result)
                         })
                     }
                     else {
-                        database.getPrCrNxtLesson(lsnId, (getResult)=> {
-                            if (getResult == -1) {
-                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else if (getResult == 0) {
-                                response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                    res.json(result)
-                                })
-                            }
-                            else {
-                                response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                    res.json(result)
+                        let lsnId = view[0].lsnId
+                        if (lsnId == '0') {
+                            database.getFirstLesson((firstLesson)=> {
+                                if (firstLesson == 0 || firstLesson == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
 
-                                })
-                            }
-                        })
+                                }
+                                else {
+                                    let lsnId = firstLesson._id
+                                    database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                                        if (getResult == -1) {
+                                            response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else if (getResult == 0) {
+                                            response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                res.json(result)
+                                            })
+                                        }
+                                        else {
+                                            for(var i=0;i<getResult.length;i++){
+                                                if(getResult[i].position == "current"){
+                                                    if(!checkPaid){
+                                                        getResult[i].position = "notPaid"
+                                                    }
+                                                }
+                                            }
+                                            response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                                res.json(result)
+
+                                            })
+                                        }
+                                    })
+
+                                }
+                            })
+                        }
+                        else {
+                            database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                                if (getResult == -1) {
+                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else if (getResult == 0) {
+                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                        res.json(result)
+                                    })
+                                }
+                                else {
+                                    for(var i=0;i<getResult.length;i++){
+                                        if(getResult[i].position == "current"){
+                                            if(!checkPaid){
+                                                getResult[i].position = "notPaid"
+                                            }
+                                        }
+                                    }
+                                    response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                        res.json(result)
+
+                                    })
+                                }
+                            })
 
 
+                        }
                     }
-                }
+                })
             })
 
 
