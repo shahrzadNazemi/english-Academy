@@ -2414,7 +2414,7 @@ router.get('/level/:lvlId', (req, res) => {
                                                             resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                         let pass = moment(resultInfo.timePassed).add(24, 'h').format('x')
                                                         let currentTime = new Date().getTime()
-                                                        var examPermissionPassLessonNO = true
+                                                        var examPermissionPassLessonNO = false
                                                         if(resultInfo.examTimePassed !="0"){
                                                             if (typeof resultInfo.examTimePassed == 'string')
                                                                 resultInfo.examTimePassed = parseInt(resultInfo.examTimePassed)

@@ -12,6 +12,7 @@ let statistic = require('./statistic')
 const trim = require('../util/trimmer')
 // let csurf = require('../util/csurfHelper')
 let chatRoom = require('./chatRoom')
+let moment = require('moment-jalaali')
 
 
 router.post('/admin/login', (req, res) => {
@@ -2698,12 +2699,12 @@ router.get('/student/bestOfLevel', (req, res) => {
                                     temp[1].rank = i
                                 }
                                 else {
-                                    if(i==0){
+                                    if (i == 0) {
                                         temp[1] = levelStu[1]
-                                        temp[1].rank = levelStu.length -1
+                                        temp[1].rank = levelStu.length - 1
                                     }
-                                    else if(i == length -1){
-                                        temp[1] = levelStu[length -2]
+                                    else if (i == length - 1) {
+                                        temp[1] = levelStu[length - 2]
                                         temp[1].rank = 2
                                     }
 
@@ -2765,26 +2766,72 @@ router.get('/student/prCrNxtLesson', (req, res) => {
         else {
             // let lsnId = student[0].lastPassedLesson
             let usrId = student[0]._id
-            database.checkPaid(usrId , (checkPaid)=>{
-                database.getViewUser(usrId, (view)=> {
-                    if (view == 0 || view == -1) {
+            database.checkPaid(usrId, (checkPaid)=> {
+                database.getResultUsr(usrId, (resultOfUser)=> {
+                    if (resultOfUser == -1) {
                         response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                             res.json(result)
                         })
                     }
+                    else if (resultOfUser == 0) {
+                        response.respondNotFound(' مورد نظر یافت نشد.', [], (result)=> {
+                            res.json(result)
+                        })
+                    }
                     else {
-                        let lsnId = view[0].lsnId
-                        if (lsnId == '0') {
-                            database.getFirstLesson((firstLesson)=> {
-                                if (firstLesson == 0 || firstLesson == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
+                        database.getViewUser(usrId, (view)=> {
+                            if (view == 0 || view == -1) {
+                                response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                    res.json(result)
+                                })
+                            }
+                            else {
+                                let usrLsnId = view[0].lsnId
+                                if (usrLsnId == '0') {
+                                    database.getFirstLesson((firstLesson)=> {
+                                        if (firstLesson == 0 || firstLesson == -1) {
+                                        }
+                                        else {
+                                            let updateInfo = {}
+                                            updateInfo.lsnId = firstLesson._id
+                                            database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                                                if (getResult == -1) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else if (getResult == 0) {
+                                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
+                                                        res.json(result)
+                                                    })
+                                                }
+                                                else {
+                                                    for (var i = 0; i < getResult.length; i++) {
+                                                        if (getResult[i].position == "current") {
+                                                            if (!checkPaid) {
+                                                                if (getResult[i]._id == resultOfUser[0].lsnId) {
+                                                                    getResult[i].position = "current"
+                                                                }
+                                                                else {
+                                                                    getResult[i].position = "locked"
+                                                                }
 
+                                                            }
+                                                        }
+                                                    }
+                                                    response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                                        res.json(result)
+
+                                                    })
+                                                }
+                                            })
+
+
+                                        }
+                                    })
                                 }
                                 else {
-                                    let lsnId = firstLesson._id
-                                    database.getPrCrNxtLesson(lsnId, (getResult)=> {
+                                    database.getPrCrNxtLesson(usrLsnId, (getResult)=> {
                                         if (getResult == -1) {
                                             response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
                                                 res.json(result)
@@ -2796,54 +2843,110 @@ router.get('/student/prCrNxtLesson', (req, res) => {
                                             })
                                         }
                                         else {
-                                            for(var i=0;i<getResult.length;i++){
-                                                if(getResult[i].position == "current"){
-                                                    if(!checkPaid){
-                                                        getResult[i].position = "locked"
-                                                    }
+                                            database.getResultUsrLsn(usrId, usrLsnId, (resultInfo)=> {
+                                                if (resultInfo == -1 || resultInfo == 0) {
+                                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
+                                                        res.json(result)
+                                                    })
                                                 }
-                                            }
-                                            response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                                res.json(result)
+                                                else {
+                                                    if (resultInfo.timePassed != "0") {
+                                                        if (typeof resultInfo.timePassed == 'string')
+                                                            resultInfo.timePassed = parseInt(resultInfo.timePassed)
+                                                        let pass = moment(resultInfo.timePassed).add(24, 'h').format('x')
+                                                        let currentTime = new Date().getTime()
+                                                        var examPermissionPassLessonNO = false
+                                                        if (resultInfo.examTimePassed != "0") {
+                                                            if (typeof resultInfo.examTimePassed == 'string')
+                                                                resultInfo.examTimePassed = parseInt(resultInfo.examTimePassed)
+                                                            let passExam = moment(resultInfo.examTimePassed).add(24, 'h').format('x')
+                                                            let currentTimeExam = new Date().getTime()
+                                                            examPermissionPassLessonNO = (currentTimeExam < passExam)
+                                                        }
+                                                        if (currentTime < pass || examPermissionPassLessonNO) {
+                                                            if (checkPaid) {
+                                                                for (var i = 0; i < getResult.length; i++) {
+                                                                    if (getResult[i].position == "current") {
+                                                                        getResult[i].position = "locked"
+                                                                    }
+                                                                }
+                                                            }
+                                                            else {
+                                                                for (var i = 0; i < getResult.length; i++) {
+                                                                    if (getResult[i].position == "current") {
+                                                                        getResult[i].position = "locked"
+                                                                        if (getResult[i]._id == resultOfUser[0].lsnId) {
+                                                                            getResult[i].position = "current"
+                                                                        }
+                                                                    }
 
+                                                                }
+
+                                                            }
+                                                            response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                                                res.json(result)
+
+                                                            })
+                                                        }
+                                                        else {
+                                                            if (!checkPaid) {
+                                                                for (var i = 0; i < getResult.length; i++) {
+                                                                    if (getResult[i].position == "current") {
+                                                                        getResult[i].position = "locked"
+                                                                        if (getResult[i]._id == resultOfUser[0].lsnId) {
+                                                                            getResult[i].position = "current"
+                                                                        }
+                                                                    }
+
+                                                                }
+
+
+                                                            }
+
+                                                            response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                                                res.json(result)
+
+                                                            })
+                                                        }
+                                                    }
+                                                    else {
+                                                        logger.info("checkPaid", checkPaid)
+                                                        if (!checkPaid) {
+                                                            for (var i = 0; i < getResult.length; i++) {
+                                                                if (getResult[i].position == "current") {
+                                                                    getResult[i].position = "locked"
+                                                                    if (getResult[i]._id == resultOfUser[0].lsnId) {
+                                                                        getResult[i].position = "current"
+                                                                    }
+                                                                }
+
+                                                            }
+
+                                                        }
+                                                        response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                                            res.json(result)
+
+                                                        })
+                                                    }
+
+
+                                                }
                                             })
+
+                                            // response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
+                                            //     res.json(result)
+                                            //
+                                            // })
                                         }
                                     })
 
                                 }
-                            })
-                        }
-                        else {
-                            database.getPrCrNxtLesson(lsnId, (getResult)=> {
-                                if (getResult == -1) {
-                                    response.InternalServer('مشکلی در سرور پیش آمده است.لطفا دوباره تلاش کنید.', {}, (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else if (getResult == 0) {
-                                    response.respondNotFound('درس مورد نظر یافت نشد.', [], (result)=> {
-                                        res.json(result)
-                                    })
-                                }
-                                else {
-                                    for(var i=0;i<getResult.length;i++){
-                                        if(getResult[i].position == "current"){
-                                            if(!checkPaid){
-                                                getResult[i].position = "locked"
-                                            }
-                                        }
-                                    }
-                                    response.respondDeleted('اطلاعات درسها', getResult, (result)=> {
-                                        res.json(result)
+                            }
+                        })
 
-                                    })
-                                }
-                            })
-
-
-                        }
                     }
                 })
+
             })
 
 
