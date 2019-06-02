@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="956fe94a-02da-48f8-9d91-1a071aea50f3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/lesson.js" afterPath="$PROJECT_DIR$/routes/lesson.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.js" afterPath="$PROJECT_DIR$/test.js" />
     </list>
     <ignored path="englishAcademi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -1872,8 +1870,8 @@
       <file leaf-file-name="users.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/users.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="2786" column="84" selection-start-line="2786" selection-start-column="84" selection-end-line="2786" selection-end-column="84" />
+            <state relative-caret-position="306">
+              <caret line="2797" column="46" selection-start-line="2797" selection-start-column="46" selection-end-line="2797" selection-end-column="46" />
               <folding>
                 <element signature="e#593#1426#0" expanded="false" />
                 <element signature="e#711#1423#0" expanded="false" />
@@ -2854,21 +2852,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/package.js">
+      <file leaf-file-name="englishServer.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/englishServer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="42" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="42" />
+            <state relative-caret-position="285">
+              <caret line="44" column="35" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hashHelper.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/util/hashHelper.js">
+      <file leaf-file-name="package.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/package.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="340">
+              <caret line="20" column="42" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -3188,7 +3186,6 @@
         <option value="$PROJECT_DIR$/util/config.js" />
         <option value="$PROJECT_DIR$/util/jwtHelper.js" />
         <option value="$PROJECT_DIR$/routes/dictionary.js" />
-        <option value="$PROJECT_DIR$/englishServer.js" />
         <option value="$PROJECT_DIR$/routes/chatRoom.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/routes/view.js" />
@@ -3199,6 +3196,7 @@
         <option value="$PROJECT_DIR$/routes/users.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
         <option value="$PROJECT_DIR$/test.js" />
+        <option value="$PROJECT_DIR$/englishServer.js" />
       </list>
     </option>
   </component>
@@ -3842,15 +3840,15 @@
       <workItem from="1559037263805" duration="1300000" />
       <workItem from="1559209741880" duration="10708000" />
       <workItem from="1559366137901" duration="13803000" />
-      <workItem from="1559454254596" duration="188000" />
+      <workItem from="1559454254596" duration="383000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1380836000" />
+    <option name="totallyTimeSpent" value="1381031000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="1" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -4090,13 +4088,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="60" selection-start-line="3" selection-start-column="60" selection-end-line="3" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/englishServer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -6280,10 +6271,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/englishServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="44" column="35" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="2786" column="84" selection-start-line="2786" selection-start-column="84" selection-end-line="2786" selection-end-column="84" />
+        <state relative-caret-position="306">
+          <caret line="2797" column="46" selection-start-line="2797" selection-start-column="46" selection-end-line="2797" selection-end-column="46" />
           <folding>
             <element signature="e#593#1426#0" expanded="false" />
             <element signature="e#711#1423#0" expanded="false" />
