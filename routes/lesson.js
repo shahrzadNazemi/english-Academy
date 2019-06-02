@@ -30,10 +30,10 @@ const lesson = {
     properties: {
         lvlId: {type: "string"},
         title: {type: "string"},
-        order: {type: "string"},
         description: {type: "string"},
         commonMistake: {type: "string"},
-        deadline: {type: "string"}
+        deadline: {type: "string"},
+        order :{type:"string"}
     },
     required: ["lvlId", "title", "order"],
     additionalProperties: false
@@ -2414,7 +2414,15 @@ router.get('/level/:lvlId', (req, res) => {
                                                             resultInfo.timePassed = parseInt(resultInfo.timePassed)
                                                         let pass = moment(resultInfo.timePassed).add(24, 'h').format('x')
                                                         let currentTime = new Date().getTime()
-                                                        if (currentTime < pass) {
+                                                        var examPermissionPassLessonNO = true
+                                                        if(resultInfo.examTimePassed !="0"){
+                                                            if (typeof resultInfo.examTimePassed == 'string')
+                                                                resultInfo.examTimePassed = parseInt(resultInfo.examTimePassed)
+                                                            let passExam = moment(resultInfo.examTimePassed).add(24, 'h').format('x')
+                                                            let currentTimeExam = new Date().getTime()
+                                                           examPermissionPassLessonNO = (currentTimeExam < passExam)
+                                                        }
+                                                        if (currentTime < pass || examPermissionPassLessonNO ) {
                                                             if (checkPaid) {
                                                                 for (var i = 0; i < lessons.length; i++) {
                                                                     lessons[i].status = "locked"
@@ -3108,7 +3116,7 @@ router.get('/:lsnId', (req, res) => {
                         types[k].downloadFile = []
                         types[k].text = []
                     }
-                    max.sort()
+                    max =  Math.max.apply(null, order)
                     for (var k = 0; k < types.length; k++) {
 
                         for (var i = 0; i < max[max.length - 1]; i++) {
