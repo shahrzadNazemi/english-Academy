@@ -3116,7 +3116,7 @@ router.get('/:lsnId', (req, res) => {
                         types[k].downloadFile = []
                         types[k].text = []
                     }
-                    max =  Math.max.apply(null, order)
+                    max =  Math.max.apply(null, max)
                     for (var k = 0; k < types.length; k++) {
 
                         for (var i = 0; i < max[max.length - 1]; i++) {
